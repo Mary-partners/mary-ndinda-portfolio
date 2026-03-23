@@ -309,10 +309,19 @@ blockquote {
   min-height: 100vh;
   display: flex;
   align-items: center;
+  justify-content: center;
   padding-top: 60px;
   position: relative;
   overflow: hidden;
   background: linear-gradient(160deg, #fafaf8 0%, #f3f1ec 50%, #ede9df 100%);
+}
+
+.hero .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
 }
 
 .hero-canvas {
@@ -333,7 +342,7 @@ blockquote {
   z-index: 1;
 }
 
-.hero-content { max-width: 780px; position: relative; z-index: 2; }
+.hero-content { max-width: 100%; position: relative; z-index: 2; }
 
 .hero-eyebrow {
   display: flex;
@@ -355,8 +364,9 @@ blockquote {
 
 .hero-title {
   margin-bottom: 2rem;
-  font-size: 3.4rem;
+  font-size: 4rem;
   min-height: 4.2em;
+  max-width: 900px;
 }
 
 .typewriter-cursor {
@@ -372,14 +382,14 @@ blockquote {
 .hero-rule { width: 60px; height: 2px; background: var(--gold); margin-bottom: 1.5rem; }
 
 .hero-lead {
-  font-size: 1.15rem;
+  font-size: 1.2rem;
   line-height: 1.7;
   color: var(--ink-light);
-  max-width: 580px;
-  margin-bottom: 2.5rem;
+  max-width: 700px;
+  margin: 0 auto 2.5rem;
 }
 
-.hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+.hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
 
 .hero-scroll-hint {
   position: absolute;
@@ -614,6 +624,112 @@ blockquote {
   background: rgba(250,250,248,0.9);
   padding: 0.25rem 0.75rem;
   border-radius: 20px;
+}
+
+/* ===== DISCIPLINES DETAILS ===== */
+.section-subtitle {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--ink-light);
+  max-width: 600px;
+  margin-top: 0.75rem;
+}
+
+.disciplines-layout {
+  display: grid;
+  grid-template-columns: 500px 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.discipline-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.discipline-card {
+  padding: 1.75rem;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.discipline-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s;
+}
+
+.discipline-card:hover {
+  border-color: var(--gold);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+}
+
+.discipline-card:hover::before { transform: scaleX(1); }
+
+.discipline-card-icon {
+  width: 36px;
+  height: 36px;
+  margin-bottom: 0.75rem;
+}
+
+.discipline-card-icon svg {
+  width: 24px;
+  height: 24px;
+  color: var(--gold);
+}
+
+.discipline-card h3 {
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--ink);
+}
+
+.discipline-card p {
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--ink-muted);
+  margin-bottom: 0.75rem;
+}
+
+.discipline-examples {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid var(--border-light);
+  padding-top: 0.75rem;
+}
+
+.discipline-examples li {
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--ink-muted);
+  padding: 0.3rem 0 0.3rem 1rem;
+  position: relative;
+}
+
+.discipline-examples li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.65rem;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--gold);
 }
 
 /* ===== PILLARS GRID ===== */
@@ -1210,6 +1326,8 @@ blockquote {
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1024px) {
+  .disciplines-layout { grid-template-columns: 1fr; gap: 3rem; }
+  .discipline-cards { grid-template-columns: 1fr 1fr; }
   .impact-grid { grid-template-columns: repeat(2, 1fr); }
   .carousel-card { min-width: calc(50% - 0.75rem); }
   .orbit-container { width: 400px; height: 400px; }
@@ -1232,6 +1350,7 @@ blockquote {
 
   .pillars-grid,
   .projects-interactive { grid-template-columns: 1fr; }
+  .discipline-cards { grid-template-columns: 1fr; }
 
   .impact-grid { grid-template-columns: 1fr; }
 
