@@ -570,4 +570,24 @@ document.addEventListener('DOMContentLoaded', () => {
     else if (e.key === 'ArrowLeft' && currentIndex > 0) switchTab(tabOrder[currentIndex - 1]);
   });
 
+  // ===== ROLE TABS =====
+  const roleTabs = document.querySelectorAll('.role-tab');
+  const rolePanels = document.querySelectorAll('.role-panel');
+
+  roleTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const role = tab.dataset.role;
+
+      roleTabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+
+      rolePanels.forEach(panel => {
+        panel.classList.remove('active');
+        if (panel.dataset.rolePanel === role) {
+          panel.classList.add('active');
+        }
+      });
+    });
+  });
+
 });
