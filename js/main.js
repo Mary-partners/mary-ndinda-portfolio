@@ -371,15 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const eased = 1 - Math.pow(1 - progress, 3);
         const current = Math.floor(eased * target);
 
-        let formatted;
-        if (target >= 1000000) {
-          formatted = prefix + '$' + (current / 1000000).toFixed(1) + 'M';
-          if (progress === 1) formatted = prefix + '$1M';
-        } else if (target >= 10000) {
-          formatted = prefix + current.toLocaleString() + suffix;
-        } else {
-          formatted = prefix + current.toLocaleString() + suffix;
-        }
+        let formatted = prefix + current.toLocaleString() + suffix;
 
         counter.textContent = formatted;
 
