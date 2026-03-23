@@ -12,14 +12,21 @@
 </head>
 <body>
 
-  <!-- Loader -->
+  <!-- Cinematic Loader -->
   <div class="loader" id="loader">
-    <div class="loader-text">
-      <span>M</span><span>a</span><span>r</span><span>y</span>
-      <span>&nbsp;</span>
-      <span>N</span><span>d</span><span>i</span><span>n</span><span>d</span><span>a</span>
+    <div class="loader-inner">
+      <div class="loader-line"></div>
+      <div class="loader-text">
+        <span>M</span><span>a</span><span>r</span><span>y</span>
+        <span>&nbsp;</span>
+        <span>N</span><span>d</span><span>i</span><span>n</span><span>d</span><span>a</span>
+      </div>
+      <div class="loader-subtitle">Strategist · Builder · Operator</div>
     </div>
   </div>
+
+  <!-- Cursor Glow (desktop only) -->
+  <div class="cursor-glow" id="cursorGlow"></div>
 
   <!-- Navigation -->
   <nav class="site-nav" id="siteNav">
@@ -78,7 +85,11 @@
 
     <!-- ===== HOME ===== -->
     <section class="tab-panel active" data-panel="home" id="panelHome">
+
+      <!-- HERO with particle canvas -->
       <div class="hero">
+        <canvas id="heroCanvas" class="hero-canvas"></canvas>
+        <div class="hero-gradient"></div>
         <div class="container">
           <div class="hero-content">
             <div class="hero-eyebrow anim-in" data-delay="0">
@@ -86,27 +97,82 @@
               <span>Strategist &middot; Builder &middot; Operator</span>
             </div>
             <h1 class="hero-title anim-in" data-delay="1">
-              I build financial systems<br>
-              <span class="text-accent">that protect people</span><br>
-              and grow economies.
+              <span class="typewriter" id="heroTypewriter"></span>
+              <span class="typewriter-cursor">|</span>
             </h1>
-            <div class="hero-rule anim-in" data-delay="2"></div>
-            <p class="hero-lead anim-in" data-delay="3">
+            <div class="hero-rule anim-in" data-delay="3"></div>
+            <p class="hero-lead anim-in" data-delay="4">
               I work at the intersection of strategic finance, climate resilience, and innovation scaling across emerging markets. I don't stay in one discipline — I move across them, because the problems that matter most don't respect boundaries.
             </p>
-            <div class="hero-actions anim-in" data-delay="4">
-              <button class="btn btn-primary" data-tab="story">Enter the body of work</button>
-              <button class="btn btn-ghost" data-tab="thinking">See how I think</button>
+            <div class="hero-actions anim-in" data-delay="5">
+              <button class="btn btn-primary magnetic" data-tab="story">
+                <span class="btn-text">Enter the body of work</span>
+                <span class="btn-shine"></span>
+              </button>
+              <button class="btn btn-ghost magnetic" data-tab="thinking">
+                <span class="btn-text">See how I think</span>
+              </button>
             </div>
           </div>
-          <div class="hero-scroll-hint anim-in" data-delay="5">
+          <div class="hero-scroll-hint anim-in" data-delay="6">
             <span>Scroll to explore</span>
             <div class="scroll-line"></div>
           </div>
         </div>
       </div>
 
-      <!-- Pillars -->
+      <!-- DISCIPLINES ORBIT -->
+      <div class="home-section disciplines-section">
+        <div class="container">
+          <div class="section-header anim-in">
+            <h4>Disciplines</h4>
+            <h2>Where I operate</h2>
+          </div>
+          <div class="orbit-container anim-in">
+            <div class="orbit-center">
+              <div class="orbit-center-text">Cross-<br>Disciplinary<br>Operator</div>
+            </div>
+            <div class="orbit-ring orbit-ring-1">
+              <div class="orbit-node" data-orbit="0" style="--angle: 0deg;">
+                <div class="orbit-node-inner">
+                  <div class="orbit-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                  </div>
+                  <span>Strategic Finance</span>
+                </div>
+              </div>
+              <div class="orbit-node" data-orbit="1" style="--angle: 90deg;">
+                <div class="orbit-node-inner">
+                  <div class="orbit-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                  </div>
+                  <span>Climate Risk</span>
+                </div>
+              </div>
+              <div class="orbit-node" data-orbit="2" style="--angle: 180deg;">
+                <div class="orbit-node-inner">
+                  <div class="orbit-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                  </div>
+                  <span>Systems Design</span>
+                </div>
+              </div>
+              <div class="orbit-node" data-orbit="3" style="--angle: 270deg;">
+                <div class="orbit-node-inner">
+                  <div class="orbit-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                  </div>
+                  <span>Innovation Scaling</span>
+                </div>
+              </div>
+            </div>
+            <div class="orbit-ring orbit-ring-2"></div>
+            <div class="orbit-pulse"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOUR PILLARS — Interactive Cards -->
       <div class="home-section">
         <div class="container">
           <div class="section-header anim-in">
@@ -116,88 +182,202 @@
 
           <div class="pillars-grid">
             <button class="pillar-card anim-in" data-tab="story" data-delay="0">
+              <div class="pillar-bg"></div>
               <div class="pillar-number">01</div>
               <div class="pillar-content">
                 <h3>Persistent Polymath</h3>
                 <p>The story of how growing up in complexity taught me to move across disciplines, find patterns others miss, and build systems that endure.</p>
               </div>
-              <div class="pillar-arrow">&rarr;</div>
+              <div class="pillar-arrow">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </div>
             </button>
 
             <button class="pillar-card anim-in" data-tab="thinking" data-delay="1">
+              <div class="pillar-bg"></div>
               <div class="pillar-number">02</div>
               <div class="pillar-content">
                 <h3>This Is How I Think</h3>
                 <p>My approach to problems: structured, cross-disciplinary, and biased toward execution. How I move from insight to system to outcome.</p>
               </div>
-              <div class="pillar-arrow">&rarr;</div>
+              <div class="pillar-arrow">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </div>
             </button>
 
             <button class="pillar-card anim-in" data-tab="building" data-delay="2">
+              <div class="pillar-bg"></div>
               <div class="pillar-number">03</div>
               <div class="pillar-content">
                 <h3>What I'm Building</h3>
                 <p>The platforms, tools, and systems I'm creating — from climate risk infrastructure to investor readiness engines.</p>
               </div>
-              <div class="pillar-arrow">&rarr;</div>
+              <div class="pillar-arrow">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </div>
             </button>
 
             <button class="pillar-card anim-in" data-tab="foresight" data-delay="3">
+              <div class="pillar-bg"></div>
               <div class="pillar-number">04</div>
               <div class="pillar-content">
                 <h3>What I See Coming</h3>
                 <p>Patterns I'm watching: climate risk as a financial event, systems outpacing advice, and the rise of cross-disciplinary operators.</p>
               </div>
-              <div class="pillar-arrow">&rarr;</div>
+              <div class="pillar-arrow">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </div>
             </button>
           </div>
         </div>
       </div>
 
-      <!-- Building Preview -->
-      <div class="home-section section-alt">
+      <!-- IMPACT NUMBERS — Animated Counters -->
+      <div class="home-section section-dark">
+        <div class="container">
+          <div class="section-header anim-in">
+            <h4 class="light">Impact</h4>
+            <h2 class="light">Numbers that tell a story</h2>
+          </div>
+          <div class="impact-grid">
+            <div class="impact-card anim-in" data-delay="0">
+              <div class="impact-number" data-target="1000000" data-prefix="$" data-suffix="">
+                <span class="counter">$0</span>
+              </div>
+              <div class="impact-bar"><div class="impact-bar-fill" data-width="85"></div></div>
+              <p>Monthly cross-border remittance volumes scaled at Wapi Pay</p>
+            </div>
+            <div class="impact-card anim-in" data-delay="1">
+              <div class="impact-number" data-target="35000" data-prefix="" data-suffix="+">
+                <span class="counter">0</span>
+              </div>
+              <div class="impact-bar"><div class="impact-bar-fill" data-width="92"></div></div>
+              <p>Borrowers served through enterprise acceleration (65% women)</p>
+            </div>
+            <div class="impact-card anim-in" data-delay="2">
+              <div class="impact-number" data-target="7" data-prefix="" data-suffix=" Countries">
+                <span class="counter">0</span>
+              </div>
+              <div class="impact-bar"><div class="impact-bar-fill" data-width="55"></div></div>
+              <p>Innovation portfolios valued at up to USD 70M</p>
+            </div>
+            <div class="impact-card anim-in" data-delay="3">
+              <div class="impact-number" data-target="1000" data-prefix="" data-suffix="+">
+                <span class="counter">0</span>
+              </div>
+              <div class="impact-bar"><div class="impact-bar-fill" data-width="78"></div></div>
+              <p>Entrepreneurs coached through venture-building pathways</p>
+            </div>
+            <div class="impact-card anim-in" data-delay="4">
+              <div class="impact-number" data-target="5000" data-prefix="" data-suffix="+">
+                <span class="counter">0</span>
+              </div>
+              <div class="impact-bar"><div class="impact-bar-fill" data-width="70"></div></div>
+              <p>SME clients receiving climate early-warning signals</p>
+            </div>
+            <div class="impact-card anim-in" data-delay="5">
+              <div class="impact-number" data-target="10000" data-prefix="" data-suffix="+">
+                <span class="counter">0</span>
+              </div>
+              <div class="impact-bar"><div class="impact-bar-fill" data-width="88"></div></div>
+              <p>Borrowers protected through anticipatory climate finance</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WHAT I'M BUILDING — Interactive Carousel -->
+      <div class="home-section">
         <div class="container">
           <div class="section-header anim-in">
             <h4>In Progress</h4>
             <h2>What I'm building right now</h2>
           </div>
 
-          <div class="building-ticker anim-in">
-            <div class="ticker-item" data-status="live">
-              <div class="ticker-status"><span class="status-dot live"></span>Live</div>
-              <h3>CFO Partners</h3>
-              <p>Strategic finance infrastructure for growth-stage companies across Africa.</p>
+          <div class="projects-carousel anim-in">
+            <div class="carousel-track" id="carouselTrack">
+              <div class="carousel-card" data-status="live">
+                <div class="carousel-card-glow"></div>
+                <div class="carousel-status"><span class="status-dot live"></span>Live</div>
+                <h3>CFO Partners</h3>
+                <p>Strategic finance infrastructure for growth-stage companies across Africa.</p>
+                <a href="https://www.cfopartners.fund" target="_blank" class="carousel-link">Visit &rarr;</a>
+              </div>
+              <div class="carousel-card" data-status="progress">
+                <div class="carousel-card-glow"></div>
+                <div class="carousel-status"><span class="status-dot progress"></span>In Progress</div>
+                <h3>Climate Risk Platform</h3>
+                <p>Early-warning financial signals for climate-vulnerable lending portfolios.</p>
+                <span class="carousel-link muted">Coming soon</span>
+              </div>
+              <div class="carousel-card" data-status="progress">
+                <div class="carousel-card-glow"></div>
+                <div class="carousel-status"><span class="status-dot progress"></span>In Progress</div>
+                <h3>Investor Readiness Tools</h3>
+                <p>Structured pathways converting founder ambition into investable discipline.</p>
+                <span class="carousel-link muted">Coming soon</span>
+              </div>
+              <div class="carousel-card" data-status="design">
+                <div class="carousel-card-glow"></div>
+                <div class="carousel-status"><span class="status-dot design"></span>In Design</div>
+                <h3>Practice Management System</h3>
+                <p>Operational infrastructure for advisory firms scaling without losing quality.</p>
+                <span class="carousel-link muted">In design phase</span>
+              </div>
             </div>
-            <div class="ticker-item" data-status="progress">
-              <div class="ticker-status"><span class="status-dot progress"></span>In Progress</div>
-              <h3>Climate Risk Platform</h3>
-              <p>Early-warning financial signals for climate-vulnerable lending portfolios.</p>
-            </div>
-            <div class="ticker-item" data-status="progress">
-              <div class="ticker-status"><span class="status-dot progress"></span>In Progress</div>
-              <h3>Investor Readiness Tools</h3>
-              <p>Structured pathways converting founder ambition into investable discipline.</p>
-            </div>
-            <div class="ticker-item" data-status="design">
-              <div class="ticker-status"><span class="status-dot design"></span>In Design</div>
-              <h3>Practice Management System</h3>
-              <p>Operational infrastructure for advisory firms scaling without losing quality.</p>
+            <div class="carousel-controls">
+              <button class="carousel-btn" id="carouselPrev" aria-label="Previous">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+              <div class="carousel-dots" id="carouselDots"></div>
+              <button class="carousel-btn" id="carouselNext" aria-label="Next">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
             </div>
           </div>
 
           <div class="section-cta anim-in">
-            <button class="btn btn-dark" data-tab="building">See everything I'm building</button>
+            <button class="btn btn-dark magnetic" data-tab="building">
+              <span class="btn-text">See everything I'm building</span>
+            </button>
           </div>
         </div>
       </div>
 
-      <!-- Closing -->
+      <!-- PHILOSOPHY MARQUEE -->
+      <div class="marquee-section">
+        <div class="marquee-track">
+          <div class="marquee-content">
+            <span>Systems over solutions</span>
+            <span class="marquee-dot">&bull;</span>
+            <span>Translation as core skill</span>
+            <span class="marquee-dot">&bull;</span>
+            <span>Execution under ambiguity</span>
+            <span class="marquee-dot">&bull;</span>
+            <span>Financial architecture as strategy</span>
+            <span class="marquee-dot">&bull;</span>
+            <span>Systems over solutions</span>
+            <span class="marquee-dot">&bull;</span>
+            <span>Translation as core skill</span>
+            <span class="marquee-dot">&bull;</span>
+            <span>Execution under ambiguity</span>
+            <span class="marquee-dot">&bull;</span>
+            <span>Financial architecture as strategy</span>
+            <span class="marquee-dot">&bull;</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CLOSING CTA -->
       <div class="home-cta">
         <div class="container">
           <div class="cta-content anim-in">
+            <div class="cta-quote">"This person thinks differently. We need them in the room."</div>
             <h2>I work best with complex problems<br>and serious people.</h2>
             <p>If you're building something that requires cross-disciplinary thinking, systems design, or strategic finance expertise in emerging markets — let's talk.</p>
-            <button class="btn btn-outline-light" data-tab="connect">Start a conversation</button>
+            <button class="btn btn-outline-light magnetic" data-tab="connect">
+              <span class="btn-text">Start a conversation</span>
+            </button>
           </div>
         </div>
       </div>
@@ -217,8 +397,6 @@
 
       <div class="panel-body">
         <div class="container">
-
-          <!-- Story Navigation (side) -->
           <div class="story-layout">
             <aside class="story-nav" id="storyNav">
               <button class="story-nav-item active" data-story="origin">Where It Started</button>
@@ -230,7 +408,6 @@
             </aside>
 
             <div class="story-content">
-
               <div class="story-chapter active" data-chapter="origin">
                 <h2>Where It Started</h2>
                 <p>I didn't grow up with a clear path. There was no family tradition in finance, no inherited network in innovation, no roadmap to the work I do today. What I had was curiosity that wouldn't sit still, and a stubbornness that refused to accept that you had to pick one thing and stay there forever.</p>
@@ -292,10 +469,8 @@
                   <button class="btn btn-dark" data-tab="thinking">See how I think &rarr;</button>
                 </div>
               </div>
-
             </div>
           </div>
-
         </div>
       </div>
     </section>
@@ -318,11 +493,9 @@
             <h2 class="anim-in">The Operating Principle</h2>
             <p class="anim-in">Most people are trained to think within a single domain. Accountants think like accountants. Technologists think like technologists. This works until you encounter a problem that spans all three.</p>
             <p class="anim-in">I've built my career on the conviction that the most important problems are fundamentally cross-disciplinary. They sit at the intersections where one discipline's solution creates another discipline's constraint.</p>
-
             <blockquote class="anim-in">The best solution is usually the one that satisfies constraints from three domains at once. If it only works in one, it's not a solution — it's a wish.</blockquote>
           </div>
 
-          <!-- Interactive Framework Cards -->
           <div class="frameworks-interactive anim-in">
             <div class="framework-tabs">
               <button class="fw-tab active" data-fw="systems">Systems Over Solutions</button>
@@ -330,7 +503,6 @@
               <button class="fw-tab" data-fw="ambiguity">Execution Under Ambiguity</button>
               <button class="fw-tab" data-fw="architecture">Financial Architecture</button>
             </div>
-
             <div class="framework-panels">
               <div class="fw-panel active" data-fwpanel="systems">
                 <div class="fw-panel-inner">
@@ -367,54 +539,31 @@
             </div>
           </div>
 
-          <!-- Practice Areas (Accordion) -->
           <div class="prose" style="margin-top: 4rem;">
             <h2 class="anim-in">How This Shows Up in Practice</h2>
           </div>
-
           <div class="accordion anim-in">
             <div class="accordion-item">
-              <button class="accordion-trigger">
-                <span>In Climate Risk</span>
-                <span class="accordion-icon">+</span>
-              </button>
-              <div class="accordion-content">
-                <p>I don't treat climate as an ESG checkbox. I treat it as a financial variable that changes how lending, insurance, and capital allocation work. When I designed anticipatory liquidity facilities for agricultural lenders, I was building financial infrastructure that responds to weather data in real time — not reporting on it after the damage is done.</p>
-              </div>
+              <button class="accordion-trigger"><span>In Climate Risk</span><span class="accordion-icon">+</span></button>
+              <div class="accordion-content"><p>I don't treat climate as an ESG checkbox. I treat it as a financial variable that changes how lending, insurance, and capital allocation work. When I designed anticipatory liquidity facilities for agricultural lenders, I was building financial infrastructure that responds to weather data in real time — not reporting on it after the damage is done.</p></div>
             </div>
             <div class="accordion-item">
-              <button class="accordion-trigger">
-                <span>In Innovation Scaling</span>
-                <span class="accordion-icon">+</span>
-              </button>
-              <div class="accordion-content">
-                <p>I don't scale programmes by replicating activities. I scale by codifying the underlying logic — the decision frameworks, governance structures, and incentive mechanisms — into replicable systems. This is why a pilot in Kenya can become a platform in Senegal, Nigeria, and Colombia without losing its effectiveness.</p>
-              </div>
+              <button class="accordion-trigger"><span>In Innovation Scaling</span><span class="accordion-icon">+</span></button>
+              <div class="accordion-content"><p>I don't scale programmes by replicating activities. I scale by codifying the underlying logic — the decision frameworks, governance structures, and incentive mechanisms — into replicable systems. This is why a pilot in Kenya can become a platform in Senegal, Nigeria, and Colombia without losing its effectiveness.</p></div>
             </div>
             <div class="accordion-item">
-              <button class="accordion-trigger">
-                <span>In Enterprise Acceleration</span>
-                <span class="accordion-icon">+</span>
-              </button>
-              <div class="accordion-content">
-                <p>I don't coach entrepreneurs with motivation. I coach them with structure. Investment readiness isn't about pitch decks. It's about financial models that hold up under scrutiny, governance systems that investors trust, and operational discipline that survives the first year after funding.</p>
-              </div>
+              <button class="accordion-trigger"><span>In Enterprise Acceleration</span><span class="accordion-icon">+</span></button>
+              <div class="accordion-content"><p>I don't coach entrepreneurs with motivation. I coach them with structure. Investment readiness isn't about pitch decks. It's about financial models that hold up under scrutiny, governance systems that investors trust, and operational discipline that survives the first year after funding.</p></div>
             </div>
             <div class="accordion-item">
-              <button class="accordion-trigger">
-                <span>In Institutional Design</span>
-                <span class="accordion-icon">+</span>
-              </button>
-              <div class="accordion-content">
-                <p>I see organisations as systems, not org charts. When I join a team I look for the structural gaps between what the organisation intends and what it can actually execute. Then I build the connective tissue: processes, controls, information flows, and decision architectures that close the gap.</p>
-              </div>
+              <button class="accordion-trigger"><span>In Institutional Design</span><span class="accordion-icon">+</span></button>
+              <div class="accordion-content"><p>I see organisations as systems, not org charts. When I join a team I look for the structural gaps between what the organisation intends and what it can actually execute. Then I build the connective tissue: processes, controls, information flows, and decision architectures that close the gap.</p></div>
             </div>
           </div>
 
           <div class="highlight-block anim-in" style="margin-top: 3rem;">
             <p><strong>The through-line in all of my work:</strong> I take high-level strategic intent and convert it into implementable operational reality. Policy to execution. Theory to system. Ambition to infrastructure.</p>
           </div>
-
           <div class="section-cta anim-in">
             <button class="btn btn-dark" data-tab="building">See what I'm building &rarr;</button>
           </div>
@@ -441,108 +590,49 @@
             <p>There's a difference between having ideas and building infrastructure. Ideas are everywhere. What's rare is the ability to take an insight, pressure-test it against operational reality, and turn it into something that works reliably.</p>
           </div>
 
-          <!-- Interactive Project Cards -->
           <h4 class="anim-in" style="margin-top: 4rem;">Current Projects</h4>
           <div class="projects-interactive">
-
             <div class="project-card anim-in" data-delay="0">
-              <div class="project-header">
-                <span class="status-dot live"></span>
-                <span class="project-status-label">Live</span>
-              </div>
+              <div class="project-header"><span class="status-dot live"></span><span class="project-status-label">Live</span></div>
               <h3>CFO Partners</h3>
               <p>Strategic finance infrastructure for growth-stage companies across Africa. Not accounting. Not advisory. A financial operating system that helps companies make better decisions with the capital they have.</p>
               <a href="https://www.cfopartners.fund" target="_blank" rel="noopener" class="project-link">Visit &rarr;</a>
             </div>
-
             <div class="project-card anim-in" data-delay="1">
-              <div class="project-header">
-                <span class="status-dot progress"></span>
-                <span class="project-status-label">In Progress</span>
-              </div>
+              <div class="project-header"><span class="status-dot progress"></span><span class="project-status-label">In Progress</span></div>
               <h3>Climate Risk Platform</h3>
               <p>Financial early-warning infrastructure connecting climate data to lending decisions. Currently serving 5,000+ SME clients through live pilots in Kenya, with expansion to Colombia's 1.6M-customer microfinance market.</p>
               <span class="project-link muted">Coming soon</span>
             </div>
-
             <div class="project-card anim-in" data-delay="2">
-              <div class="project-header">
-                <span class="status-dot progress"></span>
-                <span class="project-status-label">In Progress</span>
-              </div>
+              <div class="project-header"><span class="status-dot progress"></span><span class="project-status-label">In Progress</span></div>
               <h3>Investor Readiness Tools</h3>
               <p>Structured pathways that convert founder capability into investor-grade discipline. Financial models, governance frameworks, and operational standards designed to survive due diligence.</p>
               <span class="project-link muted">Coming soon</span>
             </div>
-
             <div class="project-card anim-in" data-delay="3">
-              <div class="project-header">
-                <span class="status-dot design"></span>
-                <span class="project-status-label">In Design</span>
-              </div>
+              <div class="project-header"><span class="status-dot design"></span><span class="project-status-label">In Design</span></div>
               <h3>Practice Management System</h3>
               <p>Operational infrastructure for advisory and consulting firms that want to scale delivery without losing institutional memory or quality control.</p>
               <span class="project-link muted">In design phase</span>
             </div>
-
             <div class="project-card anim-in" data-delay="4">
-              <div class="project-header">
-                <span class="status-dot live"></span>
-                <span class="project-status-label">Live</span>
-              </div>
+              <div class="project-header"><span class="status-dot live"></span><span class="project-status-label">Live</span></div>
               <h3>Innovation Scaling Playbooks</h3>
               <p>Codified replication methodologies that turn single-country programme pilots into multi-country platforms. Deployed across Kenya, Senegal, Nigeria, and Latin America.</p>
               <span class="project-link muted">Institutional use</span>
             </div>
-
             <div class="project-card anim-in" data-delay="5">
-              <div class="project-header">
-                <span class="status-dot live"></span>
-                <span class="project-status-label">Live</span>
-              </div>
+              <div class="project-header"><span class="status-dot live"></span><span class="project-status-label">Live</span></div>
               <h3>Anticipatory Liquidity Facility</h3>
               <p>Pre-positioned capital for agricultural lenders, structured to deploy liquidity before climate shocks become credit defaults. Designed for Fortune Credit's 10,000+ borrower portfolio.</p>
               <span class="project-link muted">Institutional use</span>
-            </div>
-
-          </div>
-
-          <!-- Track Record -->
-          <div class="prose anim-in" style="margin-top: 4rem;">
-            <h2>What I've Already Built</h2>
-          </div>
-
-          <div class="track-record anim-in">
-            <div class="track-item">
-              <div class="track-metric">USD 1M</div>
-              <div class="track-label">Monthly cross-border remittance volumes scaled at Wapi Pay</div>
-            </div>
-            <div class="track-item">
-              <div class="track-metric">35,000+</div>
-              <div class="track-label">Borrowers served through enterprise acceleration systems (65% women)</div>
-            </div>
-            <div class="track-item">
-              <div class="track-metric">7+</div>
-              <div class="track-label">Countries across innovation portfolios valued at up to USD 70M</div>
-            </div>
-            <div class="track-item">
-              <div class="track-metric">1,000+</div>
-              <div class="track-label">Entrepreneurs coached through venture-building pathways</div>
-            </div>
-            <div class="track-item">
-              <div class="track-metric">5,000+</div>
-              <div class="track-label">SME clients receiving climate early-warning signals</div>
-            </div>
-            <div class="track-item">
-              <div class="track-metric">10,000+</div>
-              <div class="track-label">Borrowers protected through anticipatory climate finance</div>
             </div>
           </div>
 
           <div class="highlight-block anim-in" style="margin-top: 3rem;">
             <p><strong>The common thread:</strong> Every system I build is designed to work without me. If it requires my presence to function, it's not a system — it's a dependency. I build for institutional endurance, not personal indispensability.</p>
           </div>
-
           <div class="section-cta anim-in">
             <button class="btn btn-dark" data-tab="foresight">See what I see coming &rarr;</button>
           </div>
@@ -565,12 +655,8 @@
       <div class="panel-body">
         <div class="container">
           <div class="perspectives">
-
             <div class="perspective anim-in">
-              <div class="perspective-marker">
-                <span class="perspective-num">01</span>
-                <div class="perspective-line"></div>
-              </div>
+              <div class="perspective-marker"><span class="perspective-num">01</span><div class="perspective-line"></div></div>
               <div class="perspective-body">
                 <h3>Climate risk is becoming a financial event</h3>
                 <p>We've spent decades treating climate as an environmental issue. That era is ending. Climate risk is now a credit risk, a liquidity risk, an insurance pricing problem, and a sovereign fiscal constraint — all at once.</p>
@@ -578,12 +664,8 @@
                 <p>The gap right now is enormous. Most financial institutions in emerging markets have no climate risk infrastructure at all. The ones that build it first will have a structural advantage that compounds over decades.</p>
               </div>
             </div>
-
             <div class="perspective anim-in">
-              <div class="perspective-marker">
-                <span class="perspective-num">02</span>
-                <div class="perspective-line"></div>
-              </div>
+              <div class="perspective-marker"><span class="perspective-num">02</span><div class="perspective-line"></div></div>
               <div class="perspective-body">
                 <h3>Founders are outgrowing their systems</h3>
                 <p>Across Africa and other emerging markets, there's a generation of founders who are capable, ambitious, and deeply knowledgeable about their markets. What they lack isn't vision or hustle. It's systems.</p>
@@ -591,12 +673,8 @@
                 <p>The investor readiness gap isn't about pitch decks. It's about institutional maturity. The founders who close that gap fastest will capture a disproportionate share of the capital flowing into emerging markets.</p>
               </div>
             </div>
-
             <div class="perspective anim-in">
-              <div class="perspective-marker">
-                <span class="perspective-num">03</span>
-                <div class="perspective-line"></div>
-              </div>
+              <div class="perspective-marker"><span class="perspective-num">03</span><div class="perspective-line"></div></div>
               <div class="perspective-body">
                 <h3>Systems are becoming more valuable than advice</h3>
                 <p>The consulting industry is built on a model where expertise is delivered through people. This model works, but it doesn't scale, and it creates dependency rather than capability.</p>
@@ -604,24 +682,16 @@
                 <p>The advisory firms and operators who make this transition — from selling expertise to building systems — will be far more valuable than those who don't.</p>
               </div>
             </div>
-
             <div class="perspective anim-in">
-              <div class="perspective-marker">
-                <span class="perspective-num">04</span>
-                <div class="perspective-line"></div>
-              </div>
+              <div class="perspective-marker"><span class="perspective-num">04</span><div class="perspective-line"></div></div>
               <div class="perspective-body">
                 <h3>Cross-disciplinary operators are becoming essential</h3>
                 <p>The most important problems right now — climate adaptation, financial inclusion, institutional resilience — don't fit into single disciplines. They require people who can hold finance, technology, policy, and operations in their head simultaneously.</p>
                 <p>Organisations that recognise this and create space for cross-disciplinary operators will have a significant strategic advantage. Those that don't will keep solving the same problems in the same ways.</p>
               </div>
             </div>
-
             <div class="perspective anim-in">
-              <div class="perspective-marker">
-                <span class="perspective-num">05</span>
-                <div class="perspective-line"></div>
-              </div>
+              <div class="perspective-marker"><span class="perspective-num">05</span><div class="perspective-line"></div></div>
               <div class="perspective-body">
                 <h3>Africa's opportunity is readiness, not just capital</h3>
                 <p>There's a persistent narrative that what Africa needs is more capital. While capital is important, it's not the binding constraint. The binding constraint is readiness.</p>
@@ -629,9 +699,7 @@
                 <p>The organisations and economies that invest in building this readiness infrastructure will capture the most value from the increasing flow of investment into African markets. That's exactly the kind of work I'm built for.</p>
               </div>
             </div>
-
           </div>
-
           <div class="section-cta anim-in" style="margin-top: 4rem;">
             <button class="btn btn-dark" data-tab="connect">Start a conversation &rarr;</button>
           </div>
@@ -654,12 +722,10 @@
       <div class="panel-body">
         <div class="container">
           <div class="contact-grid anim-in">
-
             <div class="contact-info">
               <h3>What I'm open to</h3>
               <p>I engage best with people working on problems that require depth, not just speed. Strategy roles, advisory positions, board conversations, partnerships, and collaborations where the work is substantive and the stakes are real.</p>
               <p>If you're building something at the intersection of finance, climate, systems, or institutional design — and you need someone who can think across all of those at once — let's find time to talk.</p>
-
               <div class="contact-links">
                 <a href="mailto:mary@cfolead.solutions">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
@@ -702,7 +768,6 @@
               </div>
               <button type="submit" class="btn btn-dark">Send Message</button>
             </form>
-
           </div>
         </div>
       </div>
