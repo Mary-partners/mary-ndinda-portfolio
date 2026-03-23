@@ -11,6 +11,11 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
     loader.classList.add('hidden');
     setTimeout(() => {
+      // Make the home panel visible first
+      const homePanel = document.querySelector('.tab-panel[data-panel="home"]');
+      if (homePanel) {
+        homePanel.classList.add('active', 'visible');
+      }
       animatePanel('home');
       startTypewriter();
     }, 300);

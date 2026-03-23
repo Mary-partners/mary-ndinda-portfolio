@@ -973,10 +973,17 @@ blockquote {
 .cta-content p { color: rgba(255,255,255,0.6); max-width: 520px; margin: 0 auto 2.5rem; }
 
 /* ===== PANEL HERO ===== */
-.panel-hero { padding: 9rem 0 4rem; border-bottom: 1px solid var(--border); }
-.panel-hero-inner { max-width: 700px; }
-.panel-hero h1 { font-size: 2.8rem; }
-.panel-hero .lead { margin-top: 1.5rem; }
+.panel-hero {
+  padding: 9rem 0 5rem;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(160deg, #fafaf8 0%, #f3f1ec 50%, #ede9df 100%);
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+}
+.panel-hero-inner { max-width: 100%; }
+.panel-hero h1 { font-size: 3.2rem; }
+.panel-hero .lead { margin-top: 1.5rem; max-width: 800px; font-size: 1.25rem; }
 .panel-body { padding: 4rem 0 6rem; }
 
 /* ===== STORY ===== */
