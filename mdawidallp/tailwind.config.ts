@@ -5,55 +5,59 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Deep, considered ink — the firm's primary voice.
+        // Primary voice: a clean, classic professional navy. This is the
+        // audit-firm convention (KPMG, EY, Bates White) and reads far more
+        // premium than a muddy near-black.
         ink: {
-          DEFAULT: "#0a1929",
-          50: "#eef2f6",
-          100: "#d5dee8",
-          200: "#a7b9cc",
-          300: "#7391ae",
-          400: "#496b8e",
-          500: "#2f4f72",
-          600: "#1d3a5a",
-          700: "#132c47",
-          800: "#0d2038",
-          900: "#0a1929",
-          950: "#06111d",
+          DEFAULT: "#0f2a4a",
+          50: "#eef3f9",
+          100: "#dbe6f1",
+          200: "#b6cbe1",
+          300: "#87a8cd",
+          400: "#5580b2",
+          500: "#356198",
+          600: "#254c7c",
+          700: "#1b3c64",
+          800: "#132f4f",
+          900: "#0f2a4a",
+          950: "#091d36",
         },
-        // Muted, minted teal — assurance and clarity.
+        // The accent: a confident emerald. Used for calls to action, active
+        // states, and moments that signal assurance and growth.
         teal: {
-          DEFAULT: "#1c6b64",
-          50: "#edf7f5",
-          100: "#d3ece8",
-          200: "#a4d7cf",
-          300: "#6ebbb0",
-          400: "#409a8f",
-          500: "#2a7f75",
-          600: "#1c6b64",
-          700: "#175450",
-          800: "#144340",
-          900: "#113635",
+          DEFAULT: "#0f8a5f",
+          50: "#eafaf3",
+          100: "#cdf2e1",
+          200: "#9ee5c6",
+          300: "#66d2a5",
+          400: "#33b985",
+          500: "#12a06d",
+          600: "#0f8a5f",
+          700: "#0c6e4d",
+          800: "#0b573e",
+          900: "#0a4834",
         },
-        // Restrained gold — the premium accent, used sparingly.
+        // A restrained champagne, used only as a whisper of warmth against
+        // the navy and emerald. Never the loud accent.
         gold: {
-          DEFAULT: "#b8912f",
-          50: "#fbf7ea",
-          100: "#f5ebc9",
-          200: "#ebd692",
-          300: "#dfbe56",
-          400: "#d0a739",
-          500: "#b8912f",
-          600: "#9a7526",
-          700: "#7a5b22",
-          800: "#634a20",
-          900: "#533f1f",
+          DEFAULT: "#c6a15b",
+          50: "#faf6ec",
+          100: "#f3e9cf",
+          200: "#e8d3a1",
+          300: "#dabd75",
+          400: "#cdaa5f",
+          500: "#c6a15b",
+          600: "#a8843f",
+          700: "#856733",
+          800: "#6b532d",
+          900: "#584628",
         },
         sand: {
-          DEFAULT: "#f6f3ec",
-          50: "#fdfcf9",
-          100: "#f9f6ef",
-          200: "#f1ece0",
-          300: "#e6ddca",
+          DEFAULT: "#f7f9fb",
+          50: "#fbfcfe",
+          100: "#f4f7fa",
+          200: "#e9eef4",
+          300: "#dbe3ec",
         },
       },
       fontFamily: {
@@ -61,11 +65,11 @@ const config: Config = {
         serif: ["var(--font-serif)", "Georgia", "Cambria", "serif"],
       },
       letterSpacing: {
-        widest2: "0.24em",
+        widest2: "0.22em",
       },
       boxShadow: {
-        soft: "0 1px 2px rgba(10,25,41,0.04), 0 12px 34px -14px rgba(10,25,41,0.16)",
-        lift: "0 4px 10px rgba(10,25,41,0.06), 0 24px 48px -18px rgba(10,25,41,0.28)",
+        soft: "0 1px 2px rgba(15,42,74,0.04), 0 12px 34px -14px rgba(15,42,74,0.14)",
+        lift: "0 4px 10px rgba(15,42,74,0.06), 0 24px 48px -18px rgba(15,42,74,0.24)",
       },
       keyframes: {
         "fade-up": {

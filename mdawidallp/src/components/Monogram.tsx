@@ -28,13 +28,13 @@ export function Monogram({
       >
         <defs>
           <linearGradient id="mono" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="#0a1929" />
-            <stop offset="0.6" stopColor="#132c47" />
-            <stop offset="1" stopColor="#1c6b64" />
+            <stop offset="0" stopColor="#091d36" />
+            <stop offset="0.6" stopColor="#0f2a4a" />
+            <stop offset="1" stopColor="#0f8a5f" />
           </linearGradient>
         </defs>
         <rect width="320" height="400" fill="url(#mono)" />
-        <g fill="none" stroke="#b8912f" opacity="0.4">
+        <g fill="none" stroke="#33b985" opacity="0.45">
           <circle cx="160" cy="150" r="120" strokeWidth="1" />
           <circle cx="160" cy="150" r="90" strokeWidth="1" opacity="0.6" />
         </g>
@@ -49,7 +49,7 @@ export function Monogram({
           fontFamily="Georgia, serif"
           fontSize="120"
           fontWeight="600"
-          fill="#f6f3ec"
+          fill="#f7f9fb"
           letterSpacing="4"
         >
           {initials}

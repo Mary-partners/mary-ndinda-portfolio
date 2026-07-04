@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { CoverArt } from "./CoverArt";
-import { formatDate, type Insight } from "@/lib/insights";
+import { Photo } from "./Photo";
+import { formatDate, coverImage, type Insight } from "@/lib/insights";
 
 export function InsightCard({ insight }: { insight: Insight }) {
   return (
@@ -10,7 +10,13 @@ export function InsightCard({ insight }: { insight: Insight }) {
       className="group flex h-full flex-col overflow-hidden rounded-2xl border border-ink-100 bg-white shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-ink-200 hover:shadow-lift"
     >
       <div className="relative h-44 w-full">
-        <CoverArt variant={insight.cover} rounded={false} className="h-full" />
+        <Photo
+          image={coverImage(insight)}
+          rounded={false}
+          overlay="soft"
+          className="h-full"
+          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+        />
         <span className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-ink-800 shadow-soft">
           {insight.category}
         </span>

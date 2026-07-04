@@ -1,3 +1,5 @@
+import { img, type ImageAsset, type ImageKey } from "./images";
+
 export type Category = "Audit & Assurance" | "Tax & Regulatory" | "Advisory";
 
 export type InsightBlock = { heading?: string; paragraphs: string[] };
@@ -486,6 +488,31 @@ export const insights: Insight[] = [
     ],
   },
 ];
+
+// Photography for each insight. A few pieces get a topical image; the rest
+// fall back to a category-appropriate photo, varied by the cover index so
+// the library does not feel repetitive.
+const coverBySlug: Partial<Record<string, ImageKey>> = {
+  "financing-agribusiness-east-africa": "agribusiness",
+  "pbo-act-ngo-finance-playbook": "development",
+  "kenya-sacco-governance-after-kuscco": "financialServices",
+  "investment-readiness-capital-gap": "collaboration",
+  "virtual-cfo-scaling-business": "professional",
+  "transfer-pricing-documentation-east-africa": "atWork",
+};
+
+const coverByCategory: Record<Category, ImageKey[]> = {
+  "Tax & Regulatory": ["analytics", "auditWork", "atWork"],
+  "Audit & Assurance": ["auditWork", "meeting", "atWork"],
+  Advisory: ["collaboration", "professional", "analytics"],
+};
+
+export function coverImage(insight: Insight): ImageAsset {
+  const override = coverBySlug[insight.slug];
+  if (override) return img[override];
+  const list = coverByCategory[insight.category];
+  return img[list[insight.cover % list.length]];
+}
 
 export function getInsight(slug: string): Insight | undefined {
   return insights.find((i) => i.slug === slug);

@@ -7,8 +7,9 @@ import {
   getInsight,
   relatedInsights,
   formatDate,
+  coverImage,
 } from "@/lib/insights";
-import { CoverArt } from "@/components/CoverArt";
+import { Photo } from "@/components/Photo";
 import { InsightCard } from "@/components/InsightCard";
 import { Reveal } from "@/components/Reveal";
 import { CTASection } from "@/components/CTASection";
@@ -55,13 +56,13 @@ export default async function InsightPage({
             <Reveal className="max-w-3xl">
               <Link
                 href="/insights"
-                className="inline-flex items-center gap-2 text-sm font-medium text-ink-300 transition-colors hover:text-gold-400"
+                className="inline-flex items-center gap-2 text-sm font-medium text-ink-300 transition-colors hover:text-teal-300"
               >
                 <ArrowLeft className="h-4 w-4" />
                 All insights
               </Link>
               <div className="mt-6 flex flex-wrap items-center gap-3 text-sm text-ink-300">
-                <span className="rounded-full bg-gold-500/15 px-3 py-1 text-xs font-semibold text-gold-400">
+                <span className="rounded-full bg-teal-500/15 px-3 py-1 text-xs font-semibold text-teal-300">
                   {insight.category}
                 </span>
                 <span>{formatDate(insight.date)}</span>
@@ -84,10 +85,11 @@ export default async function InsightPage({
         <div className="container-page py-16">
           <div className="mx-auto max-w-3xl">
             <Reveal>
-              <CoverArt
-                variant={insight.cover}
-                label={`${insight.title} cover`}
-                className="aspect-[16/7] w-full shadow-lift"
+              <Photo
+                image={coverImage(insight)}
+                priority
+                className="aspect-[16/8] w-full shadow-lift"
+                sizes="(min-width: 768px) 48rem, 100vw"
               />
             </Reveal>
 
@@ -136,7 +138,7 @@ export default async function InsightPage({
 
             {/* Disclaimer */}
             <div className="mt-14 flex items-start gap-3 rounded-2xl border border-ink-100 bg-sand-100 p-6 text-sm text-ink-500">
-              <Info className="mt-0.5 h-5 w-5 shrink-0 text-gold-600" />
+              <Info className="mt-0.5 h-5 w-5 shrink-0 text-teal-600" />
               <p>
                 This article is general guidance, not specific professional
                 advice. Tax law and reporting standards change, and your

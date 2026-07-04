@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Mail, MapPin, Phone, Clock } from "lucide-react";
 import { site } from "@/lib/site";
+import { img } from "@/lib/images";
 import { PageHero } from "@/components/PageHero";
 import { Reveal } from "@/components/Reveal";
 import { ContactForm } from "@/components/ContactForm";
@@ -45,6 +46,7 @@ export default function ContactPage() {
         eyebrow="Contact"
         title="Let us start with a conversation."
         lead="Tell us where your business is and what you are trying to do. We will suggest the right first step, with no obligation and no charge for the initial discussion."
+        image={img.nairobi}
       />
 
       <section className="container-page py-24">
@@ -70,7 +72,7 @@ export default function ContactPage() {
                     delay={i * 70}
                     className="flex items-start gap-4 rounded-2xl border border-ink-100 bg-white p-5 shadow-soft"
                   >
-                    <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-ink-950 text-gold-400">
+                    <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-ink-950 text-teal-300">
                       <Icon className="h-5 w-5" />
                     </span>
                     <div>

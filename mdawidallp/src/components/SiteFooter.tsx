@@ -13,7 +13,7 @@ export function SiteFooter() {
             <p className="mt-5 max-w-xs text-sm leading-relaxed text-ink-300">
               {site.descriptor}
             </p>
-            <p className="mt-6 text-xs uppercase tracking-widest2 text-gold-400">
+            <p className="mt-6 text-xs uppercase tracking-widest2 text-teal-300">
               {site.tagline}
             </p>
           </div>
@@ -27,7 +27,7 @@ export function SiteFooter() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="text-ink-200 transition-colors hover:text-gold-400"
+                    className="text-ink-200 transition-colors hover:text-teal-300"
                   >
                     {item.label}
                   </Link>
@@ -36,7 +36,7 @@ export function SiteFooter() {
               <li>
                 <Link
                   href="/contact"
-                  className="text-ink-200 transition-colors hover:text-gold-400"
+                  className="text-ink-200 transition-colors hover:text-teal-300"
                 >
                   Contact
                 </Link>
@@ -52,8 +52,8 @@ export function SiteFooter() {
               {services.map((s) => (
                 <li key={s.slug}>
                   <Link
-                    href={`/services#${s.slug}`}
-                    className="text-ink-200 transition-colors hover:text-gold-400"
+                    href={`/services/${s.slug}`}
+                    className="text-ink-200 transition-colors hover:text-teal-300"
                   >
                     {s.name}
                   </Link>
@@ -68,23 +68,23 @@ export function SiteFooter() {
             </h3>
             <ul className="mt-5 space-y-4 text-sm">
               <li className="flex items-start gap-3">
-                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gold-400" />
+                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-teal-300" />
                 <span>{site.city}, serving {site.region}</span>
               </li>
               <li className="flex items-start gap-3">
-                <Mail className="mt-0.5 h-4 w-4 shrink-0 text-gold-400" />
+                <Mail className="mt-0.5 h-4 w-4 shrink-0 text-teal-300" />
                 <a
                   href={`mailto:${site.email}`}
-                  className="transition-colors hover:text-gold-400"
+                  className="transition-colors hover:text-teal-300"
                 >
                   {site.email}
                 </a>
               </li>
               <li className="flex items-start gap-3">
-                <Phone className="mt-0.5 h-4 w-4 shrink-0 text-gold-400" />
+                <Phone className="mt-0.5 h-4 w-4 shrink-0 text-teal-300" />
                 <a
                   href={`tel:${site.phone.replace(/\s+/g, "")}`}
-                  className="transition-colors hover:text-gold-400"
+                  className="transition-colors hover:text-teal-300"
                 >
                   {site.phone}
                 </a>
@@ -101,6 +101,9 @@ export function SiteFooter() {
             Registered audit, tax, and advisory practice. {site.domain}
           </p>
         </div>
+        <p className="mt-6 text-[11px] leading-relaxed text-ink-500">
+          Nairobi skyline photograph by afromusing, licensed under CC BY 2.0.
+        </p>
       </div>
     </footer>
   );

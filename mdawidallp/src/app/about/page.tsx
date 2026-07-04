@@ -5,7 +5,8 @@ import { PageHero } from "@/components/PageHero";
 import { SectionHeading } from "@/components/SectionHeading";
 import { Reveal } from "@/components/Reveal";
 import { Monogram } from "@/components/Monogram";
-import { CoverArt } from "@/components/CoverArt";
+import { Photo } from "@/components/Photo";
+import { img } from "@/lib/images";
 import { CTASection } from "@/components/CTASection";
 
 export const metadata: Metadata = {
@@ -39,7 +40,8 @@ export default function AboutPage() {
       <PageHero
         eyebrow="About Us"
         title="A premium firm with its feet in the East African market."
-        lead={`${site.name} brings partner led audit, tax, and advisory services to founders, boards, and institutions who want more than a signature on a set of accounts.`}
+        lead={`${site.name} brings partner-led audit, tax, and advisory services to founders, boards, and institutions who want more than a signature on a set of accounts.`}
+        image={img.professional}
       />
 
       {/* Story */}
@@ -76,11 +78,14 @@ export default function AboutPage() {
             </Reveal>
           </div>
           <Reveal delay={120}>
-            <CoverArt
-              variant={2}
-              label="Firm overview artwork"
+            <Photo
+              image={img.nairobi}
               className="aspect-square w-full shadow-lift"
+              sizes="(min-width: 1024px) 45vw, 100vw"
             />
+            <p className="mt-3 text-xs text-ink-400">
+              Our home: the Nairobi central business district.
+            </p>
           </Reveal>
         </div>
       </section>
@@ -100,7 +105,7 @@ export default function AboutPage() {
                 delay={i * 80}
                 className="rounded-2xl border border-ink-100 bg-white p-7 shadow-soft"
               >
-                <span className="font-serif text-3xl font-semibold text-gold-500">
+                <span className="font-serif text-3xl font-semibold text-teal-600">
                   0{i + 1}
                 </span>
                 <h3 className="mt-4 text-lg font-semibold text-ink-900">
@@ -130,7 +135,7 @@ export default function AboutPage() {
               <p className="mt-1 text-sm text-ink-500">
                 {leadership.headline}
               </p>
-              <p className="mt-3 text-xs uppercase tracking-widest2 text-gold-600">
+              <p className="mt-3 text-xs uppercase tracking-widest2 text-teal-700">
                 {leadership.location}
               </p>
             </div>
@@ -177,7 +182,7 @@ export default function AboutPage() {
                 delay={i * 80}
                 className="rounded-2xl border border-ink-800 bg-ink-900 p-7"
               >
-                <span className="font-serif text-2xl font-semibold text-gold-400">
+                <span className="font-serif text-2xl font-semibold text-teal-300">
                   0{i + 1}
                 </span>
                 <h3 className="mt-3 text-lg font-semibold text-white">

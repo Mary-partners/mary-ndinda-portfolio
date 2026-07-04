@@ -31,7 +31,7 @@ export function SectionHeading({
             align === "center" && "justify-center",
           )}
         >
-          <span className="h-px w-6 bg-gold-500" />
+          <span className="h-px w-6 bg-teal-500" />
           {eyebrow}
         </span>
       )}

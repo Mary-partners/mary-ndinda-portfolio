@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { industries } from "@/lib/site";
+import { img } from "@/lib/images";
 import { PageHero } from "@/components/PageHero";
 import { Reveal } from "@/components/Reveal";
-import { CoverArt } from "@/components/CoverArt";
+import { Photo } from "@/components/Photo";
 import { CTASection } from "@/components/CTASection";
 
 export const metadata: Metadata = {
@@ -17,7 +18,8 @@ export default function IndustriesPage() {
       <PageHero
         eyebrow="Industries"
         title="We speak the language of your sector."
-        lead="The numbers mean different things in a SACCO, an agribusiness, and a donor funded programme. We bring the context that makes our audit, tax, and advisory work land."
+        lead="The numbers mean different things in a SACCO, an agribusiness, and a donor-funded programme. We bring the context that makes our audit, tax, and advisory work land."
+        image={img.agribusiness}
       />
 
       <section className="container-page py-24">
@@ -29,8 +31,14 @@ export default function IndustriesPage() {
               as="article"
               className="group overflow-hidden rounded-2xl border border-ink-100 bg-white shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-lift"
             >
-              <div className="relative h-36">
-                <CoverArt variant={i} rounded={false} className="h-full" />
+              <div className="relative h-44">
+                <Photo
+                  image={img[industry.image]}
+                  rounded={false}
+                  overlay="soft"
+                  className="h-full"
+                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                />
                 <span className="absolute left-4 top-4 font-serif text-sm font-semibold text-white">
                   0{i + 1}
                 </span>
