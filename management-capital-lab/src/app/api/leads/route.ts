@@ -48,7 +48,12 @@ export async function POST(request: Request) {
     createdAt: new Date().toISOString(),
   };
 
-  await addLead(lead);
+  // Persist (Notion or JSON). Non-fatal: the email below is the safety net.
+  try {
+    await addLead(lead);
+  } catch (err) {
+    console.error("Failed to persist lead:", err);
+  }
 
   // Notify Mary by email (non-blocking: never fail the submission on email error).
   const html = `
