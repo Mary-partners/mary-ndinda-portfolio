@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { addContribution, getApprovedContributions } from "@/lib/store";
 import { inferThemes } from "@/lib/utils";
+import { sendNotificationEmail, detailsTable } from "@/lib/email";
 import type { Contribution, NoteColor } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -77,5 +78,28 @@ export async function POST(request: Request) {
   };
 
   await addContribution(contribution);
+
+  // Notify Mary that a new post-it is awaiting moderation (non-blocking).
+  const html = `
+    <h2 style="font:600 18px sans-serif;color:#0f2a43;">New post-it awaiting review</h2>
+    <p style="font:14px sans-serif;color:#5b6b7a;">A new contribution was submitted to the research wall and is pending approval.</p>
+    ${detailsTable([
+      ["Prompt", contribution.prompt],
+      ["Contribution", contribution.content],
+      ["Name", contribution.isAnonymous ? "Anonymous" : contribution.name],
+      ["Role", String(contribution.role)],
+      ["Country", contribution.country],
+      ["Sector", contribution.sector],
+      ["Organisation", contribution.organisation],
+      ["Email", contribution.email],
+    ])}
+    <p style="font:13px sans-serif;color:#5b6b7a;">Review it in the admin dashboard: <strong>/admin</strong></p>
+  `;
+  await sendNotificationEmail({
+    subject: `New post-it to review — ${contribution.isAnonymous ? "Anonymous" : contribution.name}`,
+    html,
+    replyTo: contribution.email || undefined,
+  });
+
   return NextResponse.json({ ok: true, id }, { status: 201 });
 }
