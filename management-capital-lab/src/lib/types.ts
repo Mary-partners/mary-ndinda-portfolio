@@ -30,6 +30,8 @@ export interface Contribution {
   createdAt: string;
   updatedAt: string;
   approvedAt: string | null;
+  // True for the sample notes seeded at launch, so the UI can label them.
+  illustrative?: boolean;
 }
 
 export interface CollaborationLead {

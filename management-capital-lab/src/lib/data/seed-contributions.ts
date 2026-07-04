@@ -1,5 +1,10 @@
 import type { Contribution } from "../types";
 
+// The exact content strings of the launch-seed notes. Used to flag them as
+// "illustrative" wherever they are read (JSON store or Notion), so the badge
+// follows the sample notes and never attaches to a real contribution.
+export const ILLUSTRATIVE_CONTENTS = new Set<string>();
+
 // Approved, seeded post-it notes that populate the public research wall on
 // first run. New submissions are always created with status "pending".
 export const seedContributions: Contribution[] = [
@@ -215,3 +220,6 @@ export const seedContributions: Contribution[] = [
     approvedAt: "2026-03-12T08:00:00.000Z",
   },
 ];
+
+// Populate the illustrative-content set from the seeded notes above.
+seedContributions.forEach((c) => ILLUSTRATIVE_CONTENTS.add(c.content));

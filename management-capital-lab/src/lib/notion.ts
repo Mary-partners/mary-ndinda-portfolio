@@ -1,4 +1,5 @@
 import type { Contribution, CollaborationLead, NoteColor } from "./types";
+import { ILLUSTRATIVE_CONTENTS } from "./data/seed-contributions";
 
 // Notion-backed persistence for contributions and collaboration leads.
 // Enabled when NOTION_TOKEN and the database IDs are configured; otherwise the
@@ -64,10 +65,12 @@ async function notionFetch(path: string, init: RequestInit): Promise<any> {
 
 function pageToContribution(page: any): Contribution {
   const p = page.properties;
+  const content = readText(p["Content"]);
   return {
     id: page.id,
     prompt: readText(p["Prompt"]),
-    content: readText(p["Content"]),
+    content,
+    illustrative: ILLUSTRATIVE_CONTENTS.has(content),
     name: readText(p["Name"]) || "Anonymous",
     isAnonymous: readCheckbox(p["Anonymous"]),
     email: readEmail(p["Email"]),

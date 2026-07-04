@@ -1,7 +1,7 @@
 import { promises as fs } from "fs";
 import path from "path";
 import type { Contribution, CollaborationLead } from "./types";
-import { seedContributions } from "./data/seed-contributions";
+import { seedContributions, ILLUSTRATIVE_CONTENTS } from "./data/seed-contributions";
 import * as notion from "./notion";
 
 // Lightweight JSON file store for the prototype. In a production build this
@@ -47,7 +47,11 @@ async function writeJson<T>(file: string, data: T): Promise<void> {
 
 export async function getContributions(): Promise<Contribution[]> {
   if (notion.notionEnabled()) return notion.getContributions();
-  return readJson<Contribution[]>(CONTRIBUTIONS_FILE, seedContributions);
+  const all = await readJson<Contribution[]>(CONTRIBUTIONS_FILE, seedContributions);
+  return all.map((c) => ({
+    ...c,
+    illustrative: c.illustrative ?? ILLUSTRATIVE_CONTENTS.has(c.content),
+  }));
 }
 
 export async function getApprovedContributions(): Promise<Contribution[]> {
