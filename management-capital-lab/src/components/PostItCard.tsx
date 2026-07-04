@@ -43,14 +43,6 @@ export function PostItCard({ note }: { note: Contribution }) {
         )}
         aria-hidden
       />
-      {note.illustrative && (
-        <span
-          className="absolute right-3 top-3 rounded-full bg-navy/5 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-navy-500 ring-1 ring-inset ring-navy/10"
-          title="A sample note added at launch to illustrate the wall."
-        >
-          Illustrative
-        </span>
-      )}
       <p className="text-[11px] font-semibold uppercase tracking-wide text-navy-500">
         {note.prompt}
       </p>
