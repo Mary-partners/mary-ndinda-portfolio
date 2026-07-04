@@ -7,7 +7,14 @@ import { seedContributions } from "./data/seed-contributions";
 // would be swapped for a database, but a flat file keeps the prototype
 // dependency-free and easy to inspect.
 
-const DATA_DIR = path.join(process.cwd(), "data");
+// On a serverless host (e.g. Vercel) the project filesystem is read-only, so
+// writes must target the OS temp dir. This keeps the prototype from crashing on
+// submit; note that /tmp is ephemeral, so submissions are not durable there —
+// use a real database (Postgres, Vercel KV, etc.) for production persistence.
+const DATA_DIR =
+  process.env.VERCEL || process.env.MCL_DATA_DIR
+    ? process.env.MCL_DATA_DIR || path.join("/tmp", "mcl-data")
+    : path.join(process.cwd(), "data");
 const CONTRIBUTIONS_FILE = path.join(DATA_DIR, "contributions.json");
 const LEADS_FILE = path.join(DATA_DIR, "leads.json");
 
