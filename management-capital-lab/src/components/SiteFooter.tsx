@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { StickyNote } from "lucide-react";
+import { StickyNote, Mail } from "lucide-react";
+import { SITE } from "@/lib/site";
 
 const FOOTER_LINKS = [
   { href: "/about", label: "About the Research" },
@@ -30,6 +31,13 @@ export function SiteFooter() {
             This is a living DBA research platform exploring African SME growth,
             investment readiness, and management capital.
           </p>
+          <a
+            href={`mailto:${SITE.email}`}
+            className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-cream/90 transition-colors hover:text-gold-300"
+          >
+            <Mail className="h-4 w-4" />
+            {SITE.email}
+          </a>
         </div>
 
         <nav aria-label="Footer">
