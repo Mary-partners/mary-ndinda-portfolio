@@ -6,7 +6,9 @@ import {
   Database,
   ArrowRight,
   Download,
+  Mail,
 } from "lucide-react";
+import { SITE } from "@/lib/site";
 import { getApprovedContributions } from "@/lib/store";
 import { HeroSection } from "@/components/HeroSection";
 import { PostItWall } from "@/components/PostItWall";
@@ -211,6 +213,13 @@ export default async function HomePage() {
                 <ButtonLink href="/collaborate" variant="gold" size="lg">
                   Collaborate with the Research
                 </ButtonLink>
+                <a
+                  href={`mailto:${SITE.email}`}
+                  className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-cream/40 px-7 text-base font-medium text-cream transition-colors hover:bg-cream/10"
+                >
+                  <Mail className="h-4 w-4" />
+                  Talk to Mary
+                </a>
                 <ButtonLink
                   href="/contribute"
                   variant="outline"
@@ -228,6 +237,16 @@ export default async function HomePage() {
                   Download Research Concept Note
                 </a>
               </div>
+              <p className="mt-5 text-sm text-cream/70">
+                Prefer email? Reach Mary directly at{" "}
+                <a
+                  href={`mailto:${SITE.email}`}
+                  className="font-medium text-gold-200 underline underline-offset-2 hover:text-gold-100"
+                >
+                  {SITE.email}
+                </a>
+                .
+              </p>
             </div>
           </div>
         </div>
