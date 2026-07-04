@@ -8,10 +8,12 @@ import {
   HandHeart,
   GraduationCap,
   Scale,
+  Mail,
 } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
 import { SectionHeading } from "@/components/SectionHeading";
 import { CollaborationForm } from "@/components/CollaborationForm";
+import { SITE } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Collaborate",
@@ -75,7 +77,15 @@ export default function CollaboratePage() {
         eyebrow="Collaborate"
         title="Collaborate with the Research"
         intro="This research is being built with the ecosystem, not only for the ecosystem."
-      />
+      >
+        <a
+          href={`mailto:${SITE.email}`}
+          className="mt-6 inline-flex items-center gap-2 rounded-full border border-navy/15 bg-white px-4 py-2 text-sm font-medium text-navy-800 shadow-soft transition-colors hover:border-navy/30"
+        >
+          <Mail className="h-4 w-4 text-forest" />
+          {SITE.email}
+        </a>
+      </PageHeader>
 
       <div className="container-lab py-16 sm:py-20">
         <SectionHeading
