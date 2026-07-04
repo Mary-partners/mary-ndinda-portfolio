@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { addLead } from "@/lib/store";
+import { sendNotificationEmail, detailsTable } from "@/lib/email";
 import type { CollaborationLead } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -48,5 +49,26 @@ export async function POST(request: Request) {
   };
 
   await addLead(lead);
+
+  // Notify Mary by email (non-blocking: never fail the submission on email error).
+  const html = `
+    <h2 style="font:600 18px sans-serif;color:#0f2a43;">New collaboration interest</h2>
+    <p style="font:14px sans-serif;color:#5b6b7a;">Someone has expressed interest in collaborating on The Management Capital Lab.</p>
+    ${detailsTable([
+      ["Name", lead.name],
+      ["Email", lead.email],
+      ["Organisation", lead.organisation],
+      ["Role", lead.role],
+      ["Country", lead.country],
+      ["Collaboration type", lead.collaborationType],
+      ["Message", lead.message],
+    ])}
+  `;
+  await sendNotificationEmail({
+    subject: `New collaboration interest — ${lead.name}`,
+    html,
+    replyTo: lead.email,
+  });
+
   return NextResponse.json({ ok: true, id: lead.id }, { status: 201 });
 }
