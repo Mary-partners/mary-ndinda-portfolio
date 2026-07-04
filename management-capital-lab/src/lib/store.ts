@@ -2,6 +2,7 @@ import { promises as fs } from "fs";
 import path from "path";
 import type { Contribution, CollaborationLead } from "./types";
 import { seedContributions } from "./data/seed-contributions";
+import * as notion from "./notion";
 
 // Lightweight JSON file store for the prototype. In a production build this
 // would be swapped for a database, but a flat file keeps the prototype
@@ -45,10 +46,12 @@ async function writeJson<T>(file: string, data: T): Promise<void> {
 /* -------------------------------- Contributions ------------------------------- */
 
 export async function getContributions(): Promise<Contribution[]> {
+  if (notion.notionEnabled()) return notion.getContributions();
   return readJson<Contribution[]>(CONTRIBUTIONS_FILE, seedContributions);
 }
 
 export async function getApprovedContributions(): Promise<Contribution[]> {
+  if (notion.notionEnabled()) return notion.getApprovedContributions();
   const all = await getContributions();
   return all
     .filter((c) => c.status === "approved")
@@ -62,6 +65,7 @@ export async function getApprovedContributions(): Promise<Contribution[]> {
 export async function addContribution(
   contribution: Contribution
 ): Promise<Contribution> {
+  if (notion.notionEnabled()) return notion.addContribution(contribution);
   const all = await getContributions();
   all.unshift(contribution);
   await writeJson(CONTRIBUTIONS_FILE, all);
@@ -72,6 +76,7 @@ export async function updateContribution(
   id: string,
   patch: Partial<Contribution>
 ): Promise<Contribution | null> {
+  if (notion.notionEnabled()) return notion.updateContribution(id, patch);
   const all = await getContributions();
   const idx = all.findIndex((c) => c.id === id);
   if (idx === -1) return null;
@@ -86,6 +91,7 @@ export async function updateContribution(
 }
 
 export async function deleteContribution(id: string): Promise<boolean> {
+  if (notion.notionEnabled()) return notion.deleteContribution(id);
   const all = await getContributions();
   const next = all.filter((c) => c.id !== id);
   if (next.length === all.length) return false;
@@ -96,10 +102,12 @@ export async function deleteContribution(id: string): Promise<boolean> {
 /* ------------------------------------ Leads ----------------------------------- */
 
 export async function getLeads(): Promise<CollaborationLead[]> {
+  if (notion.notionEnabled()) return notion.getLeads();
   return readJson<CollaborationLead[]>(LEADS_FILE, []);
 }
 
 export async function addLead(lead: CollaborationLead): Promise<CollaborationLead> {
+  if (notion.notionEnabled()) return notion.addLead(lead);
   const all = await getLeads();
   all.unshift(lead);
   await writeJson(LEADS_FILE, all);

@@ -77,7 +77,12 @@ export async function POST(request: Request) {
     approvedAt: null,
   };
 
-  await addContribution(contribution);
+  // Persist (Notion or JSON). Non-fatal: the email below is the safety net.
+  try {
+    await addContribution(contribution);
+  } catch (err) {
+    console.error("Failed to persist contribution:", err);
+  }
 
   // Notify Mary that a new post-it is awaiting moderation (non-blocking).
   const html = `
