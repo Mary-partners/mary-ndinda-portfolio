@@ -3,8 +3,6 @@ import { FRAMEWORK_CONTENT } from "../src/lib/framework-content";
 import { DIMENSION_META } from "../src/lib/constants";
 import { computeScores, type ScoringResponse } from "../src/lib/scoring";
 
-const prisma = new PrismaClient();
-
 const clamp = (n: number, lo = 0, hi = 4) => Math.max(lo, Math.min(hi, n));
 const daysAgo = (n: number) => new Date(Date.now() - n * 86400000);
 
@@ -359,7 +357,7 @@ const COMPANIES: CompanySeed[] = [
   },
 ];
 
-async function main() {
+export async function seedDatabase(prisma: PrismaClient) {
   console.log("Resetting demo data…");
   // Clean (order respects FKs via cascade where set)
   await prisma.auditLog.deleteMany();
@@ -772,6 +770,10 @@ function evidenceType(key: string): string {
   return key === "financial" ? "AccountingReport" : key === "governance" ? "Minutes" : key === "operational" ? "PDF" : "PDF";
 }
 
-main()
-  .then(async () => { await prisma.$disconnect(); })
-  .catch(async (e) => { console.error(e); await prisma.$disconnect(); process.exit(1); });
+// CLI entrypoint only (not when imported by the app, e.g. the seed API route).
+if (process.argv[1] && /seed\.ts$/.test(process.argv[1])) {
+  const prisma = new PrismaClient();
+  seedDatabase(prisma)
+    .then(async () => { await prisma.$disconnect(); })
+    .catch(async (e) => { console.error(e); await prisma.$disconnect(); process.exit(1); });
+}

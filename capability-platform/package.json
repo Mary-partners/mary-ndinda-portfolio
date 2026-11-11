@@ -5,7 +5,7 @@
   "description": "Management Capital Lab | Enterprise Capability Intelligence — a management-capability diagnostic, implementation and portfolio-intelligence platform for African SME support programmes.",
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && prisma migrate deploy && next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
