@@ -1,0 +1,422 @@
+// Management Capital Lab | Enterprise Capability Intelligence
+// Prisma schema (SQLite demo build; clear migration path to PostgreSQL).
+// Notes:
+//  - SQLite does not support native enums; status/role fields are strings with
+//    documented allowed values (see src/lib/constants.ts).
+//  - Finalised assessments are preserved as immutable snapshots; corrections
+//    create new assessments with audit history rather than overwriting.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String   @id @default(uuid())
+  name           String
+  email          String   @unique
+  role           String // global convenience role label; real authz via Membership
+  isPlatformAdmin Boolean @default(false)
+  title          String?
+  createdAt      DateTime @default(now())
+
+  memberships     Membership[]
+  advisedCompanies Company[]      @relation("CompanyAdvisor")
+  assessments     Assessment[]    @relation("AssessmentAuthor")
+  reviews         EvidenceReview[]
+  sessionsLed     AdvisorySession[]
+  auditLogs       AuditLog[]
+  notifications   Notification[]
+}
+
+model Organisation {
+  id          String   @id @default(uuid())
+  name        String
+  type        String // e.g. Fund, Accelerator, DFI, ESO
+  country     String
+  description String?
+  createdAt   DateTime @default(now())
+
+  memberships Membership[]
+  programmes  Programme[]
+  companies   Company[]
+  frameworks  Framework[]
+}
+
+model Membership {
+  id     String @id @default(uuid())
+  userId String
+  orgId  String
+  role   String // PROGRAM_MANAGER | ADVISOR | FOUNDER | REVIEWER | ADMIN
+
+  user User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  org  Organisation @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, orgId, role])
+  @@index([orgId])
+}
+
+model Programme {
+  id               String   @id @default(uuid())
+  orgId            String
+  name             String
+  fundingPartner   String?
+  startDate        DateTime?
+  endDate          DateTime?
+  objectives       String?
+  sectorCoverage   String?
+  geography        String?
+  targetEnterprises Int?
+  budget           Float?
+  reportingCadence String?
+  frameworkVersion String?
+  status           String   @default("Active") // Active | Planned | Closed
+  createdAt        DateTime @default(now())
+
+  org       Organisation @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  companies Company[]
+
+  @@index([orgId])
+}
+
+model Company {
+  id            String   @id @default(uuid())
+  orgId         String
+  programmeId   String?
+  legalName     String
+  tradingName   String?
+  country       String
+  region        String?
+  sector        String
+  subsector     String?
+  yearEstablished Int?
+  businessModel String?
+  stage         String? // Micro | Small | Medium
+  ownership     String?
+  employees     Int?
+  founderName   String?
+  advisorId     String?
+  primaryContact String?
+  scenarioTag   String? // narrative label for the demo scenario
+  isDemo        Boolean  @default(true)
+  createdAt     DateTime @default(now())
+
+  org        Organisation @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  programme  Programme?   @relation(fields: [programmeId], references: [id])
+  advisor    User?        @relation("CompanyAdvisor", fields: [advisorId], references: [id])
+
+  assessments     Assessment[]
+  plans           ImprovementPlan[]
+  evidence        Evidence[]
+  sessions        AdvisorySession[]
+  kpis            CompanyKpi[]
+  constraints     ConstraintFlag[]
+  founderProfile  FounderProfile?
+
+  @@index([orgId])
+  @@index([programmeId])
+}
+
+model FounderProfile {
+  id        String  @id @default(uuid())
+  companyId String  @unique
+  // structured founder interview captured as qualitative text (not auto-scored)
+  ambition        String?
+  threeYearVision String?
+  objectiveType   String? // Survival | Income | Growth | Expansion | Investment
+  topPriorities   String?
+  growthLimiter   String?
+  founderDecisions String?
+  independentRoles String?
+  neededCapabilities String?
+  pastChanges     String?
+  changeOutcomes  String?
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
+
+model Framework {
+  id        String   @id @default(uuid())
+  orgId     String?
+  name      String
+  version   String
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  org        Organisation? @relation(fields: [orgId], references: [id])
+  dimensions Dimension[]
+  assessments Assessment[]
+
+  @@unique([name, version])
+}
+
+model Dimension {
+  id          String  @id @default(uuid())
+  frameworkId String
+  key         String // strategic | financial | operational | performance | people | commercial | governance | learning
+  name        String
+  description String?
+  weight      Float   @default(1)
+  order       Int
+
+  framework Framework  @relation(fields: [frameworkId], references: [id], onDelete: Cascade)
+  questions Question[]
+  scores    DimensionScore[]
+
+  @@index([frameworkId])
+}
+
+model Question {
+  id          String  @id @default(uuid())
+  dimensionId String
+  text        String
+  helpText    String?
+  weight      Float   @default(1)
+  order       Int
+  // conditional applicability hint by company size (comma list) e.g. "Small,Medium"
+  appliesTo   String?
+
+  dimension Dimension  @relation(fields: [dimensionId], references: [id], onDelete: Cascade)
+  responses Response[]
+
+  @@index([dimensionId])
+}
+
+model Assessment {
+  id            String   @id @default(uuid())
+  companyId     String
+  frameworkId   String
+  frameworkVersion String
+  type          String   @default("baseline") // baseline | followup
+  assessorRole  String? // FOUNDER | ADVISOR | REVIEWER
+  status        String   @default("draft") // draft | finalized
+  isBaseline    Boolean  @default(false)
+  overallScore  Float?
+  completeness  Float? // % of applicable questions answered
+  evidenceCoverage Float?
+  createdById   String?
+  createdAt     DateTime @default(now())
+  finalizedAt   DateTime?
+  label         String?
+
+  company   Company    @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  framework Framework  @relation(fields: [frameworkId], references: [id])
+  createdBy User?      @relation("AssessmentAuthor", fields: [createdById], references: [id])
+  responses Response[]
+  dimensionScores DimensionScore[]
+
+  @@index([companyId])
+}
+
+model Response {
+  id           String   @id @default(uuid())
+  assessmentId String
+  questionId   String
+  score        Int? // 0-4, null = unanswered
+  applicable   Boolean  @default(true)
+  evidenceStatus String @default("none") // none | claimed | verified
+  confidence   String?  // low | medium | high
+  rationale    String?
+  updatedAt    DateTime @updatedAt
+
+  assessment Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  question   Question   @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@unique([assessmentId, questionId])
+  @@index([assessmentId])
+}
+
+model DimensionScore {
+  id           String @id @default(uuid())
+  assessmentId String
+  dimensionId  String
+  score        Float
+  applicableCount Int @default(0)
+
+  assessment Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  dimension  Dimension  @relation(fields: [dimensionId], references: [id], onDelete: Cascade)
+
+  @@unique([assessmentId, dimensionId])
+}
+
+model ConstraintFlag {
+  id        String @id @default(uuid())
+  companyId String
+  type      String // WorkingCapital | InvestmentCapital | MarketDemand | BusinessModel | Infrastructure | Regulation | Technology | SkilledLabour
+  severity  String // low | medium | high
+  note      String?
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+}
+
+model ImprovementPlan {
+  id           String   @id @default(uuid())
+  companyId    String
+  dimensionKey String
+  title        String
+  weakness     String?
+  rootCause    String?
+  intervention String?
+  baselineScore Float?
+  targetScore  Float?
+  ownerName    String?
+  advisorName  String?
+  startDate    DateTime?
+  dueDate      DateTime?
+  costEstimate Float?
+  priority     Int      @default(2) // 1 highest
+  status       String   @default("Not started") // see constants
+  successCriteria String?
+  createdAt    DateTime @default(now())
+
+  company    Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  milestones Milestone[]
+  tasks      Task[]
+  evidence   Evidence[]
+
+  @@index([companyId])
+}
+
+model Milestone {
+  id        String   @id @default(uuid())
+  planId    String
+  title     String
+  status    String   @default("Not started") // Not started | In progress | Evidence submitted | Verified | Rejected
+  dueDate   DateTime?
+  order     Int      @default(0)
+  verifiedAt DateTime?
+
+  plan     ImprovementPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  evidence Evidence[]
+
+  @@index([planId])
+}
+
+model Task {
+  id        String   @id @default(uuid())
+  planId    String
+  title     String
+  ownerName String?
+  status    String   @default("Not started")
+  dueDate   DateTime?
+  order     Int      @default(0)
+
+  plan ImprovementPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@index([planId])
+}
+
+model Evidence {
+  id           String   @id @default(uuid())
+  companyId    String
+  planId       String?
+  milestoneId  String?
+  name         String
+  type         String // PDF | Spreadsheet | Image | Minutes | AccountingReport | Attestation | Other
+  submittedBy  String?
+  period       String?
+  status       String   @default("Submitted") // Submitted | Under review | More info required | Verified | Rejected | Superseded
+  createdAt    DateTime @default(now())
+
+  company   Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  plan      ImprovementPlan? @relation(fields: [planId], references: [id])
+  milestone Milestone?       @relation(fields: [milestoneId], references: [id])
+  reviews   EvidenceReview[]
+
+  @@index([companyId])
+}
+
+model EvidenceReview {
+  id         String   @id @default(uuid())
+  evidenceId String
+  reviewerId String?
+  decision   String // verified | rejected | more_info
+  comment    String?
+  createdAt  DateTime @default(now())
+
+  evidence Evidence @relation(fields: [evidenceId], references: [id], onDelete: Cascade)
+  reviewer User?    @relation(fields: [reviewerId], references: [id])
+
+  @@index([evidenceId])
+}
+
+model AdvisorySession {
+  id             String   @id @default(uuid())
+  companyId      String
+  advisorId      String?
+  date           DateTime @default(now())
+  durationMins   Int?
+  participants   String?
+  priorityProblem String?
+  observations   String?
+  decisions      String?
+  actions        String?
+  nextReviewDate DateTime?
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  advisor User?   @relation(fields: [advisorId], references: [id])
+
+  @@index([companyId])
+}
+
+model KpiDefinition {
+  id       String @id @default(uuid())
+  key      String @unique
+  name     String
+  unit     String
+  category String // financial | commercial | operational | people
+  higherIsBetter Boolean @default(true)
+
+  observations CompanyKpi[]
+}
+
+model CompanyKpi {
+  id         String   @id @default(uuid())
+  companyId  String
+  kpiKey     String
+  period     String
+  actual     Float?
+  target     Float?
+  baseline   Float?
+  dataStatus String   @default("actual") // actual | estimated | unavailable
+  updatedAt  DateTime @updatedAt
+
+  company    Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  definition KpiDefinition @relation(fields: [kpiKey], references: [key])
+
+  @@index([companyId])
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String?
+  title     String
+  body      String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  orgId     String?
+  entity    String
+  entityId  String?
+  action    String
+  detail    String?
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([entity, entityId])
+}

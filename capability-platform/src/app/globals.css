@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-surface-muted text-ink antialiased;
+  }
+  h1, h2, h3, h4 { @apply font-semibold text-navy-700; }
+  * { font-feature-settings: "kern", "liga", "tnum"; }
+}
+
+@layer components {
+  .card {
+    @apply rounded-xl border border-navy/10 bg-white shadow-card;
+  }
+  .stat-label { @apply text-xs font-medium uppercase tracking-wide text-ink-muted; }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/50 disabled:opacity-50;
+  }
+  .btn-primary { @apply btn bg-navy-700 text-white hover:bg-navy-800; }
+  .btn-gold { @apply btn bg-gold text-navy-900 hover:bg-gold-600 hover:text-white; }
+  .btn-outline { @apply btn border border-navy/20 bg-white text-navy-700 hover:bg-surface-muted; }
+  .btn-ghost { @apply btn text-navy-600 hover:bg-navy/5; }
+  .input {
+    @apply w-full rounded-lg border border-navy/15 bg-white px-3 py-2 text-sm text-ink shadow-sm focus:border-navy-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20;
+  }
+  .th { @apply px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-ink-muted; }
+  .td { @apply px-4 py-3 text-sm text-ink; }
+}
+
+/* print-friendly reports */
+@media print {
+  .no-print { display: none !important; }
+  body { background: white; }
+}

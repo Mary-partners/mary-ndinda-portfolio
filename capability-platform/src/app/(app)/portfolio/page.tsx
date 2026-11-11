@@ -1,0 +1,59 @@
+import Link from "next/link";
+import { requireUser } from "@/lib/auth";
+import { latestAssessments } from "@/lib/portfolio";
+import { PageHeader, Panel } from "@/components/ui/Page";
+import { Badge } from "@/components/ui/Badge";
+import { fmtScore, maturityBand, fmtNumber } from "@/lib/utils";
+
+export const dynamic = "force-dynamic";
+
+export default async function PortfolioPage() {
+  const user = await requireUser();
+  const rows = await latestAssessments(user.activeOrgId);
+
+  return (
+    <>
+      <PageHeader title="Enterprise Portfolio" subtitle={`${rows.length} enterprises in the active organisation. Click any enterprise for its full capability profile.`} />
+      <Panel>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-navy/10">
+                <th className="th">Enterprise</th>
+                <th className="th">Country</th>
+                <th className="th">Sector</th>
+                <th className="th">Stage</th>
+                <th className="th">Advisor</th>
+                <th className="th">Maturity</th>
+                <th className="th">Band</th>
+                <th className="th">Revenue</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map(({ company, latest }) => {
+                const band = maturityBand(latest?.overallScore);
+                return (
+                  <tr key={company.id} className="border-b border-navy/5 last:border-0 hover:bg-surface-muted">
+                    <td className="td">
+                      <Link href={`/portfolio/${company.id}`} className="font-medium text-navy-700 hover:underline">
+                        {company.tradingName ?? company.legalName}
+                      </Link>
+                      <div className="text-xs text-ink-muted">{company.scenarioTag}</div>
+                    </td>
+                    <td className="td text-ink-muted">{company.country}</td>
+                    <td className="td text-ink-muted">{company.sector}</td>
+                    <td className="td text-ink-muted">{company.stage}</td>
+                    <td className="td text-ink-muted">{company.advisor?.name ?? "—"}</td>
+                    <td className="td font-medium">{fmtScore(latest?.overallScore)}</td>
+                    <td className="td"><Badge tone={band.tone as "ok" | "warn" | "bad" | "neutral"}>{band.label}</Badge></td>
+                    <td className="td text-ink-muted">{company.employees ? `${fmtNumber(company.employees)} staff` : "—"}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </Panel>
+    </>
+  );
+}
