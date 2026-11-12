@@ -34,11 +34,11 @@ export function CompanyForm({ programmes }: { programmes: { id: string; name: st
         <input name="tradingName" className="input" placeholder="Trading name (optional)" />
       </div>
       <div className="grid gap-3 sm:grid-cols-2">
-        <input name="country" className="input" placeholder="Country" />
+        <input name="country" className="input" placeholder="Country" required />
         <input name="region" className="input" placeholder="Region / city" />
       </div>
       <div className="grid gap-3 sm:grid-cols-2">
-        <input name="sector" className="input" placeholder="Sector" />
+        <input name="sector" className="input" placeholder="Sector" required />
         <input name="subsector" className="input" placeholder="Sub-sector" />
       </div>
       <div className="grid gap-3 sm:grid-cols-3">

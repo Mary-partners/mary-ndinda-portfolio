@@ -22,14 +22,11 @@ export async function completeSetup(formData: FormData) {
   const name = String(formData.get("name") ?? "").trim();
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
   const password = String(formData.get("password") ?? "");
-  const orgName = String(formData.get("orgName") ?? "").trim();
-  const orgType = String(formData.get("orgType") ?? "").trim();
-  const country = String(formData.get("country") ?? "").trim();
-  if (!name || !email || password.length < 8 || !orgName) redirect("/setup?error=invalid");
-  const { user, org } = await bootstrapOwner(prisma, { name, email, password, orgName, orgType, country });
+  if (!name || !email || password.length < 8) redirect("/setup?error=invalid");
+  // The administrator account only — organisations are created inside the app.
+  const { user } = await bootstrapOwner(prisma, { name, email, password });
   await login(user.id);
-  await setActiveOrg(org.id);
-  redirect("/overview");
+  redirect("/organisations");
 }
 
 export async function signOut() {

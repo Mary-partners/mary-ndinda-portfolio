@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { requireUser, can } from "@/lib/auth";
+import { requireUser, can, setActiveOrg } from "@/lib/auth";
 import { hashPassword } from "@/lib/password";
 
 async function audit(userId: string, orgId: string, entity: string, entityId: string, action: string, detail?: string) {
@@ -27,12 +27,14 @@ export async function createOrganisation(formData: FormData) {
     data: {
       name,
       type: s(formData.get("type")) || "Organisation",
-      country: s(formData.get("country")) || "—",
+      country: s(formData.get("country")) || null,
       description: s(formData.get("description")) || null,
     },
   });
   await prisma.membership.create({ data: { userId: user.id, orgId: org.id, role: "ADMIN" } });
   await audit(user.id, org.id, "Organisation", org.id, "create", name);
+  // If this is the admin's first organisation, make it the active workspace.
+  if (!user.activeOrgId) await setActiveOrg(org.id);
   revalidatePath("/organisations");
   revalidatePath("/overview");
 }
@@ -83,9 +85,9 @@ export async function createCompany(formData: FormData) {
       programmeId,
       legalName,
       tradingName: s(formData.get("tradingName")) || null,
-      country: s(formData.get("country")) || "—",
+      country: s(formData.get("country")),
       region: s(formData.get("region")) || null,
-      sector: s(formData.get("sector")) || "—",
+      sector: s(formData.get("sector")),
       subsector: s(formData.get("subsector")) || null,
       yearEstablished: n(formData.get("yearEstablished")),
       businessModel: s(formData.get("businessModel")) || null,
