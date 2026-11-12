@@ -1,8 +1,9 @@
-import { StickyNote, ArrowRight, Sparkles } from "lucide-react";
-import { ButtonLink } from "@/components/ui/button";
+import { StickyNote, ArrowRight, Sparkles, Gauge } from "lucide-react";
+import { ButtonLink, buttonClasses } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { Contribution } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { SITE } from "@/lib/site";
 
 const FLOAT_COLORS = [
   "bg-note-yellow border-noteBorder-yellow",
@@ -43,6 +44,14 @@ export function HeroSection({ preview }: { preview: Contribution[] }) {
             <ButtonLink href="/contribute" variant="primary" size="lg">
               <StickyNote className="h-4 w-4" /> Leave a Post-It
             </ButtonLink>
+            <a
+              href={SITE.platformUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={buttonClasses({ variant: "gold", size: "lg" })}
+            >
+              <Gauge className="h-4 w-4" /> Open the Capability Platform
+            </a>
             <ButtonLink href="/about" variant="outline" size="lg">
               Explore the Research
             </ButtonLink>

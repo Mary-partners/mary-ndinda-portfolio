@@ -4,4 +4,6 @@ export const SITE = {
   author: "Mary Ndinda",
   email: "mary@managementcapitallab.com",
   tagline: "Beyond access to finance.",
+  // The Enterprise Capability Intelligence platform (separate app).
+  platformUrl: "https://capability-platform-eta.vercel.app",
 } as const;
