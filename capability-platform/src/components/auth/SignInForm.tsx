@@ -11,7 +11,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="mt-1 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-navy-700 text-sm font-semibold text-white shadow-sm transition-all hover:bg-navy-800 disabled:cursor-not-allowed disabled:opacity-60"
+      className="mt-1 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-gold text-sm font-semibold text-navy-900 shadow-sm transition-all hover:bg-gold-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
     >
       {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <>Sign in <ArrowRight className="h-4 w-4" /></>}
     </button>
@@ -21,7 +21,9 @@ function SubmitButton() {
 export function SignInForm({ message }: { message?: string | null }) {
   const [show, setShow] = React.useState(false);
   return (
-    <div className="card p-6 sm:p-8">
+    <div className="overflow-hidden rounded-xl border border-navy/10 bg-white shadow-card">
+      <div className="h-1.5 bg-gradient-to-r from-gold-300 via-gold to-gold-600" />
+      <div className="p-6 sm:p-8">
       <h1 className="text-xl font-semibold text-navy-700">Welcome back</h1>
       <p className="mt-1.5 text-sm text-ink-muted">Sign in with the email and password from your administrator.</p>
 
@@ -54,6 +56,7 @@ export function SignInForm({ message }: { message?: string | null }) {
 
         <SubmitButton />
       </form>
+      </div>
     </div>
   );
 }
