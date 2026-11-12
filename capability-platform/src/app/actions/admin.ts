@@ -1,8 +1,9 @@
 "use server";
 
+import crypto from "crypto";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { requireUser, can, setActiveOrg } from "@/lib/auth";
+import { requireUser, can, setActiveOrg, assertCompanyAccess } from "@/lib/auth";
 import { hashPassword } from "@/lib/password";
 
 async function audit(userId: string, orgId: string, entity: string, entityId: string, action: string, detail?: string) {
@@ -132,4 +133,19 @@ export async function createUser(formData: FormData) {
   await audit(user.id, user.activeOrgId, "User", target.id, existing ? "member.add" : "create", `${email} (${role})`);
   revalidatePath("/organisations");
   revalidatePath("/settings");
+}
+
+// ---- Self-assessment invite link ----
+// Creates (or returns the existing) anonymous self-assessment token for a company.
+export async function createInviteLink(companyId: string): Promise<string> {
+  const user = await requireUser();
+  if (!can(user, "company.manage")) throw new Error("FORBIDDEN");
+  await assertCompanyAccess(companyId, user);
+  const company = await prisma.company.findUnique({ where: { id: companyId }, select: { inviteToken: true } });
+  if (company?.inviteToken) return company.inviteToken;
+  const token = crypto.randomBytes(16).toString("hex");
+  await prisma.company.update({ where: { id: companyId }, data: { inviteToken: token } });
+  await audit(user.id, user.activeOrgId, "Company", companyId, "invite.create");
+  revalidatePath(`/portfolio/${companyId}`);
+  return token;
 }
