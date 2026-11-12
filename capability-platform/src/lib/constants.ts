@@ -1,4 +1,4 @@
-// Allowed values for the string-based status/role fields (SQLite has no enums).
+// Allowed values for the string-based status/role fields (stored as strings for portability).
 
 export const ROLES = {
   ADMIN: "ADMIN",

@@ -77,8 +77,8 @@ export function EvidenceReviewer({ items, canVerify }: { items: EvidenceItem[]; 
             </div>
 
             <div className="mt-4 rounded-lg border border-dashed border-navy/20 bg-surface-muted p-6 text-center text-sm text-ink-muted">
-              Evidence document preview (metadata-only in this demo build). In production this pane shows the
-              uploaded file via a signed, expiring URL alongside the assessment requirement.
+              Document preview is not yet enabled — verification is recorded against the evidence metadata and
+              review history below. File attachments with signed, expiring links are on the roadmap.
             </div>
 
             {current.reviews.length > 0 && (

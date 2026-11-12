@@ -9,8 +9,10 @@ export async function Topbar({ user }: { user: SessionUser }) {
     <header className="no-print sticky top-0 z-20 border-b border-navy/10 bg-white/90 backdrop-blur">
       <div className="flex h-14 items-center justify-between gap-4 px-5">
         <div className="flex items-center gap-3">
-          <Badge tone="gold">DEMO DATA</Badge>
-          <span className="hidden text-sm text-ink-muted sm:inline">All enterprises & metrics are fictional</span>
+          {process.env.NEXT_PUBLIC_APP_ENV === "demo" && <Badge tone="gold">DEMO</Badge>}
+          <span className="hidden text-sm font-medium text-navy-700 sm:inline">
+            {user.memberships.find((m) => m.orgId === user.activeOrgId)?.orgName ?? ""}
+          </span>
         </div>
         <div className="flex items-center gap-3">
           {user.memberships.length > 1 && (

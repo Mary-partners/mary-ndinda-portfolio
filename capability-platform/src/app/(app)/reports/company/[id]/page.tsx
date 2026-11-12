@@ -29,7 +29,7 @@ export default async function CompanyReport({ params }: { params: Promise<{ id: 
           <div className="text-right text-xs text-ink-muted">
             <div>Management Capital Lab</div>
             <div>Generated {fmtDate(new Date())}</div>
-            <div className="mt-1 inline-block rounded bg-gold/15 px-1.5 py-0.5 font-semibold text-gold-700">DEMO DATA</div>
+            <div className="mt-1 inline-block rounded bg-navy/10 px-1.5 py-0.5 font-semibold text-navy-700">Confidential</div>
           </div>
         </div>
       </header>
@@ -94,7 +94,7 @@ export default async function CompanyReport({ params }: { params: Promise<{ id: 
       </section>
 
       <section className="mt-5 rounded border border-navy/15 bg-surface-muted p-3 text-xs text-ink-muted">
-        <strong className="text-navy-700">Evidence & assessment limitations.</strong> Scores reflect a custom SME maturity assessment, not validated WMS scores. Founder-provided evidence is independently verified only when confirmed by a reviewer. Associations between management quality and financial outcomes are not treated as causal. All data is fictional (demo).
+        <strong className="text-navy-700">Evidence & assessment limitations.</strong> Scores reflect a custom SME maturity assessment, not validated WMS scores. Founder-provided evidence is independently verified only when confirmed by a reviewer. Associations between management quality and financial outcomes are not treated as causal.
       </section>
     </div>
   );
