@@ -49,18 +49,18 @@ export interface OwnerInput {
   name: string;
   email: string;
   password: string;
-  orgName: string;
-  orgType: string;
-  country: string;
+  // Optional: the platform administrator does not have to belong to a tenant
+  // organisation. Organisations (the funds/accelerators/ESOs being supported)
+  // are created inside the app after setup.
+  orgName?: string;
+  orgType?: string;
+  country?: string;
 }
 
 export async function bootstrapOwner(prisma: PrismaClient, input: OwnerInput) {
   const count = await prisma.user.count();
   if (count > 0) throw new Error("ALREADY_INITIALISED");
 
-  const org = await prisma.organisation.create({
-    data: { name: input.orgName.trim(), type: input.orgType.trim() || "Organisation", country: input.country.trim() || "—" },
-  });
   const user = await prisma.user.create({
     data: {
       name: input.name.trim(),
@@ -71,10 +71,19 @@ export async function bootstrapOwner(prisma: PrismaClient, input: OwnerInput) {
       passwordHash: hashPassword(input.password),
     },
   });
-  await prisma.membership.create({ data: { userId: user.id, orgId: org.id, role: "ADMIN" } });
+
+  let org = null;
+  const orgName = input.orgName?.trim();
+  if (orgName) {
+    org = await prisma.organisation.create({
+      data: { name: orgName, type: input.orgType?.trim() || "Organisation", country: input.country?.trim() || null },
+    });
+    await prisma.membership.create({ data: { userId: user.id, orgId: org.id, role: "ADMIN" } });
+  }
+
   await ensureFramework(prisma);
   await prisma.auditLog.create({
-    data: { userId: user.id, orgId: org.id, entity: "User", entityId: user.id, action: "setup.owner", detail: "Initial administrator account and organisation created." },
+    data: { userId: user.id, orgId: org?.id ?? null, entity: "User", entityId: user.id, action: "setup.owner", detail: "Initial administrator account created." },
   });
   return { user, org };
 }

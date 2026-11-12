@@ -33,6 +33,27 @@
   .td { @apply px-4 py-3 text-sm text-ink; }
 }
 
+/* Auth / entry experience */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up { animation: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+@keyframes aurora {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); opacity: 0.55; }
+  50% { transform: translate3d(0, -6%, 0) scale(1.15); opacity: 0.8; }
+}
+.animate-aurora { animation: aurora 14s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up, .animate-aurora { animation: none; }
+}
+
+.auth-input {
+  @apply w-full rounded-xl border border-navy/15 bg-white py-2.5 pl-10 pr-10 text-sm text-ink shadow-sm transition-all placeholder:text-ink-muted/70 focus:border-navy-500 focus:outline-none focus:ring-4 focus:ring-navy-500/10;
+}
+
 /* print-friendly reports */
 @media print {
   .no-print { display: none !important; }

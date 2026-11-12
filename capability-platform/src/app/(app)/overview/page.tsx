@@ -5,12 +5,15 @@ import { CapabilityRadar, DimensionBars, DistributionBars, AdoptionFunnel } from
 import { fmtScore } from "@/lib/utils";
 import { DIMENSION_META } from "@/lib/constants";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { ArrowUpRight } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
 export default async function OverviewPage() {
   const user = await requireUser();
+  // A brand-new administrator has no organisation yet — send them to create one.
+  if (!user.activeOrgId) redirect("/organisations");
   const s = await getPortfolioStats(user.activeOrgId);
 
   const radar = DIMENSION_META.map((d) => ({

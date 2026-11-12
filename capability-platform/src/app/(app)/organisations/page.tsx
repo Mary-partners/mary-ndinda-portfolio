@@ -12,19 +12,42 @@ export const dynamic = "force-dynamic";
 
 export default async function OrganisationsPage() {
   const user = await requireUser();
-  const org = await prisma.organisation.findUnique({
-    where: { id: user.activeOrgId },
-    include: {
-      programmes: { orderBy: { createdAt: "desc" }, include: { _count: { select: { companies: true } } } },
-      memberships: { include: { user: { select: { name: true, email: true, title: true } } } },
-      _count: { select: { companies: true, memberships: true } },
-    },
-  });
-  if (!org) return null;
 
   const canProg = can(user, "programme.manage");
   const canOrg = can(user, "org.manage");
   const canUser = can(user, "user.manage");
+
+  const org = user.activeOrgId
+    ? await prisma.organisation.findUnique({
+        where: { id: user.activeOrgId },
+        include: {
+          programmes: { orderBy: { createdAt: "desc" }, include: { _count: { select: { companies: true } } } },
+          memberships: { include: { user: { select: { name: true, email: true, title: true } } } },
+          _count: { select: { companies: true, memberships: true } },
+        },
+      })
+    : null;
+
+  // Brand-new administrator with no organisation yet: welcome + create the first one.
+  if (!org) {
+    return (
+      <>
+        <PageHeader title="Organisations" subtitle="Set up the funds, accelerators and enterprise-support organisations you work with." />
+        <div className="mx-auto max-w-xl">
+          <div className="mb-5 rounded-2xl border border-navy/10 bg-gradient-to-b from-white to-surface-muted p-6 text-center">
+            <h2 className="font-semibold text-navy-700">Create your first organisation</h2>
+            <p className="mx-auto mt-1 max-w-md text-sm text-ink-muted">
+              An organisation is a programme sponsor you support — a fund, DFI, accelerator or ESO. Each is a separate,
+              tenant-isolated workspace with its own programmes, enterprises and team. You can add as many as you need.
+            </p>
+          </div>
+          {canOrg ? <OrgForm /> : <EmptyState title="No organisations yet" description="Ask a platform administrator to create one." />}
+        </div>
+      </>
+    );
+  }
+
+  const subtitle = [org.name, org.type, org.country].filter(Boolean).join(" · ");
 
   // Unique members by user (a user may hold more than one role in the org).
   const memberMap = new Map<string, { name: string; email: string; title: string | null; roles: string[] }>();
@@ -40,7 +63,7 @@ export default async function OrganisationsPage() {
     <>
       <PageHeader
         title="Organisations & Programmes"
-        subtitle={`${org.name} · ${org.type} · ${org.country}`}
+        subtitle={subtitle}
         actions={<div className="flex flex-wrap items-center gap-2">{canOrg && <OrgForm />}{canProg && <ProgrammeForm />}</div>}
       />
       <div className="mb-5 grid gap-3 sm:grid-cols-3">
