@@ -46,8 +46,8 @@ export default async function SettingsPage() {
         </Panel>
       </div>
 
-      <Panel title="Environment" className="mt-5">
-        <p className="text-sm text-ink-muted">Demo build · SQLite persistence · all enterprises and metrics are fictional and labelled DEMO DATA. Reseed with <code className="rounded bg-surface-muted px-1">npm run db:reset</code>.</p>
+      <Panel title="About this workspace" className="mt-5">
+        <p className="text-sm text-ink-muted">Data you enter is private to your organisation and stored securely. Capability scores reflect a custom SME maturity assessment — not validated WMS scores — and maturity, implementation and business performance are tracked as distinct things. See <a href="/research" className="text-gold-700 hover:underline">Research &amp; Methodology</a> for the full approach and its limitations.</p>
       </Panel>
     </>
   );

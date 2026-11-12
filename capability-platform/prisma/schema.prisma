@@ -22,6 +22,7 @@ model User {
   role           String // global convenience role label; real authz via Membership
   isPlatformAdmin Boolean @default(false)
   title          String?
+  passwordHash   String? // scrypt hash; null until the user sets a password
   createdAt      DateTime @default(now())
 
   memberships     Membership[]

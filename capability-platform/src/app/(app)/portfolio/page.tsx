@@ -1,19 +1,35 @@
 import Link from "next/link";
-import { requireUser } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { requireUser, can } from "@/lib/auth";
 import { latestAssessments } from "@/lib/portfolio";
-import { PageHeader, Panel } from "@/components/ui/Page";
+import { PageHeader, Panel, EmptyState } from "@/components/ui/Page";
 import { Badge } from "@/components/ui/Badge";
 import { fmtScore, maturityBand, fmtNumber } from "@/lib/utils";
+import { CompanyForm } from "@/components/forms/CompanyForm";
 
 export const dynamic = "force-dynamic";
 
 export default async function PortfolioPage() {
   const user = await requireUser();
   const rows = await latestAssessments(user.activeOrgId);
+  const canManage = can(user, "company.manage");
+  const programmes = canManage
+    ? await prisma.programme.findMany({ where: { orgId: user.activeOrgId }, orderBy: { createdAt: "desc" }, select: { id: true, name: true } })
+    : [];
 
   return (
     <>
-      <PageHeader title="Enterprise Portfolio" subtitle={`${rows.length} enterprises in the active organisation. Click any enterprise for its full capability profile.`} />
+      <PageHeader
+        title="Enterprise Portfolio"
+        subtitle={`${rows.length} ${rows.length === 1 ? "enterprise" : "enterprises"} in the active organisation. Click any enterprise for its full capability profile.`}
+        actions={canManage ? <CompanyForm programmes={programmes} /> : undefined}
+      />
+      {rows.length === 0 ? (
+        <EmptyState
+          title="No enterprises yet"
+          description={canManage ? "Add your first SME to begin diagnostics, improvement planning and implementation tracking." : "No enterprises have been added to this organisation yet."}
+        />
+      ) : (
       <Panel>
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -54,6 +70,7 @@ export default async function PortfolioPage() {
           </table>
         </div>
       </Panel>
+      )}
     </>
   );
 }

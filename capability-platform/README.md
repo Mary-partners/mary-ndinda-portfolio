@@ -35,6 +35,23 @@ npm run dev                     # http://localhost:3000
 
 Then open the app and pick a **demo user** on the login screen (one per role).
 
+## Live deployment & first run
+
+The hosted app runs on **Vercel + Supabase Postgres** and starts **empty** (no
+sample data), with **real email/password accounts**:
+
+1. Set env vars on the host: `DATABASE_URL` (Supabase transaction pooler),
+   `SESSION_SECRET`, `SEED_TOKEN`, `NEXT_PUBLIC_APP_ENV=production`.
+2. Apply the schema to the database (`prisma migrate deploy`, or apply the DDL once).
+3. Visit the site — with no accounts yet it redirects to **`/setup`**, a one-time
+   page that creates the first **administrator account** and **organisation** and
+   installs the default capability framework. It is disabled once an account exists.
+4. Sign in; create programmes and enterprises, invite team members (Settings /
+   Organisations), and run diagnostics.
+
+`GET /api/seed?token=$SEED_TOKEN` is an optional, idempotent endpoint that
+(re)installs the default framework only — it never creates sample enterprises.
+
 ### Scripts
 | Script | Purpose |
 |---|---|

@@ -96,7 +96,10 @@ export function can(user: SessionUser, action: string): boolean {
     "evidence.submit": ["FOUNDER", "ADVISOR"],
     "evidence.verify": ["REVIEWER", "PROGRAM_MANAGER"],
     "session.create": ["ADVISOR", "PROGRAM_MANAGER"],
-    "programme.manage": ["PROGRAM_MANAGER"],
+    "programme.manage": ["PROGRAM_MANAGER", "ADMIN"],
+    "org.manage": ["ADMIN"],
+    "company.manage": ["PROGRAM_MANAGER", "ADMIN"],
+    "user.manage": ["ADMIN"],
   };
   return (matrix[action] ?? []).includes(role);
 }
