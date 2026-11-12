@@ -4,7 +4,7 @@ import { latestAssessments } from "@/lib/portfolio";
 import { prisma } from "@/lib/prisma";
 import { PageHeader, Panel } from "@/components/ui/Page";
 import { StatusBadge } from "@/components/ui/Badge";
-import { fmtScore, fmtDate } from "@/lib/utils";
+import { fmtIndex, fmtDate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -36,7 +36,7 @@ export default async function DiagnosticsPage() {
                   <td className="td font-medium text-navy-700">{company.tradingName ?? company.legalName}</td>
                   <td className="td">{latest ? <StatusBadge status="Verified" /> : <span className="text-ink-muted">Not assessed</span>}{draftSet.has(company.id) && <span className="ml-2 text-xs text-amber-700">draft open</span>}</td>
                   <td className="td text-ink-muted">{fmtDate(latest?.finalizedAt)}</td>
-                  <td className="td font-medium">{fmtScore(latest?.overallScore)}</td>
+                  <td className="td font-medium">{fmtIndex(latest?.overallScore)}</td>
                   <td className="td text-ink-muted">{Math.round((latest?.completeness ?? 0) * 100)}%</td>
                   <td className="td text-right">
                     <Link href={`/portfolio/${company.id}/diagnostic`} className="text-xs font-medium text-navy-600 hover:underline">Open diagnostic</Link>

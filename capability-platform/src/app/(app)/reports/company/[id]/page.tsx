@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { requireUser, assertCompanyAccess } from "@/lib/auth";
 import { getCompanyDetail } from "@/lib/company";
-import { fmtScore, fmtDate, maturityBand, fmtNumber, pctChange } from "@/lib/utils";
+import { fmtScore, fmtIndex, fmtDate, maturityBand, fmtNumber, pctChange } from "@/lib/utils";
 import { CONSTRAINT_LABELS } from "@/lib/constants";
 import { PrintButton } from "@/components/PrintButton";
 
@@ -46,7 +46,7 @@ export default async function CompanyReport({ params }: { params: Promise<{ id: 
       <section className="mt-5">
         <h2 className="text-sm font-bold uppercase text-navy-700">Executive summary</h2>
         <div className="mt-2 flex gap-6">
-          <div><div className="text-xs text-ink-muted">Overall maturity</div><div className="text-2xl font-bold text-gold-700">{fmtScore(latest?.overallScore)}</div><div className="text-xs">{maturityBand(latest?.overallScore).label}</div></div>
+          <div><div className="text-xs text-ink-muted">Management Capital Index</div><div className="text-2xl font-bold text-gold-700">{fmtIndex(latest?.overallScore)}<span className="text-sm font-normal text-ink-muted">/100</span></div><div className="text-xs">{maturityBand(latest?.overallScore).label}</div></div>
           <div><div className="text-xs text-ink-muted">Completeness</div><div className="text-2xl font-bold text-navy-700">{Math.round((latest?.completeness ?? 0) * 100)}%</div></div>
           <div><div className="text-xs text-ink-muted">Evidence coverage</div><div className="text-2xl font-bold text-navy-700">{Math.round((latest?.evidenceCoverage ?? 0) * 100)}%</div></div>
         </div>
@@ -94,7 +94,7 @@ export default async function CompanyReport({ params }: { params: Promise<{ id: 
       </section>
 
       <section className="mt-5 rounded border border-navy/15 bg-surface-muted p-3 text-xs text-ink-muted">
-        <strong className="text-navy-700">Evidence & assessment limitations.</strong> Scores reflect a custom SME maturity assessment, not validated WMS scores. Founder-provided evidence is independently verified only when confirmed by a reviewer. Associations between management quality and financial outcomes are not treated as causal.
+        <strong className="text-navy-700">Evidence & assessment limitations.</strong> Scores reflect the Management Capital Index (managementcapitallab.com/framework), an original SME framework — not validated WMS scores. Founder-provided evidence is independently verified only when confirmed by a reviewer. Associations between management quality and financial outcomes are not treated as causal.
       </section>
     </div>
   );

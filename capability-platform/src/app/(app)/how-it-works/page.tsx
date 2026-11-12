@@ -3,13 +3,13 @@ import { DIMENSION_META } from "@/lib/constants";
 import {
   Gauge, ClipboardCheck, ListChecks, KanbanSquare, ShieldCheck, PieChart, LineChart,
   Crown, Briefcase, UserCog, BadgeCheck, Store, ArrowRight,
-  Compass, Banknote, Cog, Users, TrendingUp, Scale, Lightbulb, BarChart3,
+  Compass, Banknote, Cog, Users, TrendingUp, Scale, ExternalLink,
 } from "lucide-react";
 
 export const metadata = { title: "How it works" };
 
 const LOOP = [
-  { icon: ClipboardCheck, title: "Diagnose", desc: "Score management maturity across 8 dimensions, with the founder." },
+  { icon: ClipboardCheck, title: "Diagnose", desc: "Score management capability across the 6 Index pillars, with the founder." },
   { icon: ListChecks, title: "Plan", desc: "Turn the weakest areas into prioritised improvement plans." },
   { icon: KanbanSquare, title: "Implement", desc: "Work the plan — milestones, owners and advisory sessions." },
   { icon: ShieldCheck, title: "Verify", desc: "An independent reviewer confirms what was actually adopted." },
@@ -25,27 +25,25 @@ const ROLES = [
 ];
 
 const PRACTICES: Record<string, string> = {
-  strategic: "Clear priorities, deliberate resource allocation, responsibilities cascaded to the team.",
-  financial: "Monthly management accounts, a 13-week cash-flow forecast, pricing based on real margins.",
-  operational: "Documented core processes, quality control, root-cause problem solving.",
-  performance: "A defined KPI set, a monthly review cadence, corrective actions followed up.",
-  people: "Role clarity, accountable owners, performance reviews and succession.",
-  commercial: "Segmentation, margin analysis, pipeline and retention discipline.",
-  governance: "Approval limits, recorded management meetings, less founder-dependency.",
-  learning: "Capturing lessons and acting on them — retrospectives and an improvement log.",
+  financial: "Monthly management accounts, cash-flow forecasting, deliberate pricing, business/personal money separated.",
+  governance: "Defined roles and decision rights, spending approvals, internal controls, founder accountable to a board.",
+  strategic: "A clear customer and model, working unit economics, a specific growth strategy and credible use of funds.",
+  operational: "Documented processes, reliable inventory/delivery, a clear team structure, performance tracked to targets.",
+  founder: "Data-led decisions, financial literacy, openness to advice, consistent execution on commitments.",
+  absorption: "Capital deployed against a plan, tracked and reported to funders, with the right type of capital for the need.",
 };
 
 const DIM_ICON: Record<string, typeof Compass> = {
-  strategic: Compass, financial: Banknote, operational: Cog, performance: BarChart3,
-  people: Users, commercial: TrendingUp, governance: Scale, learning: Lightbulb,
+  financial: Banknote, governance: Scale, strategic: Compass, operational: Cog,
+  founder: Users, absorption: TrendingUp,
 };
 
 const LADDER = [
-  { n: 0, label: "Absent", tone: "bg-bad" },
-  { n: 1, label: "Informal", tone: "bg-bad/70" },
-  { n: 2, label: "Introduced", tone: "bg-warn" },
-  { n: 3, label: "Consistent", tone: "bg-ok/80" },
-  { n: 4, label: "Embedded", tone: "bg-ok" },
+  { range: "0–20", label: "Fragile", tone: "bg-bad" },
+  { range: "21–40", label: "Emerging", tone: "bg-bad/70" },
+  { range: "41–60", label: "Developing", tone: "bg-warn" },
+  { range: "61–80", label: "Finance-preparing", tone: "bg-ok/80" },
+  { range: "81–100", label: "Finance-ready", tone: "bg-ok" },
 ];
 
 const WINDOWS = [
@@ -75,6 +73,9 @@ export default function HowItWorksPage() {
           This platform measures whether the real constraint is <span className="font-semibold text-gold-300">management capability</span> —
           then helps build it, and proves it moved.
         </p>
+        <a href="https://www.managementcapitallab.com/framework" target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-gold-300 hover:text-gold-200">
+          Based on the published Management Capital Index <ExternalLink className="h-3.5 w-3.5" />
+        </a>
       </div>
 
       {/* The loop */}
@@ -114,8 +115,8 @@ export default function HowItWorksPage() {
         </div>
       </Panel>
 
-      {/* Dimensions = practices */}
-      <Panel title="The 8 capability dimensions — and the practices they build" className="mb-6">
+      {/* Pillars = practices */}
+      <Panel title="The 6 pillars of the Management Capital Index — and the practices they build" className="mb-6">
         <div className="grid gap-3 sm:grid-cols-2">
           {DIMENSION_META.map((d) => {
             const Icon = DIM_ICON[d.key] ?? Compass;
@@ -133,13 +134,13 @@ export default function HowItWorksPage() {
 
         {/* Maturity ladder */}
         <div className="mt-5 rounded-xl border border-navy/10 bg-surface-muted p-4">
-          <div className="mb-3 text-xs font-semibold uppercase tracking-wide text-ink-muted">Every practice is scored 0–4</div>
-          <div className="grid grid-cols-5 gap-2">
+          <div className="mb-3 text-xs font-semibold uppercase tracking-wide text-ink-muted">The Management Capital Index · 0–100 finance-readiness</div>
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
             {LADDER.map((l) => (
-              <div key={l.n} className="text-center">
+              <div key={l.label} className="text-center">
                 <div className={`h-1.5 rounded-full ${l.tone}`} />
-                <div className="mt-2 text-sm font-semibold text-navy-700">{l.n}</div>
-                <div className="text-[11px] text-ink-muted">{l.label}</div>
+                <div className="mt-2 text-sm font-semibold text-navy-700">{l.label}</div>
+                <div className="text-[11px] text-ink-muted">{l.range}</div>
               </div>
             ))}
           </div>

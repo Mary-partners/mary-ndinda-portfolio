@@ -1,6 +1,8 @@
-// Original SME assessment question library, authored from the publicly described
-// WMS / Management Matters constructs. These are NOT official WMS questions and
-// the resulting scores are NOT validated WMS scores — see the Research page.
+// The Management Capital Index question library — the 6 pillars and their
+// diagnostic questions, as published at
+// https://www.managementcapitallab.com/framework (Mary Ndinda, DBA research).
+// Each question is answered on the 0-4 scale in src/lib/constants.ts
+// (MATURITY_ANCHORS); pillar and overall scores roll up into the 0-100 Index.
 
 export interface SeedQuestion {
   text: string;
@@ -15,86 +17,57 @@ export interface SeedDimension {
 
 export const FRAMEWORK_CONTENT: SeedDimension[] = [
   {
-    key: "strategic",
-    questions: [
-      { text: "Can management state the company's three most important priorities and explain how they were chosen?" },
-      { text: "Are priorities translated into specific responsibilities for teams or individuals?" },
-      { text: "Does management have a clear basis for rejecting opportunities that do not fit the strategy?" },
-      { text: "Is relevant information (financial, customer, operational) used when making significant decisions?" },
-      { text: "Can management describe a recent decision that changed after new evidence emerged?" },
-    ],
-  },
-  {
     key: "financial",
     questions: [
-      { text: "Are management accounts prepared on a regular, predictable schedule?" },
-      { text: "Is there a named person responsible for reviewing financial performance?" },
-      { text: "Does the business forecast its cash requirements before shortfalls occur?" },
-      { text: "Are customer or product margins understood and used in pricing decisions?" },
-      { text: "Can management evaluate whether it can afford a new investment using its own numbers?" },
-      { text: "Can management point to a decision made in the last quarter using financial information?" },
-    ],
-  },
-  {
-    key: "operational",
-    questions: [
-      { text: "Are the processes most critical to customer value identified and documented appropriately for the company's size?" },
-      { text: "Does management have a reliable way to detect operating inefficiencies or bottlenecks?" },
-      { text: "When a delivery or quality target is missed, is there a defined response?" },
-      { text: "Are recurring operational problems investigated for root cause rather than repeatedly patched?" },
-      { text: "Can management demonstrate a process improvement completed in the last six months?" },
-    ],
-  },
-  {
-    key: "performance",
-    questions: [
-      { text: "Does management track a defined set of KPIs chosen for a clear reason?" },
-      { text: "Are the underlying data for those KPIs reasonably reliable and current?" },
-      { text: "Is performance information reviewed on a regular cadence by the right people?" },
-      { text: "When performance falls below target, are corrective actions assigned to named individuals?" },
-      { text: "Does management verify that assigned corrective actions were actually completed?" },
-    ],
-  },
-  {
-    key: "people",
-    questions: [
-      { text: "Does every function critical to the business have an accountable owner?" },
-      { text: "Are hiring needs determined from business requirements rather than ad hoc reaction?" },
-      { text: "Is there a practical way to evaluate and discuss employee performance?" },
-      { text: "Are high-performing employees recognised and underperformance addressed?" },
-      { text: "Could the business continue to operate key functions if the founder were away for two weeks?" },
-    ],
-  },
-  {
-    key: "commercial",
-    questions: [
-      { text: "Does management know which customers or products generate the strongest contribution margins?" },
-      { text: "Is there a deliberate, repeatable basis for setting prices?" },
-      { text: "Is the sales pipeline recorded and reviewed rather than held in people's heads?" },
-      { text: "Can the business identify and act on unprofitable customers or products?" },
-      { text: "Have commercial decisions changed in response to performance information?" },
+      { text: "Does the business know its monthly revenue, gross margin, and net profit?", helpText: "Recordkeeping and profitability monitoring." },
+      { text: "Can the founder explain cash-flow pressure before it becomes a crisis?", helpText: "Cash-flow forecasting." },
+      { text: "Are business and personal finances separated?", helpText: "Basic financial discipline and control." },
+      { text: "Does the business prepare monthly management accounts?", helpText: "Management accounts and use of accounting systems." },
     ],
   },
   {
     key: "governance",
     questions: [
-      { text: "Is it clear which decisions require founder approval and which managers can make independently?" },
-      { text: "Are expenditure approval limits defined and respected at a level appropriate to the company's size?" },
-      { text: "Are incompatible duties (e.g. approving and paying) separated where practical?" },
-      { text: "Is there a regular management meeting where decisions are recorded?" },
-      { text: "Would core functions keep running if the founder were suddenly unavailable?" },
+      { text: "Are key roles and decision rights clearly defined?", helpText: "Defined roles and separation of decision-making powers." },
+      { text: "Is there an approval process for significant spending?", helpText: "Approval processes and internal controls." },
+      { text: "Does the founder answer to a board, advisory board, or peer structure?", helpText: "Founder accountability." },
+      { text: "Are basic internal controls in place to prevent leakage or fraud?", helpText: "Internal controls and compliance." },
     ],
   },
   {
-    key: "learning",
+    key: "strategic",
     questions: [
-      { text: "Does management have a way to identify practices that are not working?" },
-      { text: "Is employee feedback captured and acted upon in a visible way?" },
-      { text: "Was a meaningful operational change introduced in the last six months, and its effect assessed?" },
-      { text: "Are lessons from mistakes documented and shared rather than lost?" },
-      { text: "Does management adjust its approach when its assumptions prove incorrect?" },
+      { text: "Can the founder explain who the customer is and why they buy?", helpText: "Customer segmentation and market positioning." },
+      { text: "Is there a clear, credible use of funds?", helpText: "Use-of-funds clarity." },
+      { text: "Do the unit economics work at the level of a single sale?", helpText: "Unit economics and revenue model." },
+      { text: "Is the growth strategy specific rather than aspirational?", helpText: "Growth strategy and business model clarity." },
+    ],
+  },
+  {
+    key: "operational",
+    questions: [
+      { text: "Are core processes documented rather than held in one person's memory?", helpText: "SOPs and delivery systems." },
+      { text: "Is inventory or delivery tracked reliably?", helpText: "Inventory controls and delivery systems." },
+      { text: "Does the team have a clear structure and accountability?", helpText: "Team structure." },
+      { text: "Is performance measured against targets?", helpText: "Performance tracking." },
+    ],
+  },
+  {
+    key: "founder",
+    questions: [
+      { text: "Does the founder make decisions with data or with instinct alone?", helpText: "Decision-making discipline and risk awareness." },
+      { text: "Is the founder financially literate about their own business?", helpText: "Financial literacy." },
+      { text: "Is the founder open to advice and willing to be challenged?", helpText: "Advisory openness and adaptability." },
+      { text: "Does the team execute consistently on what it commits to?", helpText: "Execution consistency." },
+    ],
+  },
+  {
+    key: "absorption",
+    questions: [
+      { text: "Is there a plan to track how capital is deployed once received?", helpText: "Capital deployment tracking." },
+      { text: "Can the business report back to a funder with credible numbers?", helpText: "Ability to report to funders." },
+      { text: "Is the type of capital matched to the business need (debt vs equity vs grant)?", helpText: "Alignment between capital type and business model." },
+      { text: "Has past capital produced revenue growth or productive assets?", helpText: "Productive asset creation and revenue growth after financing." },
     ],
   },
 ];
-
-export const TOTAL_QUESTIONS = FRAMEWORK_CONTENT.reduce((n, d) => n + d.questions.length, 0);

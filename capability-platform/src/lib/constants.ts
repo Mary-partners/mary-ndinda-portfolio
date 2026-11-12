@@ -69,7 +69,7 @@ export const CONSTRAINT_LABELS: Record<string, string> = {
   SkilledLabour: "Skilled labour",
 };
 
-// Custom SME maturity anchors (0-4). NOT the official WMS scale.
+// Answer scale (0-4) used when responding to each diagnostic question.
 export const MATURITY_ANCHORS = [
   { score: 0, label: "Absent", desc: "The practice does not exist, or there is no credible evidence of it." },
   { score: 1, label: "Informal", desc: "Exists informally, is inconsistent, or depends entirely on one individual." },
@@ -78,15 +78,24 @@ export const MATURITY_ANCHORS = [
   { score: 4, label: "Embedded", desc: "Consistently applied, monitored and improved; evidence shows it informs decisions." },
 ] as const;
 
+// The Management Capital Index — 6 pillars, as published at
+// https://www.managementcapitallab.com/framework (Mary Ndinda, DBA research).
 export const DIMENSION_META: { key: string; name: string; description: string }[] = [
-  { key: "strategic", name: "Strategic Management", description: "Priorities, resource allocation, decision-making and adaptability." },
-  { key: "financial", name: "Financial Management", description: "Records, management accounts, cash forecasting, pricing and financial decisions." },
-  { key: "operational", name: "Operational Management", description: "Process documentation, quality, productivity and continuous improvement." },
-  { key: "performance", name: "Performance Monitoring", description: "KPI selection, data reliability, review cadence and accountability." },
-  { key: "people", name: "People & Talent Management", description: "Structure, role clarity, performance management and succession." },
-  { key: "commercial", name: "Commercial Management", description: "Segmentation, pricing, pipeline, customer profitability and retention." },
-  { key: "governance", name: "Governance & Delegation", description: "Delegation, authority limits, controls and founder dependency." },
-  { key: "learning", name: "Organisational Learning", description: "Problem identification, feedback, experimentation and resilience." },
+  { key: "financial", name: "Financial Management Capability", description: "The ability to plan, track, control and interpret the financial position." },
+  { key: "governance", name: "Governance and Accountability", description: "Structures, controls and accountability that make decisions traceable and reduce founder concentration." },
+  { key: "strategic", name: "Strategic Clarity", description: "A coherent understanding of the model, customer, market and how capital translates into growth." },
+  { key: "operational", name: "Operational Systems", description: "Processes, tools and structures that let the business deliver consistently and scale without chaos." },
+  { key: "founder", name: "Founder and Management Capability", description: "The judgement, discipline, financial literacy and leadership maturity of the people running the business." },
+  { key: "absorption", name: "Capital Absorption Capability", description: "The ability to receive capital and convert it into productive outcomes." },
+];
+
+// Management Capital Index readiness bands (overall score out of 100).
+export const READINESS_BANDS: { min: number; max: number; label: string; tone: "bad" | "warn" | "ok"; description: string }[] = [
+  { min: 0, max: 20, label: "Fragile", tone: "bad", description: "Survival-focused; systems and records are largely absent." },
+  { min: 21, max: 40, label: "Emerging", tone: "bad", description: "Some structure forming, but numbers are not yet reliable." },
+  { min: 41, max: 60, label: "Developing", tone: "warn", description: "Basic systems in place; readiness is uneven across pillars." },
+  { min: 61, max: 80, label: "Finance-preparing", tone: "ok", description: "Close to ready; specific gaps to close before financing." },
+  { min: 81, max: 100, label: "Finance-ready", tone: "ok", description: "Evidence, discipline and absorption capacity are in place." },
 ];
 
 export const DIMENSION_NAME: Record<string, string> = Object.fromEntries(

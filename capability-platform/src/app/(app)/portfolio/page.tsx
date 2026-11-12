@@ -4,7 +4,7 @@ import { requireUser, can } from "@/lib/auth";
 import { latestAssessments } from "@/lib/portfolio";
 import { PageHeader, Panel, EmptyState } from "@/components/ui/Page";
 import { Badge } from "@/components/ui/Badge";
-import { fmtScore, maturityBand, fmtNumber } from "@/lib/utils";
+import { fmtIndex, maturityBand, fmtNumber } from "@/lib/utils";
 import { CompanyForm } from "@/components/forms/CompanyForm";
 
 export const dynamic = "force-dynamic";
@@ -40,8 +40,8 @@ export default async function PortfolioPage() {
                 <th className="th">Sector</th>
                 <th className="th">Stage</th>
                 <th className="th">Advisor</th>
-                <th className="th">Maturity</th>
-                <th className="th">Band</th>
+                <th className="th">Index</th>
+                <th className="th">Readiness</th>
                 <th className="th">Revenue</th>
               </tr>
             </thead>
@@ -60,7 +60,7 @@ export default async function PortfolioPage() {
                     <td className="td text-ink-muted">{company.sector}</td>
                     <td className="td text-ink-muted">{company.stage}</td>
                     <td className="td text-ink-muted">{company.advisor?.name ?? "—"}</td>
-                    <td className="td font-medium">{fmtScore(latest?.overallScore)}</td>
+                    <td className="td font-medium">{fmtIndex(latest?.overallScore)}</td>
                     <td className="td"><Badge tone={band.tone as "ok" | "warn" | "bad" | "neutral"}>{band.label}</Badge></td>
                     <td className="td text-ink-muted">{company.employees ? `${fmtNumber(company.employees)} staff` : "—"}</td>
                   </tr>

@@ -2,7 +2,7 @@ import { requireUser } from "@/lib/auth";
 import { getPortfolioStats } from "@/lib/portfolio";
 import { PageHeader, StatCard, Panel } from "@/components/ui/Page";
 import { CapabilityRadar, DimensionBars, DistributionBars, AdoptionFunnel } from "@/components/charts";
-import { fmtScore } from "@/lib/utils";
+import { fmtIndex, maturityBand } from "@/lib/utils";
 import { DIMENSION_META } from "@/lib/constants";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -33,9 +33,9 @@ export default async function OverviewPage() {
         <StatCard label="Enterprises enrolled" value={s.totalEnterprises} href="/portfolio" />
         <StatCard label="Assessments completed" value={s.assessed} sub={`${s.totalEnterprises - s.assessed} outstanding`} href="/diagnostics" />
         <StatCard
-          label="Avg management maturity"
-          value={fmtScore(s.avgMaturity)}
-          sub={s.maturityChange !== null ? `${s.maturityChange >= 0 ? "+" : ""}${s.maturityChange.toFixed(2)} vs baseline` : "0–4 scale"}
+          label="Avg. Management Capital Index"
+          value={s.avgMaturity !== null ? `${fmtIndex(s.avgMaturity)}/100` : "—"}
+          sub={maturityBand(s.avgMaturity).label}
           tone="gold"
         />
         <StatCard label="Verified practice adoption" value={`${s.pctVerifiedAdoption.toFixed(0)}%`} sub={`${s.companiesWithVerified} of ${s.totalEnterprises} enterprises`} tone="ok" href="/evidence" />
@@ -46,10 +46,10 @@ export default async function OverviewPage() {
       </div>
 
       <div className="mt-6 grid gap-5 lg:grid-cols-3">
-        <Panel title="Capability by dimension (portfolio average)" className="lg:col-span-1">
+        <Panel title="Capability by pillar (portfolio average)" className="lg:col-span-1">
           <CapabilityRadar data={radar} />
         </Panel>
-        <Panel title="Average scores by dimension" className="lg:col-span-2">
+        <Panel title="Average scores by pillar" className="lg:col-span-2">
           <DimensionBars data={s.dimensionAverages.map((d) => ({ name: d.name, score: d.score }))} />
         </Panel>
       </div>
@@ -74,7 +74,7 @@ export default async function OverviewPage() {
                 <tr className="border-b border-navy/10">
                   <th className="th">Enterprise</th>
                   <th className="th">Sector</th>
-                  <th className="th">Maturity</th>
+                  <th className="th">Index</th>
                   <th className="th">Scenario</th>
                   <th className="th"></th>
                 </tr>
@@ -87,7 +87,7 @@ export default async function OverviewPage() {
                     <tr key={company.id} className="border-b border-navy/5 last:border-0">
                       <td className="td font-medium text-navy-700">{company.tradingName ?? company.legalName}</td>
                       <td className="td text-ink-muted">{company.sector}</td>
-                      <td className="td">{fmtScore(latest?.overallScore)}</td>
+                      <td className="td">{fmtIndex(latest?.overallScore)}</td>
                       <td className="td text-ink-muted">{company.scenarioTag}</td>
                       <td className="td text-right">
                         <Link href={`/portfolio/${company.id}`} className="inline-flex items-center gap-1 text-xs font-medium text-navy-600 hover:underline">
