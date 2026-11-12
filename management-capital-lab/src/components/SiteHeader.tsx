@@ -3,9 +3,10 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, StickyNote } from "lucide-react";
+import { Menu, X, StickyNote, Gauge } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ButtonLink } from "@/components/ui/button";
+import { ButtonLink, buttonClasses } from "@/components/ui/button";
+import { SITE } from "@/lib/site";
 
 const NAV = [
   { href: "/", label: "Home" },
@@ -64,9 +65,14 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden items-center gap-2 lg:flex">
-          <ButtonLink href="/collaborate" variant="outline" size="sm">
-            Collaborate
-          </ButtonLink>
+          <a
+            href={SITE.platformUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={buttonClasses({ variant: "gold", size: "sm" })}
+          >
+            <Gauge className="h-4 w-4" /> Capability Platform
+          </a>
           <ButtonLink href="/contribute" variant="primary" size="sm">
             Leave a Post-It
           </ButtonLink>
@@ -100,6 +106,14 @@ export function SiteHeader() {
               </Link>
             ))}
             <div className="mt-2 flex flex-col gap-2 px-1 pb-2">
+              <a
+                href={SITE.platformUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={buttonClasses({ variant: "gold", size: "md" })}
+              >
+                <Gauge className="h-4 w-4" /> Capability Platform
+              </a>
               <ButtonLink href="/contribute" variant="primary" size="md">
                 Leave a Post-It
               </ButtonLink>
