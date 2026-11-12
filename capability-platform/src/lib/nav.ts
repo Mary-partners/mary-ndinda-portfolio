@@ -1,11 +1,12 @@
 import {
   LayoutDashboard, Building2, Briefcase, ClipboardCheck, Gauge, ListChecks,
   KanbanSquare, CalendarClock, ShieldCheck, LineChart, PieChart, FileText,
-  BookOpen, Settings,
+  BookOpen, Settings, Compass,
 } from "lucide-react";
 
 export const NAV = [
   { href: "/overview", label: "Overview", icon: LayoutDashboard },
+  { href: "/how-it-works", label: "How it works", icon: Compass },
   { href: "/organisations", label: "Organisations & Programmes", icon: Building2 },
   { href: "/portfolio", label: "Enterprise Portfolio", icon: Briefcase },
   { href: "/diagnostics", label: "Management Diagnostics", icon: ClipboardCheck },
