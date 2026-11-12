@@ -6,6 +6,8 @@ const FOOTER_LINKS = [
   { href: "/about", label: "About the Research" },
   { href: "/framework", label: "Management Capital Index" },
   { href: "/journey", label: "Research Journey" },
+  { href: "/findings", label: "Findings So Far" },
+  { href: "/library", label: "Research Library" },
   { href: "/field-notes", label: "Field Notes" },
   { href: "/collaborate", label: "Collaborate" },
   { href: "/contribute", label: "Leave a Post-It" },

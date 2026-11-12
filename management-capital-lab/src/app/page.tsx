@@ -23,6 +23,8 @@ import { HOME_PROMPT_CARDS } from "@/lib/data/prompts";
 import { PILLARS } from "@/lib/data/pillars";
 import { FIELD_NOTES } from "@/lib/data/field-notes";
 import { RESEARCH_PHASES } from "@/lib/data/phases";
+import { KEY_FINDINGS } from "@/lib/data/findings";
+import { LITERATURE_STATS } from "@/lib/data/library";
 
 export const dynamic = "force-dynamic";
 
@@ -30,7 +32,7 @@ const SNAPSHOT = [
   { icon: HelpCircle, stat: "1", label: "Core Question" },
   { icon: Layers, stat: "6", label: "Index Pillars" },
   { icon: Users, stat: "Multiple", label: "Stakeholder Voices" },
-  { icon: Database, stat: "Living", label: "Evidence Base" },
+  { icon: Database, stat: String(LITERATURE_STATS.total), label: "Articles in the Evidence Base" },
 ];
 
 export default async function HomePage() {
@@ -86,6 +88,43 @@ export default async function HomePage() {
                 <p className="mt-4 font-serif text-2xl text-navy-900">{stat}</p>
                 <p className="text-sm text-navy-600">{label}</p>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* C2. Findings so far */}
+      <section className="pb-16 sm:pb-20">
+        <div className="container-lab">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <SectionHeading
+              eyebrow="Findings so far"
+              title="What Chapters One and Two found"
+              description="Chapter One is complete and the Chapter Two literature review has been submitted. Three of the headline findings:"
+            />
+            <ButtonLink href="/findings" variant="ghost" size="sm">
+              All findings
+              <ArrowRight className="h-4 w-4" />
+            </ButtonLink>
+          </div>
+          <div className="mt-10 grid gap-5 md:grid-cols-3">
+            {[KEY_FINDINGS[2], KEY_FINDINGS[3], KEY_FINDINGS[4]].map((f) => (
+              <Link
+                key={f.n}
+                href="/findings#chapter-two"
+                className="group flex flex-col rounded-2xl border border-navy/10 bg-white p-6 shadow-soft transition-shadow hover:shadow-note"
+              >
+                <span className="grid h-8 w-8 place-items-center rounded-full bg-navy text-sm font-semibold text-cream">
+                  {f.n}
+                </span>
+                <h3 className="mt-4 font-serif text-lg leading-snug text-navy-900">
+                  {f.title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-navy-600">{f.body}</p>
+                <span className="mt-auto inline-flex items-center gap-1.5 pt-4 text-sm font-semibold text-forest group-hover:text-forest-700">
+                  Read more <ArrowRight className="h-3.5 w-3.5" />
+                </span>
+              </Link>
             ))}
           </div>
         </div>

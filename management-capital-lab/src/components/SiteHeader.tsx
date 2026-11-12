@@ -8,13 +8,22 @@ import { cn } from "@/lib/utils";
 import { ButtonLink, buttonClasses } from "@/components/ui/button";
 import { SITE } from "@/lib/site";
 
+// Primary navigation: kept to six links so the bar stays calm.
+// Home is the logo; Contribute is the "Leave a Post-It" button; Collaborate
+// lives in the mobile menu, the footer and the page calls-to-action.
 const NAV = [
-  { href: "/", label: "Home" },
   { href: "/about", label: "The Research" },
+  { href: "/findings", label: "Findings" },
   { href: "/framework", label: "Index" },
   { href: "/journey", label: "Journey" },
-  { href: "/field-notes", label: "Field Notes" },
   { href: "/library", label: "Library" },
+  { href: "/field-notes", label: "Field Notes" },
+];
+
+// The mobile menu has room for everything.
+const MOBILE_NAV = [
+  { href: "/", label: "Home" },
+  ...NAV,
   { href: "/collaborate", label: "Collaborate" },
   { href: "/contribute", label: "Contribute" },
 ];
@@ -32,13 +41,13 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-navy/10 bg-cream/85 backdrop-blur-md">
-      <div className="container-lab flex h-16 items-center justify-between gap-4">
-        <Link href="/" className="group flex items-center gap-2.5">
+      <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-4 px-5 sm:px-8">
+        <Link href="/" className="group flex shrink-0 items-center gap-2.5">
           <span className="grid h-9 w-9 place-items-center rounded-lg bg-navy text-cream">
             <StickyNote className="h-5 w-5" strokeWidth={2} />
           </span>
           <span className="leading-tight">
-            <span className="block font-serif text-[15px] font-semibold text-navy-900">
+            <span className="block whitespace-nowrap font-serif text-[15px] font-semibold text-navy-900">
               The Management Capital Lab
             </span>
             <span className="block text-[11px] tracking-wide text-navy-500">
@@ -53,7 +62,7 @@ export function SiteHeader() {
               key={item.href}
               href={item.href}
               className={cn(
-                "rounded-full px-3 py-2 text-sm font-medium transition-colors",
+                "whitespace-nowrap rounded-full px-2.5 py-2 text-sm xl:px-3 font-medium transition-colors",
                 isActive(item.href)
                   ? "bg-navy/10 text-navy-900"
                   : "text-navy-600 hover:bg-navy/5 hover:text-navy-900"
@@ -64,17 +73,20 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-2 lg:flex">
+        <div className="hidden shrink-0 items-center gap-2 lg:flex">
           <a
             href={SITE.platformUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className={buttonClasses({ variant: "gold", size: "sm" })}
+            className={buttonClasses({ variant: "gold", size: "sm", className: "whitespace-nowrap" })}
           >
-            <Gauge className="h-4 w-4" /> Capability Platform
+            <Gauge className="h-4 w-4" />
+            <span className="hidden xl:inline">Capability Platform</span>
+            <span className="xl:hidden">Platform</span>
           </a>
-          <ButtonLink href="/contribute" variant="primary" size="sm">
-            Leave a Post-It
+          <ButtonLink href="/contribute" variant="primary" size="sm" className="whitespace-nowrap">
+            <span className="hidden xl:inline">Leave a Post-It</span>
+            <span className="xl:hidden">Post-It</span>
           </ButtonLink>
         </div>
 
@@ -91,7 +103,7 @@ export function SiteHeader() {
       {open && (
         <div className="border-t border-navy/10 bg-cream lg:hidden">
           <nav className="container-lab flex flex-col py-3" aria-label="Mobile">
-            {NAV.map((item) => (
+            {MOBILE_NAV.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
@@ -112,13 +124,12 @@ export function SiteHeader() {
                 rel="noopener noreferrer"
                 className={buttonClasses({ variant: "gold", size: "md" })}
               >
-                <Gauge className="h-4 w-4" /> Capability Platform
+                <Gauge className="h-4 w-4" />
+            <span className="hidden xl:inline">Capability Platform</span>
+            <span className="xl:hidden">Platform</span>
               </a>
               <ButtonLink href="/contribute" variant="primary" size="md">
                 Leave a Post-It
-              </ButtonLink>
-              <ButtonLink href="/collaborate" variant="outline" size="md">
-                Collaborate
               </ButtonLink>
             </div>
           </nav>

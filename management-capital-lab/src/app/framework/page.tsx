@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Gauge, Clock, ArrowRight } from "lucide-react";
+import { Gauge, Clock, ArrowRight, RefreshCw, ShieldAlert } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
 import { SectionHeading } from "@/components/SectionHeading";
 import { PillarDetail } from "@/components/PillarCard";
+import { ConceptualModel } from "@/components/ConceptualModel";
 import { ButtonLink } from "@/components/ui/button";
 import { PILLARS, SCORE_BANDS, ARCHETYPES } from "@/lib/data/pillars";
 
@@ -45,11 +46,49 @@ export default function IndexPage() {
         </nav>
       </PageHeader>
 
+      {/* What changed after Chapter Two */}
+      <section className="container-lab pt-14 sm:pt-16">
+        <div className="flex gap-3 rounded-2xl border border-gold/30 bg-gold-50 p-5 text-sm leading-relaxed text-navy-700">
+          <RefreshCw className="mt-0.5 h-5 w-5 shrink-0 text-gold-600" />
+          <div>
+            <p className="font-semibold text-navy-900">
+              Updated after the Chapter Two literature review (November 2026)
+            </p>
+            <p className="mt-1">
+              The six pillars hold, with three refinements. Strategy now
+              explicitly includes market orientation. Operations and the founder
+              pillar are broadened to process discipline and the whole management
+              team. And Pillar 6 now measures{" "}
+              <strong>capital-deployment readiness before funding</strong>, while
+              realised absorption after funding is tested separately as an
+              outcome. Each pillar below shows what the literature says and what
+              the fieldwork still has to test.{" "}
+              <Link href="/findings" className="font-medium text-forest underline underline-offset-2 hover:text-forest-700">
+                Read the findings
+              </Link>
+              .
+            </p>
+          </div>
+        </div>
+      </section>
+
       <div className="container-lab space-y-8 py-16 sm:py-20">
         {PILLARS.map((p) => (
           <PillarDetail key={p.id} pillar={p} />
         ))}
       </div>
+
+      {/* Conceptual model */}
+      <section className="border-t border-navy/10 py-16 sm:py-20">
+        <div className="container-lab">
+          <SectionHeading
+            eyebrow="How the pillars connect to outcomes"
+            title="The conceptual model"
+            description="The six pillars make up management capital. The study will test how it relates to investment readiness, access to finance, realised capital absorption and sustainable growth."
+          />
+          <ConceptualModel className="mt-10" />
+        </div>
+      </section>
 
       {/* Scoring concept */}
       <section className="border-y border-navy/10 bg-white py-16 sm:py-20">
@@ -72,6 +111,18 @@ export default function IndexPage() {
                 </p>
               </div>
             ))}
+          </div>
+          <div className="mt-8 flex gap-3 rounded-2xl border border-navy/10 bg-cream-50 p-5 text-sm leading-relaxed text-navy-700">
+            <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-navy-500" />
+            <p>
+              <strong className="text-navy-900">Profiles before scores.</strong>{" "}
+              The literature does not yet justify weights between pillars, and a
+              single number can hide a serious weakness behind a strong pillar.
+              The first version of the index will report pillar-level profiles;
+              any overall score stays provisional until validated. It is designed
+              to support diagnosis and advisory sequencing, not to act as an
+              automatic lending threshold.
+            </p>
           </div>
         </div>
       </section>

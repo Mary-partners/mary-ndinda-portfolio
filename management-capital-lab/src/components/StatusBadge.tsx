@@ -18,6 +18,7 @@ export function PhaseStatusBadge({
 }) {
   const map = {
     Completed: "green" as const,
+    Submitted: "navy" as const,
     "In Progress": "gold" as const,
     Open: "forest" as const,
     Upcoming: "neutral" as const,

@@ -5,6 +5,9 @@ import {
   Settings2,
   UserRoundCheck,
   Sprout,
+  BookOpenText,
+  FlaskConical,
+  RefreshCw,
 } from "lucide-react";
 import type { Pillar } from "@/lib/data/pillars";
 
@@ -46,6 +49,13 @@ export function PillarDetail({ pillar }: { pillar: Pillar }) {
           <h2 className="font-serif text-2xl text-navy-900">{pillar.name}</h2>
         </div>
       </div>
+
+      {pillar.changeNote && (
+        <p className="mt-5 flex items-start gap-2 rounded-xl border border-gold/30 bg-gold-50 px-4 py-3 text-sm leading-relaxed text-navy-700">
+          <RefreshCw className="mt-0.5 h-4 w-4 shrink-0 text-gold-600" />
+          <span>{pillar.changeNote}</span>
+        </p>
+      )}
 
       <div className="mt-6 grid gap-8 lg:grid-cols-2">
         <div>
@@ -109,6 +119,28 @@ export function PillarDetail({ pillar }: { pillar: Pillar }) {
               </p>
             </div>
           </div>
+        </div>
+      </div>
+
+      <div className="mt-8 grid gap-4 border-t border-navy/10 pt-6 lg:grid-cols-[1.4fr_1fr]">
+        <div>
+          <h3 className="flex items-center gap-2 text-sm font-semibold text-navy-900">
+            <BookOpenText className="h-4 w-4 text-forest" />
+            What the literature says
+            <span className="font-normal text-navy-500">(Chapter Two)</span>
+          </h3>
+          <p className="mt-1.5 text-sm leading-relaxed text-navy-700">
+            {pillar.evidence}
+          </p>
+        </div>
+        <div className="rounded-xl bg-cream-100 p-4 ring-1 ring-inset ring-navy/10">
+          <h3 className="flex items-center gap-2 text-sm font-semibold text-navy-900">
+            <FlaskConical className="h-4 w-4 text-gold-600" />
+            Still to be tested
+          </h3>
+          <p className="mt-1.5 text-sm leading-relaxed text-navy-700">
+            {pillar.openQuestion}
+          </p>
         </div>
       </div>
     </section>
