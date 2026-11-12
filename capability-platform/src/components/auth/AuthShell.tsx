@@ -30,8 +30,12 @@ export function AuthShell({ children, footnote }: { children: React.ReactNode; f
         </div>
 
         <div className="relative max-w-md">
-          <h2 className="text-3xl font-semibold leading-tight text-white xl:text-4xl">
-            Turn management capability into measurable growth.
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-[11px] font-medium uppercase tracking-wide text-gold-200">
+            <span className="h-1.5 w-1.5 rounded-full bg-gold" />
+            For funds, DFIs, accelerators &amp; ESOs
+          </span>
+          <h2 className="mt-5 text-3xl font-semibold leading-tight text-white xl:text-4xl">
+            Turn management capability into <span className="text-gold-300">measurable growth.</span>
           </h2>
           <p className="mt-4 text-[15px] leading-relaxed text-white/70">
             A diagnostic, implementation and portfolio-intelligence platform for the organisations backing African SMEs.
@@ -39,7 +43,7 @@ export function AuthShell({ children, footnote }: { children: React.ReactNode; f
           <ul className="mt-8 space-y-5">
             {FEATURES.map((f) => (
               <li key={f.title} className="flex gap-3.5">
-                <span className="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-white/10 text-gold-200 ring-1 ring-white/10">
+                <span className="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-gold/15 text-gold-200 ring-1 ring-gold/25">
                   <f.icon className="h-[18px] w-[18px]" />
                 </span>
                 <div>
