@@ -7,7 +7,7 @@ import { InviteLink } from "@/components/InviteLink";
 import { PageHeader, Panel, StatCard, EmptyState } from "@/components/ui/Page";
 import { Badge, StatusBadge } from "@/components/ui/Badge";
 import { CapabilityRadar } from "@/components/charts";
-import { fmtScore, fmtDate, fmtNumber, pctChange, maturityBand } from "@/lib/utils";
+import { fmtScore, fmtIndex, fmtDate, fmtNumber, pctChange, maturityBand } from "@/lib/utils";
 import { CONSTRAINT_LABELS } from "@/lib/constants";
 import { AlertTriangle, ClipboardCheck, ArrowRight, Download } from "lucide-react";
 
@@ -61,7 +61,7 @@ export default async function CompanyPage({ params }: { params: Promise<{ id: st
       />
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Overall maturity" value={fmtScore(latest?.overallScore)} sub={<Badge tone={band.tone as "ok" | "warn" | "bad" | "neutral"}>{band.label}</Badge>} tone="gold" />
+        <StatCard label="Management Capital Index" value={latest?.overallScore != null ? `${fmtIndex(latest?.overallScore)}/100` : "—"} sub={<Badge tone={band.tone as "ok" | "warn" | "bad" | "neutral"}>{band.label}</Badge>} tone="gold" />
         <StatCard label="Assessment completeness" value={`${Math.round((latest?.completeness ?? 0) * 100)}%`} sub="of applicable questions" />
         <StatCard label="Evidence coverage" value={`${Math.round((latest?.evidenceCoverage ?? 0) * 100)}%`} sub="answered items verified" />
         <StatCard label="Open interventions" value={company.plans.filter((p) => !["Verified", "Rejected"].includes(p.status)).length} tone="navy" href="/implementation" />

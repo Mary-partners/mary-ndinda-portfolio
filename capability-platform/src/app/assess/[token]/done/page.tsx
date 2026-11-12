@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getCompanyDetail } from "@/lib/company";
-import { fmtScore, maturityBand } from "@/lib/utils";
+import { fmtIndex, maturityBand } from "@/lib/utils";
 import { Gauge, Download, CheckCircle2 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -30,11 +30,11 @@ export default async function AssessDonePage({ params }: { params: Promise<{ tok
             <p className="mt-1.5 text-sm text-ink-muted">You&apos;ve completed the management capability check for {name}. Here&apos;s your result, and a full PDF report to download.</p>
 
             <div className="mt-5 rounded-xl border border-navy/10 bg-surface-muted p-4">
-              <div className="text-xs text-ink-muted">Overall management maturity</div>
+              <div className="text-xs text-ink-muted">Management Capital Index</div>
               <div className="mt-0.5 flex items-baseline gap-2">
-                <span className="text-3xl font-semibold text-gold-700">{fmtScore(latest?.overallScore)}</span>
+                <span className="text-3xl font-semibold text-gold-700">{fmtIndex(latest?.overallScore)}</span>
+                <span className="text-xs text-ink-muted">/ 100</span>
                 <span className="text-sm font-medium text-navy-700">{band.label}</span>
-                <span className="text-xs text-ink-muted">of 4.0</span>
               </div>
             </div>
 

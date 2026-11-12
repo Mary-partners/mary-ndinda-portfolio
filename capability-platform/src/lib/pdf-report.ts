@@ -1,7 +1,7 @@
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import type { PDFFont, PDFPage, RGB } from "pdf-lib";
 import { DIMENSION_META, CONSTRAINT_LABELS } from "./constants";
-import { fmtScore, fmtNumber, fmtDate, pctChange, maturityBand } from "./utils";
+import { fmtScore, fmtIndex, fmtNumber, fmtDate, pctChange, maturityBand } from "./utils";
 import type { getCompanyDetail } from "./company";
 import type { getPortfolioStats } from "./portfolio";
 
@@ -134,7 +134,7 @@ export async function buildCompanyReportPdf(detail: Detail, orgName: string): Pr
   d.section("Executive summary");
   const band = maturityBand(latest?.overallScore);
   const stats: [string, string, string, RGB][] = [
-    ["Overall maturity", fmtScore(latest?.overallScore), band.label, GOLD_DEEP],
+    ["Management Capital Index", latest?.overallScore != null ? fmtIndex(latest?.overallScore) + "/100" : "—", band.label, GOLD_DEEP],
     ["Completeness", Math.round((latest?.completeness ?? 0) * 100) + "%", "applicable answered", NAVY],
     ["Evidence coverage", Math.round((latest?.evidenceCoverage ?? 0) * 100) + "%", "independently verified", NAVY],
   ];
@@ -156,7 +156,7 @@ export async function buildCompanyReportPdf(detail: Detail, orgName: string): Pr
   // Capability breakdown
   d.section("Capability breakdown");
   const c1 = M, c2 = M + 210, c3 = M + 270, cbar = M + 330, cband = M + 452;
-  d.cell("Dimension", c1, { size: 8.5, bold: true, color: MUTED });
+  d.cell("Pillar", c1, { size: 8.5, bold: true, color: MUTED });
   d.cell("Base", c2, { size: 8.5, bold: true, color: MUTED, align: "right", w: 34 });
   d.cell("Now", c3, { size: 8.5, bold: true, color: MUTED, align: "right", w: 34 });
   d.cell("Maturity", cbar, { size: 8.5, bold: true, color: MUTED });
@@ -230,7 +230,7 @@ export async function buildPortfolioReportPdf(stats: Stats, orgName: string): Pr
   d.section("Headline metrics");
   const cards: [string, string, string, RGB][] = [
     ["Enterprises", String(stats.totalEnterprises), `${stats.assessed} assessed`, NAVY],
-    ["Avg. maturity", fmtScore(stats.avgMaturity), maturityBand(stats.avgMaturity).label, GOLD_DEEP],
+    ["Avg. Index", stats.avgMaturity != null ? fmtIndex(stats.avgMaturity) + "/100" : "—", maturityBand(stats.avgMaturity).label, GOLD_DEEP],
     ["Verified adoption", Math.round(stats.pctVerifiedAdoption) + "%", "of enterprises", NAVY],
     ["Evidence coverage", Math.round(stats.evidenceCoverage) + "%", "verified / submitted", NAVY],
   ];
@@ -244,7 +244,7 @@ export async function buildPortfolioReportPdf(stats: Stats, orgName: string): Pr
   d.y -= 54;
   d.hr();
 
-  d.section("Average capability by dimension");
+  d.section("Average capability by pillar");
   for (const dim of stats.dimensionAverages) {
     d.ensure(16);
     d.cell(dim.name, M, { size: 9.5 });
