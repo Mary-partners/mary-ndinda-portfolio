@@ -1,14 +1,15 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { requireUser, assertCompanyAccess } from "@/lib/auth";
+import { requireUser, assertCompanyAccess, can } from "@/lib/auth";
 import { getCompanyDetail } from "@/lib/company";
 import { startReassessment } from "@/app/actions/assessment";
+import { InviteLink } from "@/components/InviteLink";
 import { PageHeader, Panel, StatCard, EmptyState } from "@/components/ui/Page";
 import { Badge, StatusBadge } from "@/components/ui/Badge";
 import { CapabilityRadar } from "@/components/charts";
 import { fmtScore, fmtDate, fmtNumber, pctChange, maturityBand } from "@/lib/utils";
 import { CONSTRAINT_LABELS } from "@/lib/constants";
-import { AlertTriangle, ClipboardCheck, ArrowRight } from "lucide-react";
+import { AlertTriangle, ClipboardCheck, ArrowRight, Download } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +20,7 @@ export default async function CompanyPage({ params }: { params: Promise<{ id: st
   const data = await getCompanyDetail(id);
   if (!data) notFound();
   const { company, latest, baseline, draft, dimRows } = data;
+  const canManage = can(user, "company.manage");
 
   const radar = dimRows.map((d) => ({ dimension: d.name.split(" ")[0], current: d.current, baseline: d.baseline }));
   const band = maturityBand(latest?.overallScore);
@@ -46,7 +48,8 @@ export default async function CompanyPage({ params }: { params: Promise<{ id: st
         title={company.tradingName ?? company.legalName}
         subtitle={`${company.sector} · ${company.country} · ${company.stage ?? ""} · Advisor: ${company.advisor?.name ?? "—"}`}
         actions={
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <a href={`/api/report/company/${company.id}`} className="btn-outline"><Download className="h-4 w-4" /> PDF report</a>
             <Link href={`/portfolio/${company.id}/diagnostic${latest ? `?assessment=${draft?.id ?? ""}` : ""}`} className="btn-outline">
               <ClipboardCheck className="h-4 w-4" /> {latest ? "View diagnostic" : "Start diagnostic"}
             </Link>
@@ -63,6 +66,15 @@ export default async function CompanyPage({ params }: { params: Promise<{ id: st
         <StatCard label="Evidence coverage" value={`${Math.round((latest?.evidenceCoverage ?? 0) * 100)}%`} sub="answered items verified" />
         <StatCard label="Open interventions" value={company.plans.filter((p) => !["Verified", "Rejected"].includes(p.status)).length} tone="navy" href="/implementation" />
       </div>
+
+      {canManage && (
+        <div className="mt-5">
+          <Panel title="Founder self-assessment">
+            <p className="mb-3 text-sm text-ink-muted">Invite the business owner to complete the capability check themselves. Their answers appear here as self-reported maturity — evidence is only counted once a reviewer verifies it.</p>
+            <InviteLink companyId={company.id} existingToken={company.inviteToken} />
+          </Panel>
+        </div>
+      )}
 
       <div className="mt-6 grid gap-5 lg:grid-cols-3">
         <Panel title="Capability profile (baseline vs current)">
