@@ -2,6 +2,45 @@ import type { FieldNote } from "../types";
 
 export const FIELD_NOTES: FieldNote[] = [
   {
+    id: "fn-7",
+    slug: "what-64-studies-say-about-money-and-management",
+    title: "What 64 Studies Say About Money and Management",
+    excerpt:
+      "Chapter Two is in. The literature doesn't say finance is unimportant. It says finance and management capability are complements, and the evidence splits in ways that point straight at the missing layer.",
+    category: "Literature review",
+    tags: ["Chapter Two", "Literature review", "Evidence base", "Kenya", "South Africa"],
+    publishedAt: "2026-11-12",
+    readingTime: 6,
+    status: "published",
+    body: [
+      "I have just submitted the formal draft of Chapter Two, the literature review. It rests on a structured database of 64 verified journal articles and research papers spanning theory, management practices, capital-use experiments, SME finance, human capital, strategy, governance, absorptive capacity and African SME evidence. Every record captures the method, geography, variables, key finding, limitation and relevance to the Management Capital Index. You can browse all of them in the research library.",
+      "The first thing the review makes clear is that the finance-constraint story is not wrong. Smaller firms do face greater obstacles: information is costly to verify, collateral is scarce, and lenders may ration credit even to borrowers willing to pay more. Across more than 10,000 firms in 30 African countries, firms without credit constraints grew faster. Any honest account of SME growth keeps finance in the model.",
+      "But the evidence also shows that management is not a soft extra. When structured practices were introduced in Indian textile plants, productivity rose by around 17% in the first year. Across seven developing countries, including Kenya, simple routines such as record keeping, stock control and financial planning predicted sales, profits and survival. The conclusion I keep returning to is complementarity: capability cannot compensate indefinitely for missing capital, and capital cannot reliably compensate for weak systems.",
+      "The most useful part of the review, for me, was where the studies disagree. Grants produced high returns in Sri Lanka but no lasting gains for tailors in Ghana. Some training raised profits; some only changed knowledge. Consulting improved systems without always improving long-run profit. These disagreements don't cancel each other out. They expose the missing explanatory layer: which firms have, or can develop, the capability to turn an intervention into continuing performance, and through which decisions.",
+      "The review also sharpened the framework. Two concepts I had held together now need to be separated: readiness to deploy capital, assessed before funding, and realised capital absorption, observed afterwards. Measuring both inside the same index would quietly build the outcome into the predictor. So Pillar 6 now measures deployment readiness, and realised absorption is tested separately.",
+      "Finally, the review confirmed Kenya and South Africa as the study's comparative markets, and showed how thin the directly comparable evidence is: only three Kenya-specific and three South Africa-specific studies in the current base. That gap is a finding in its own right. It is why the next stage is qualitative, with founders, funders and support organisations in both countries, before any survey is fielded.",
+    ],
+  },
+  {
+    id: "fn-6",
+    slug: "the-moment-after-the-money-arrives",
+    title: "The Moment After the Money Arrives",
+    excerpt:
+      "Most research stops at whether a business got funded. The decisions made in the weeks after the money lands may matter just as much.",
+    category: "Diagnosis",
+    tags: ["Capital absorption", "Deployment readiness", "Chapter Two"],
+    publishedAt: "2026-11-10",
+    readingTime: 4,
+    status: "published",
+    body: [
+      "One of the most valuable pieces of supervisor feedback on my literature review pointed at a moment the research tends to skip: the period immediately after finance is received.",
+      "A business can present a credible funding need and still be unprepared for the speed, scale and irreversibility of what follows disbursement. New liquidity widens the choice set and loosens the discipline that scarcity used to impose. Recruitment, a brand refresh, new premises, equipment and marketing can all be brought forward before demand, processes or supervision are ready. In more serious cases, owner withdrawals, bonuses or unbudgeted spending quietly drain the value of the investment. Others go the opposite way and become so cautious that the funds miss their window.",
+      "The experimental evidence supports taking this seriously. In Ghana, grants given in kind stayed in the business while cash grants leaked out. Identical grants produced very different returns across Sri Lankan microenterprises. Yet most studies measure sales or profit at follow-up. They rarely reconstruct the sequence of decisions in between.",
+      "So the study now separates three stages. Deployment readiness is the plan, controls and decision rules in place before the money arrives. Deployment behaviour is what managers actually do after receipt. Realised absorption is whether that spending turns into productive capacity, is tracked against milestones, and is corrected when assumptions fail.",
+      "Good post-capital judgement includes restraint: delaying a hire until revenue milestones are met, or revising the budget when customer evidence changes. Those choices are almost invisible in a standard survey, which is why the fieldwork will ask founders where actual use departed from the plan, and ask funders what distinguishes firms that can responsibly absorb larger tickets. If you have lived this moment, as a founder or as a funder, I would love a post-it about it.",
+    ],
+  },
+  {
     id: "fn-1",
     slug: "money-is-not-enough",
     title: "Money Is Not Enough",

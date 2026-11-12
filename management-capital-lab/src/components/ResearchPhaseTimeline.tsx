@@ -1,4 +1,5 @@
-import { Check, Loader2, DoorOpen, Circle } from "lucide-react";
+import Link from "next/link";
+import { Check, Loader2, DoorOpen, Circle, Send, ArrowRight } from "lucide-react";
 import type { ResearchPhase } from "@/lib/types";
 import { PhaseStatusBadge } from "@/components/StatusBadge";
 import { cn } from "@/lib/utils";
@@ -6,12 +7,14 @@ import { cn } from "@/lib/utils";
 function Marker({ status }: { status: ResearchPhase["status"] }) {
   const styles = {
     Completed: "bg-emerald-500 text-white border-emerald-500",
+    Submitted: "bg-white text-emerald-600 border-emerald-500",
     "In Progress": "bg-gold text-navy-900 border-gold",
     Open: "bg-forest text-cream border-forest",
     Upcoming: "bg-white text-navy-300 border-navy/20",
   }[status];
   const Icon = {
     Completed: Check,
+    Submitted: Send,
     "In Progress": Loader2,
     Open: DoorOpen,
     Upcoming: Circle,
@@ -53,9 +56,23 @@ export function ResearchPhaseTimeline({
               </h3>
               <PhaseStatusBadge status={phase.status} />
             </div>
+            {phase.milestone && (
+              <p className="mt-1 text-xs font-medium text-navy-500">
+                {phase.milestone}
+              </p>
+            )}
             <p className="mt-2 text-sm leading-relaxed text-navy-600">
               {phase.description}
             </p>
+            {phase.href && (
+              <Link
+                href={phase.href}
+                className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-forest hover:text-forest-700"
+              >
+                Read what it found
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            )}
           </div>
         </li>
       ))}

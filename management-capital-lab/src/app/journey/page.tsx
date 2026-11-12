@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
-import { Compass } from "lucide-react";
+import { Compass, ArrowRight } from "lucide-react";
+import Link from "next/link";
 import { PageHeader } from "@/components/PageHeader";
 import { ResearchPhaseTimeline } from "@/components/ResearchPhaseTimeline";
 import { formatDate } from "@/lib/utils";
 import {
   RESEARCH_PHASES,
   RESEARCH_PROGRESS,
+  RESEARCH_PROGRESS_NOTE,
   CURRENT_FOCUS,
 } from "@/lib/data/phases";
 
@@ -49,7 +51,7 @@ export default function JourneyPage() {
               />
             </div>
             <p className="mt-3 text-xs text-navy-500">
-              Early stage: literature review and framework design underway.
+              {RESEARCH_PROGRESS_NOTE}
             </p>
           </div>
 
@@ -68,6 +70,26 @@ export default function JourneyPage() {
               Updated {formatDate(CURRENT_FOCUS.updated)}
             </p>
           </div>
+
+          {/* Findings so far */}
+          <Link
+            href="/findings"
+            className="group mt-5 block rounded-2xl border border-forest/20 bg-forest/5 p-6 transition-colors hover:bg-forest/10"
+          >
+            <p className="text-xs font-semibold uppercase tracking-wide text-forest-700">
+              Findings so far
+            </p>
+            <p className="mt-2 font-serif text-lg leading-snug text-navy-900">
+              What Chapters One and Two found
+            </p>
+            <p className="mt-1.5 text-sm leading-relaxed text-navy-600">
+              The argument, the refined model, the hypotheses and the eight
+              research gaps, drawn from the 64-article evidence base.
+            </p>
+            <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-forest group-hover:text-forest-700">
+              Read the findings <ArrowRight className="h-3.5 w-3.5" />
+            </span>
+          </Link>
         </aside>
 
         <div>

@@ -12,6 +12,12 @@ import {
 import { PageHeader } from "@/components/PageHeader";
 import { SectionHeading } from "@/components/SectionHeading";
 import { ButtonLink } from "@/components/ui/button";
+import {
+  OBJECTIVES,
+  SUPPORTING_QUESTIONS,
+  THESIS_IN_BRIEF,
+  HYPOTHESES,
+} from "@/lib/data/findings";
 
 export const metadata: Metadata = {
   title: "About the Research",
@@ -26,24 +32,7 @@ const EXAMPLES = [
   "Some need governance before investment",
   "Some need advisory support before debt",
   "Some need climate or shock resilience before capital",
-];
-
-const SUB_QUESTIONS = [
-  "What are the key dimensions of management capital that influence SME growth in the African context?",
-  "How does financial-management capability affect SME investment readiness and access to finance?",
-  "To what extent does management capital determine an SME's ability to absorb and deploy financial capital productively?",
-  "What relationship exists between management capital and sustainable SME growth outcomes?",
-  "Can a Management Capital Index classify SMEs according to readiness for finance and advisory support needs?",
-  "How can banks, funders, investors, ESOs, and advisory firms use management-capital diagnostics?",
-];
-
-const OBJECTIVES = [
-  "Identify the core components of management capital",
-  "Examine the relationship between financial-management capability and investment readiness",
-  "Analyse how management capital affects capital absorption",
-  "Assess whether stronger management capital leads to better growth outcomes",
-  "Design a Management Capital Index",
-  "Generate recommendations for founders, banks, investors, ESOs, funders, and advisors",
+  "Some are capable but simply underfinanced",
 ];
 
 const IMPACT = [
@@ -117,12 +106,14 @@ export default function AboutPage() {
         <section className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
           <SectionHeading eyebrow="Research Aim" title="What this study sets out to do" />
           <div className="prose-lab">
+            <p>{THESIS_IN_BRIEF.aim}</p>
             <p>
-              The aim of this study is to examine the role of management capital
-              in African SME growth by developing and testing a{" "}
-              <strong>Management Capital Index</strong> that predicts investment
-              readiness, capital absorption capacity, and sustainable business
-              growth.
+              The empirical study focuses on <strong>Kenya and South Africa</strong>:
+              two markets with active SME and financial ecosystems that differ in
+              market depth, informality, institutions and access to growth
+              capital. They are compared as distinct cases, and findings will be
+              reported as evidence from those two markets rather than claimed
+              for the whole continent.
             </p>
           </div>
         </section>
@@ -138,13 +129,11 @@ export default function AboutPage() {
               Main question
             </p>
             <p className="mt-2 font-serif text-xl leading-snug text-navy-900">
-              To what extent does management capital influence investment
-              readiness, capital absorption, and sustainable growth among
-              African SMEs?
+              {THESIS_IN_BRIEF.mainQuestion}
             </p>
           </div>
           <ol className="mt-6 grid gap-4 sm:grid-cols-2">
-            {SUB_QUESTIONS.map((q, i) => (
+            {SUPPORTING_QUESTIONS.map((q, i) => (
               <li
                 key={q}
                 className="flex gap-4 rounded-2xl border border-navy/10 bg-white p-5 shadow-soft"
@@ -161,17 +150,45 @@ export default function AboutPage() {
         {/* Objectives */}
         <section className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
           <SectionHeading eyebrow="Research Objectives" title="How the aim breaks down" />
-          <ul className="space-y-3">
-            {OBJECTIVES.map((o) => (
+          <ol className="space-y-3">
+            {OBJECTIVES.map((o, i) => (
               <li
                 key={o}
                 className="flex items-start gap-3 rounded-xl border border-navy/10 bg-white p-4 text-sm leading-relaxed text-navy-700 shadow-soft"
               >
-                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-forest" />
+                <span className="text-xs font-semibold text-forest-700">{i + 1}</span>
                 {o}
               </li>
             ))}
-          </ul>
+          </ol>
+        </section>
+
+        {/* Hypotheses */}
+        <section className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+          <SectionHeading
+            eyebrow="Provisional Hypotheses"
+            title="What the study expects to find"
+            description="Provisional until qualitative construct development and measurement validation confirm the dimensions. Refined in the Chapter Two literature review."
+          />
+          <div>
+            <ul className="space-y-2">
+              {HYPOTHESES.filter((h) => h.id.startsWith("H")).map((h) => (
+                <li
+                  key={h.id}
+                  className="flex items-start gap-3 rounded-xl border border-navy/10 bg-white p-4 text-sm leading-relaxed text-navy-700 shadow-soft"
+                >
+                  <span className="shrink-0 rounded-full bg-navy px-2 py-0.5 text-xs font-semibold text-cream">
+                    {h.id}
+                  </span>
+                  {h.text}
+                </li>
+              ))}
+            </ul>
+            <ButtonLink href="/findings#hypotheses" variant="ghost" size="sm" className="mt-3">
+              See the model and how each hypothesis was refined
+              <ArrowRight className="h-4 w-4" />
+            </ButtonLink>
+          </div>
         </section>
 
         {/* Why it matters */}
@@ -200,7 +217,11 @@ export default function AboutPage() {
         </section>
 
         <section className="flex flex-wrap gap-3">
-          <ButtonLink href="/framework" variant="primary" size="lg">
+          <ButtonLink href="/findings" variant="primary" size="lg">
+            Read the findings so far
+            <ArrowRight className="h-4 w-4" />
+          </ButtonLink>
+          <ButtonLink href="/framework" variant="outline" size="lg">
             Explore the Management Capital Index
             <ArrowRight className="h-4 w-4" />
           </ButtonLink>
