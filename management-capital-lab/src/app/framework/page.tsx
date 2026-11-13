@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Gauge, Clock, ArrowRight } from "lucide-react";
+import { Gauge, ArrowRight } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
 import { SectionHeading } from "@/components/SectionHeading";
 import { PillarDetail } from "@/components/PillarCard";
 import { ButtonLink } from "@/components/ui/button";
 import { PILLARS, SCORE_BANDS, ARCHETYPES } from "@/lib/data/pillars";
+import { SITE } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "The Management Capital Index",
@@ -119,22 +120,26 @@ export default function IndexPage() {
               <span className="grid h-11 w-11 place-items-center rounded-xl bg-gold/20 text-gold-200">
                 <Gauge className="h-5 w-5" />
               </span>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-cream/10 px-3 py-1 text-xs font-medium text-cream/80">
-                <Clock className="h-3.5 w-3.5" /> Coming soon
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-gold/20 px-3 py-1 text-xs font-medium text-gold-200">
+                <Gauge className="h-3.5 w-3.5" /> Now live
               </span>
             </div>
             <h2 className="mt-5 max-w-2xl font-serif text-3xl text-cream sm:text-4xl">
               Take the Management Capital diagnostic
             </h2>
             <p className="mt-4 max-w-2xl text-lg leading-relaxed text-cream/85">
-              A founder-centred self-assessment across the six pillars is in
-              development. It will return your readiness profile, your closest
-              archetype, and the most valuable next step for your business.
+              A founder-centred self-assessment across the six pillars — about 15
+              minutes. It returns your Management Capital Index, your readiness band
+              and closest archetype, and a downloadable report with your most
+              valuable next step. Free and confidential.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <span className="inline-flex cursor-not-allowed items-center gap-2 rounded-full bg-gold/30 px-6 py-3 text-sm font-medium text-cream/70">
-                Diagnostic in development
-              </span>
+              <a
+                href={SITE.diagnosticUrl}
+                className="inline-flex items-center gap-2 rounded-full bg-gold px-6 py-3 text-sm font-semibold text-navy-900 transition-colors hover:bg-gold-400"
+              >
+                <Gauge className="h-4 w-4" /> Start the diagnostic
+              </a>
               <ButtonLink
                 href="/collaborate?type=Partner+on+diagnostics+or+pilots+(ESO)"
                 variant="outline"

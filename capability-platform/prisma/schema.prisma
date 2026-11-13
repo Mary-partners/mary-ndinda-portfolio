@@ -100,6 +100,7 @@ model Company {
   ownership     String?
   employees     Int?
   founderName   String?
+  founderEmail  String?
   advisorId     String?
   primaryContact String?
   scenarioTag   String? // narrative label for the demo scenario

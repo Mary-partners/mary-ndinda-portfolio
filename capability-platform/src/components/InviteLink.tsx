@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { createInviteLink } from "@/app/actions/admin";
+import { BASE_PATH } from "@/lib/constants";
 import { Link2, Copy, Check, Loader2, ExternalLink } from "lucide-react";
 
 export function InviteLink({ companyId, existingToken }: { companyId: string; existingToken: string | null }) {
@@ -10,7 +11,7 @@ export function InviteLink({ companyId, existingToken }: { companyId: string; ex
   const [pending, setPending] = React.useState(false);
   const [copied, setCopied] = React.useState(false);
 
-  const url = token ? `${typeof window !== "undefined" ? window.location.origin : ""}/assess/${token}` : "";
+  const url = token ? `${typeof window !== "undefined" ? window.location.origin : ""}${BASE_PATH}/assess/${token}` : "";
 
   async function create() {
     setPending(true);

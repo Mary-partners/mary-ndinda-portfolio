@@ -1,3 +1,8 @@
+// The app is served under this base path (managementcapitallab.com/platform).
+// next/link, router and redirect() prefix it automatically; use it only for
+// plain <a> hrefs and manually-built URLs.
+export const BASE_PATH = "/platform";
+
 // Allowed values for the string-based status/role fields (stored as strings for portability).
 
 export const ROLES = {
