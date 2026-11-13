@@ -8,7 +8,7 @@ import { PageHeader, Panel, StatCard, EmptyState } from "@/components/ui/Page";
 import { Badge, StatusBadge } from "@/components/ui/Badge";
 import { CapabilityRadar } from "@/components/charts";
 import { fmtScore, fmtIndex, fmtDate, fmtNumber, pctChange, maturityBand } from "@/lib/utils";
-import { CONSTRAINT_LABELS } from "@/lib/constants";
+import { CONSTRAINT_LABELS, BASE_PATH } from "@/lib/constants";
 import { AlertTriangle, ClipboardCheck, ArrowRight, Download } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -49,7 +49,7 @@ export default async function CompanyPage({ params }: { params: Promise<{ id: st
         subtitle={`${company.sector} · ${company.country} · ${company.stage ?? ""} · Advisor: ${company.advisor?.name ?? "—"}`}
         actions={
           <div className="flex flex-wrap items-center gap-2">
-            <a href={`/api/report/company/${company.id}`} className="btn-outline"><Download className="h-4 w-4" /> PDF report</a>
+            <a href={`${BASE_PATH}/api/report/company/${company.id}`} className="btn-outline"><Download className="h-4 w-4" /> PDF report</a>
             <Link href={`/portfolio/${company.id}/diagnostic${latest ? `?assessment=${draft?.id ?? ""}` : ""}`} className="btn-outline">
               <ClipboardCheck className="h-4 w-4" /> {latest ? "View diagnostic" : "Start diagnostic"}
             </Link>

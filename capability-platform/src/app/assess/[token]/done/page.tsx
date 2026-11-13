@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getCompanyDetail } from "@/lib/company";
 import { fmtIndex, maturityBand } from "@/lib/utils";
+import { BASE_PATH } from "@/lib/constants";
 import { Gauge, Download, CheckCircle2 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -38,7 +39,7 @@ export default async function AssessDonePage({ params }: { params: Promise<{ tok
               </div>
             </div>
 
-            <a href={`/api/report/assess/${token}`} className="mt-5 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-navy-700 text-sm font-semibold text-white transition-colors hover:bg-navy-800">
+            <a href={`${BASE_PATH}/api/report/assess/${token}`} className="mt-5 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-navy-700 text-sm font-semibold text-white transition-colors hover:bg-navy-800">
               <Download className="h-4 w-4" /> Download my PDF report
             </a>
             <p className="mt-4 text-xs text-ink-muted">Your answers are self-reported. {company.org.name} may follow up to verify evidence and support your improvement plan.</p>

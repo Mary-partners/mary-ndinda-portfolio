@@ -1,8 +1,39 @@
 "use server";
 
+import crypto from "crypto";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { recomputeAssessment } from "@/lib/recompute";
+import { ensurePublicOrg, ensureFramework } from "@/lib/install";
+
+const t = (v: FormDataEntryValue | null) => String(v ?? "").trim();
+
+// Public, self-serve entry: a founder starts their own assessment from the
+// website. Creates an enterprise under the public-intake organisation and sends
+// them straight into the self-assessment. No account required.
+export async function startPublicAssessment(formData: FormData) {
+  const business = t(formData.get("business"));
+  if (!business) redirect("/start?error=1");
+  const org = await ensurePublicOrg(prisma);
+  await ensureFramework(prisma);
+  const token = crypto.randomBytes(16).toString("hex");
+  const company = await prisma.company.create({
+    data: {
+      orgId: org.id,
+      legalName: business,
+      tradingName: business,
+      country: t(formData.get("country")) || "—",
+      sector: t(formData.get("sector")) || "—",
+      founderName: t(formData.get("founderName")) || null,
+      founderEmail: t(formData.get("email")) || null,
+      isDemo: false,
+      scenarioTag: "Public self-assessment",
+      inviteToken: token,
+    },
+  });
+  await prisma.auditLog.create({ data: { orgId: org.id, entity: "Company", entityId: company.id, action: "public.start", detail: business } });
+  redirect(`/assess/${token}`);
+}
 
 export interface SelfResponse {
   questionId: string;

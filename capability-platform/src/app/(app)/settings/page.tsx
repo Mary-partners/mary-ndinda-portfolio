@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/auth";
 import { PageHeader, Panel } from "@/components/ui/Page";
-import { ROLE_LABELS } from "@/lib/constants";
+import { ROLE_LABELS, BASE_PATH } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 
@@ -47,7 +47,7 @@ export default async function SettingsPage() {
       </div>
 
       <Panel title="About this workspace" className="mt-5">
-        <p className="text-sm text-ink-muted">Data you enter is private to your organisation and stored securely. Scores use the <a href="https://www.managementcapitallab.com/framework" target="_blank" rel="noopener noreferrer" className="text-gold-700 hover:underline">Management Capital Index</a> (0–100), and capability, implementation and business performance are tracked as distinct things. See <a href="/research" className="text-gold-700 hover:underline">Research &amp; Methodology</a> for the full approach and its limitations.</p>
+        <p className="text-sm text-ink-muted">Data you enter is private to your organisation and stored securely. Scores use the <a href="https://www.managementcapitallab.com/framework" target="_blank" rel="noopener noreferrer" className="text-gold-700 hover:underline">Management Capital Index</a> (0–100), and capability, implementation and business performance are tracked as distinct things. See <a href={`${BASE_PATH}/research`} className="text-gold-700 hover:underline">Research &amp; Methodology</a> for the full approach and its limitations.</p>
       </Panel>
     </>
   );
