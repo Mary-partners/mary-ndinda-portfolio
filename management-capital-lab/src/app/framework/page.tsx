@@ -1,17 +1,19 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Gauge, ArrowRight } from "lucide-react";
+import { Gauge, ArrowRight, RefreshCw, ShieldAlert } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
 import { SectionHeading } from "@/components/SectionHeading";
-import { PillarDetail } from "@/components/PillarCard";
+import { StagedPillars } from "./StagedPillars";
+import { ConceptualModel } from "@/components/ConceptualModel";
 import { ButtonLink } from "@/components/ui/button";
 import { PILLARS, SCORE_BANDS, ARCHETYPES } from "@/lib/data/pillars";
 import { SITE } from "@/lib/site";
+import { STAGES, PILLAR_STAGES } from "@/lib/data/stages";
 
 export const metadata: Metadata = {
   title: "The Management Capital Index",
   description:
-    "A proposed diagnostic framework for assessing whether SMEs are ready to access, absorb, and deploy capital for sustainable growth — across six pillars of management capital.",
+    "A proposed diagnostic framework for assessing whether SMEs, from early-stage to growing and scaling firms, are ready to access, absorb and deploy capital for sustainable growth, across six pillars of management capital.",
 };
 
 const BAND_COLORS = [
@@ -28,7 +30,7 @@ export default function IndexPage() {
       <PageHeader
         eyebrow="The Framework"
         title="The Management Capital Index"
-        intro="A proposed diagnostic framework for assessing whether SMEs are ready to access, absorb, and deploy capital for sustainable growth."
+        intro="A proposed diagnostic framework for assessing whether SMEs are ready to access, absorb and deploy capital for sustainable growth, whether they are just establishing, growing beyond the founder, or scaling into an institution."
       >
         <nav
           aria-label="Pillars"
@@ -46,11 +48,89 @@ export default function IndexPage() {
         </nav>
       </PageHeader>
 
-      <div className="container-lab space-y-8 py-16 sm:py-20">
-        {PILLARS.map((p) => (
-          <PillarDetail key={p.id} pillar={p} />
-        ))}
-      </div>
+      {/* What changed after Chapter Two */}
+      <section className="container-lab pt-14 sm:pt-16">
+        <div className="flex gap-3 rounded-2xl border border-gold/30 bg-gold-50 p-5 text-sm leading-relaxed text-navy-700">
+          <RefreshCw className="mt-0.5 h-5 w-5 shrink-0 text-gold-600" />
+          <div>
+            <p className="font-semibold text-navy-900">
+              Updated after the Chapter Two literature review (November 2026)
+            </p>
+            <p className="mt-1">
+              The six pillars hold, with three refinements. Strategy now
+              explicitly includes market orientation. Operations and the founder
+              pillar are broadened to process discipline and the whole management
+              team. And Pillar 6 now measures{" "}
+              <strong>capital-deployment readiness before funding</strong>, while
+              realised absorption after funding is tested separately as an
+              outcome. The index is also now <strong>stage-aware</strong>: each
+              pillar shows what good looks like, and what to ask, for early-stage,
+              growing and scaling businesses. Each pillar also shows what the
+              literature says and what the fieldwork still has to test.{" "}
+              <Link href="/findings" className="font-medium text-forest underline underline-offset-2 hover:text-forest-700">
+                Read the findings
+              </Link>
+              .
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <StagedPillars pillars={PILLARS} />
+
+      {/* How the bar rises across stages */}
+      <section className="border-t border-navy/10 bg-white py-16 sm:py-20">
+        <div className="container-lab">
+          <SectionHeading
+            eyebrow="At a glance"
+            title="How the bar rises as a business grows"
+            description="The same six capabilities, with the expected practice at each stage. A growing business is judged against what is proportionate for its size, not against a start-up checklist, and an early-stage business is not penalised for lacking a board."
+          />
+          <div className="mt-10 overflow-x-auto rounded-2xl border border-navy/10 shadow-soft">
+            <table className="w-full min-w-[44rem] text-left text-sm">
+              <thead className="bg-cream-100 text-xs uppercase tracking-wide text-navy-600">
+                <tr>
+                  <th scope="col" className="px-5 py-3 font-semibold">Pillar</th>
+                  {STAGES.map((st) => (
+                    <th key={st.key} scope="col" className="px-5 py-3 font-semibold">
+                      <a href={`?stage=${st.key}#pillars`} className="hover:text-navy-900">
+                        {st.name}
+                      </a>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-navy/10 bg-white">
+                {PILLARS.map((p) => (
+                  <tr key={p.id} className="align-top">
+                    <th scope="row" className="px-5 py-4 font-serif text-base font-normal text-navy-900">
+                      <span className="mr-1.5 text-xs font-semibold text-gold-600">{p.id}</span>
+                      {p.name}
+                    </th>
+                    {STAGES.map((st) => (
+                      <td key={st.key} className="px-5 py-4 leading-relaxed text-navy-700">
+                        {PILLAR_STAGES[p.slug]?.[st.key]?.focus}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      {/* Conceptual model */}
+      <section className="border-t border-navy/10 py-16 sm:py-20">
+        <div className="container-lab">
+          <SectionHeading
+            eyebrow="How the pillars connect to outcomes"
+            title="The conceptual model"
+            description="The six pillars make up management capital. The study will test how it relates to investment readiness, access to finance, realised capital absorption and sustainable growth."
+          />
+          <ConceptualModel className="mt-10" />
+        </div>
+      </section>
 
       {/* Scoring concept */}
       <section className="border-y border-navy/10 bg-white py-16 sm:py-20">
@@ -74,6 +154,21 @@ export default function IndexPage() {
               </div>
             ))}
           </div>
+          <div className="mt-8 flex gap-3 rounded-2xl border border-navy/10 bg-cream-50 p-5 text-sm leading-relaxed text-navy-700">
+            <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-navy-500" />
+            <p>
+              <strong className="text-navy-900">Profiles before scores.</strong>{" "}
+              The literature does not yet justify weights between pillars, and a
+              single number can hide a serious weakness behind a strong pillar.
+              The first version of the index will report pillar-level profiles;
+              any overall score stays provisional until validated. Scores are
+              read against the business&apos;s stage and the finance it is
+              seeking, so a 40-person firm raising growth equity faces a higher
+              bar than a five-person firm seeking a stock loan. The index is
+              designed to support diagnosis and advisory sequencing, not to act
+              as an automatic lending threshold.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -82,10 +177,10 @@ export default function IndexPage() {
         <div className="container-lab">
           <SectionHeading
             eyebrow="SME archetypes"
-            title="Six readiness archetypes"
-            description="A profile, not a pass-or-fail gate. Each archetype points to the most valuable next step — whether that is advisory support, systems, governance, or capital itself."
+            title="Eight readiness archetypes"
+            description="A profile, not a pass-or-fail gate. Each archetype points to the most valuable next step, whether that is advisory support, systems, governance or capital itself. Two of them are specific to growing firms: the founder bottleneck, and capital that has outrun the systems meant to absorb it."
           />
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {ARCHETYPES.map((a, i) => (
               <div
                 key={a.name}
@@ -95,16 +190,21 @@ export default function IndexPage() {
                   <span className="grid h-8 w-8 place-items-center rounded-full bg-gold/15 text-sm font-semibold text-gold-700">
                     {i + 1}
                   </span>
-                  <h3 className="font-serif text-lg text-navy-900">{a.name}</h3>
+                  <h3 className="font-serif text-lg leading-snug text-navy-900">{a.name}</h3>
                 </div>
+                <p className="mt-2 text-xs font-medium text-navy-500">
+                  Typically: {a.typicalStage}
+                </p>
                 <p className="mt-3 text-sm leading-relaxed text-navy-600">
                   {a.description}
                 </p>
-                <div className="mt-4 rounded-xl bg-cream-100 p-3.5 ring-1 ring-inset ring-navy/10">
+                <div className="mt-auto pt-4">
+                <div className="rounded-xl bg-cream-100 p-3.5 ring-1 ring-inset ring-navy/10">
                   <p className="text-xs font-semibold uppercase tracking-wide text-forest-700">
                     Most useful next step
                   </p>
                   <p className="mt-1 text-sm text-navy-700">{a.need}</p>
+                </div>
                 </div>
               </div>
             ))}
