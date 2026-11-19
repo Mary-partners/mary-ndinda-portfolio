@@ -5,8 +5,49 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { recomputeAssessment } from "@/lib/recompute";
 import { ensurePublicOrg, ensureFramework } from "@/lib/install";
+import { login } from "@/lib/auth";
+import { hashPassword } from "@/lib/password";
 
 const t = (v: FormDataEntryValue | null) => String(v ?? "").trim();
+
+// Founder self-registration: creates an account + their firm, then sends them
+// into the diagnostic. They can log back in later to view and retake it.
+export async function founderSignup(formData: FormData) {
+  const name = t(formData.get("name"));
+  const email = t(formData.get("email")).toLowerCase();
+  const password = String(formData.get("password") ?? "");
+  const business = t(formData.get("business"));
+  if (!name || !email || password.length < 8 || !business) redirect("/signup?error=invalid");
+
+  const existing = await prisma.user.findUnique({ where: { email } });
+  if (existing) redirect("/signup?error=exists");
+
+  const org = await ensurePublicOrg(prisma);
+  await ensureFramework(prisma);
+  const user = await prisma.user.create({
+    data: { name, email, role: "FOUNDER", title: "Founder", passwordHash: hashPassword(password) },
+  });
+  const token = crypto.randomBytes(16).toString("hex");
+  const company = await prisma.company.create({
+    data: {
+      orgId: org.id,
+      legalName: business,
+      tradingName: business,
+      country: t(formData.get("country")) || "—",
+      sector: t(formData.get("sector")) || "—",
+      founderName: name,
+      founderEmail: email,
+      ownerUserId: user.id,
+      isDemo: false,
+      scenarioTag: "Founder self-signup",
+      inviteToken: token,
+    },
+  });
+  await prisma.membership.create({ data: { userId: user.id, orgId: org.id, role: "FOUNDER" } });
+  await prisma.auditLog.create({ data: { orgId: org.id, entity: "Company", entityId: company.id, action: "founder.signup", detail: email } });
+  await login(user.id);
+  redirect(`/assess/${token}`);
+}
 
 // Public, self-serve entry: a founder starts their own assessment from the
 // website. Creates an enterprise under the public-intake organisation and sends
