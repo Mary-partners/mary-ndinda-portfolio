@@ -8,8 +8,15 @@ import {
   BookOpenText,
   FlaskConical,
   RefreshCw,
+  CheckCircle2,
+  AlertTriangle,
 } from "lucide-react";
 import type { Pillar } from "@/lib/data/pillars";
+import {
+  PILLAR_STAGES,
+  STAGE_BY_KEY,
+  type StageKey,
+} from "@/lib/data/stages";
 
 const ICONS = [Calculator, ShieldCheck, Compass, Settings2, UserRoundCheck, Sprout];
 
@@ -31,12 +38,20 @@ export function PillarPreviewCard({ pillar }: { pillar: Pillar }) {
   );
 }
 
-export function PillarDetail({ pillar }: { pillar: Pillar }) {
+export function PillarDetail({
+  pillar,
+  stage,
+}: {
+  pillar: Pillar;
+  stage: StageKey;
+}) {
   const Icon = ICONS[(pillar.id - 1) % ICONS.length];
+  const atStage = PILLAR_STAGES[pillar.slug]?.[stage];
+  const stageName = STAGE_BY_KEY[stage].name;
   return (
     <section
       id={pillar.slug}
-      className="scroll-mt-24 rounded-3xl border border-navy/10 bg-white p-7 shadow-soft sm:p-9"
+      className="scroll-mt-40 sm:scroll-mt-36 rounded-3xl border border-navy/10 bg-white p-7 shadow-soft sm:p-9"
     >
       <div className="flex items-start gap-4">
         <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-navy text-cream">
@@ -85,41 +100,50 @@ export function PillarDetail({ pillar }: { pillar: Pillar }) {
           </div>
         </div>
 
-        <div>
-          <h3 className="text-sm font-semibold text-navy-900">
-            Example diagnostic questions
-          </h3>
-          <ul className="mt-2 space-y-2">
-            {pillar.diagnosticQuestions.map((q) => (
-              <li
-                key={q}
-                className="flex gap-2 text-sm leading-relaxed text-navy-700"
-              >
-                <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-gold" />
-                {q}
-              </li>
-            ))}
-          </ul>
+        {atStage && (
+          <div className="rounded-2xl border border-navy/10 bg-cream-50 p-5">
+            <p className="inline-flex items-center rounded-full bg-navy px-2.5 py-0.5 text-xs font-semibold text-cream">
+              {stageName} business
+            </p>
 
-          <div className="mt-5 grid gap-3 sm:grid-cols-2">
-            <div className="rounded-xl border border-red-200 bg-red-50/60 p-3.5">
-              <h4 className="text-xs font-semibold uppercase tracking-wide text-red-700">
-                Weak performance
-              </h4>
-              <p className="mt-1.5 text-sm leading-relaxed text-navy-700">
-                {pillar.weak}
-              </p>
-            </div>
-            <div className="rounded-xl border border-emerald-200 bg-emerald-50/60 p-3.5">
-              <h4 className="text-xs font-semibold uppercase tracking-wide text-emerald-700">
-                Strong performance
-              </h4>
-              <p className="mt-1.5 text-sm leading-relaxed text-navy-700">
-                {pillar.strong}
-              </p>
+            <h3 className="mt-4 flex items-center gap-2 text-sm font-semibold text-navy-900">
+              <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+              What good looks like at this stage
+            </h3>
+            <p className="mt-1.5 text-sm leading-relaxed text-navy-700">
+              {atStage.looksLike}
+            </p>
+
+            <h3 className="mt-5 text-sm font-semibold text-navy-900">
+              Diagnostic questions
+            </h3>
+            <ol className="mt-2 space-y-2">
+              {atStage.questions.map((q, i) => (
+                <li
+                  key={q}
+                  className="flex gap-2.5 text-sm leading-relaxed text-navy-700"
+                >
+                  <span className="mt-0.5 text-xs font-semibold text-gold-600">
+                    {i + 1}
+                  </span>
+                  {q}
+                </li>
+              ))}
+            </ol>
+
+            <div className="mt-5 flex gap-2.5 rounded-xl border border-amber-200 bg-amber-50/70 p-3.5">
+              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" />
+              <div>
+                <h4 className="text-xs font-semibold uppercase tracking-wide text-amber-800">
+                  Common gap at this stage
+                </h4>
+                <p className="mt-1 text-sm leading-relaxed text-navy-700">
+                  {atStage.watchFor}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
 
       <div className="mt-8 grid gap-4 border-t border-navy/10 pt-6 lg:grid-cols-[1.4fr_1fr]">

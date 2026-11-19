@@ -179,7 +179,7 @@ export default async function HomePage() {
           <SectionHeading
             eyebrow="The Management Capital Index"
             title="Six pillars of readiness"
-            description="A proposed diagnostic framework for assessing whether SMEs are ready to access, absorb, and deploy capital for sustainable growth."
+            description="A proposed diagnostic framework for assessing whether SMEs are ready to access, absorb and deploy capital, from early-stage businesses to growing and scaling firms, with what good looks like at each stage."
           />
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {PILLARS.map((p) => (

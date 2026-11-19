@@ -108,7 +108,7 @@ export const KEY_FINDINGS: KeyFinding[] = [
   {
     n: 7,
     title: "Measure what managers do, not which documents they hold",
-    body: "A weak item asks whether a budget exists. A strong item asks how it is prepared, how often actuals are compared with it, who sees it, and what happened at the last material variance. Proportionality matters: practices should give decision-useful control at the firm's current size and stage.",
+    body: "A weak item asks whether a budget exists. A strong item asks how it is prepared, how often actuals are compared with it, who sees it, and what happened at the last material variance. Proportionality matters: a five-person retailer and a 200-person manufacturer show the same capability in very different forms, so the index judges each against what fits its stage.",
     evidence:
       "Adapts the behaviourally anchored logic of the World Management Survey, while extending it to finance, governance, strategy and capital deployment, which the WMS deliberately covers less.",
     source: "Chapter Two",

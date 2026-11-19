@@ -6,9 +6,6 @@ export interface Pillar {
   definition: string;
   whyItMatters: string;
   indicators: string[];
-  diagnosticQuestions: string[];
-  weak: string;
-  strong: string;
   /** What the Chapter Two literature review says about this dimension. */
   evidence: string;
   /** The coverage gap the empirical study still has to test. */
@@ -42,15 +39,6 @@ export const PILLARS: Pillar[] = [
       "Working-capital management",
       "Budget variance review",
     ],
-    diagnosticQuestions: [
-      "Does the business know its monthly revenue, gross margin, and net profit?",
-      "Can the founder explain cash-flow pressure before it becomes a crisis?",
-      "Are business and personal finances separated?",
-      "Does the business prepare monthly management accounts?",
-    ],
-    weak: "Numbers live in the founder's head. Personal and business money mix. Reports, if they exist, cannot be traced to a bank statement or system.",
-    strong:
-      "Monthly management accounts are produced and understood. Cash flow is forecast, pricing is deliberate, and every figure can be verified against a system.",
     evidence:
       "The dimension with the most direct link to the financing problem. Record keeping and financial planning predict small-firm sales, profits and survival across seven countries including Kenya (McKenzie & Woodruff), and simple financial rules of thumb changed behaviour more than formal accounting training (Drexler et al.). What matters is whether information changes decisions, not whether a founder can recite accounting terms.",
     openQuestion:
@@ -78,15 +66,6 @@ export const PILLARS: Pillar[] = [
       "Conflict-of-interest controls",
       "Key-person cover and succession",
     ],
-    diagnosticQuestions: [
-      "Are key roles and decision rights clearly defined?",
-      "Is there an approval process for significant spending?",
-      "Does the founder answer to a board, advisory board, or peer structure?",
-      "Are basic internal controls in place to prevent leakage or fraud?",
-    ],
-    weak: "One person decides everything with no checks. No approvals, no controls, and no structure to catch mistakes or hold anyone accountable.",
-    strong:
-      "Roles and decision rights are defined, spending is approved, controls prevent leakage, and the founder is accountable to a board or advisory structure.",
     evidence:
       "Information-asymmetry theory explains its external value: clear ownership, decision rights and controls reduce a funder's uncertainty about how money will be used. Ownership and boards shape SMEs' capacity for strategic change (Brunninge et al.), and capital experiments show that control over cash affects whether funds stay in the business (Fafchamps et al.). The construct is effective accountability, not the number of committees.",
     openQuestion:
@@ -114,15 +93,6 @@ export const PILLARS: Pillar[] = [
       "Scenario review",
       "Reallocation when evidence changes",
     ],
-    diagnosticQuestions: [
-      "Can the founder explain who the customer is and why they buy?",
-      "Is there a clear, credible use of funds?",
-      "Do the unit economics work at the level of a single sale?",
-      "Is the growth strategy specific rather than aspirational?",
-    ],
-    weak: "The business sells to 'everyone', cannot explain its unit economics, and would struggle to say exactly what new capital would be used for.",
-    strong:
-      "The customer, model, and positioning are clear. Unit economics are understood and the use of funds is specific and credible.",
     evidence:
       "Business planning has a positive but context-dependent link with performance (Brinckmann et al.), and entrepreneurial orientation is associated with SME growth in South Africa (Neneh & van Zyl). More is not always better: the orientation-performance link can be an inverted U (Wales et al.). Many plans are written for competitions and never used again, so a strategy document is not proof of strategic capability.",
     openQuestion:
@@ -151,15 +121,6 @@ export const PILLARS: Pillar[] = [
       "KPI review and corrective action",
       "Supplier and power redundancy",
     ],
-    diagnosticQuestions: [
-      "Are core processes documented rather than held in one person's memory?",
-      "Is inventory or delivery tracked reliably?",
-      "Does the team have a clear structure and accountability?",
-      "Is performance measured against targets?",
-    ],
-    weak: "Everything depends on the founder being present. No documented processes, unreliable inventory or delivery, and no way to track performance.",
-    strong:
-      "Core processes are documented, inventory and delivery are controlled, the team is structured, and performance is tracked against targets.",
     evidence:
       "Draws most directly on the World Management Survey and management experiments. Monitoring, targets and problem-solving correlate with productivity (Bloom & Van Reenen), and introducing them raised productivity in Indian textile plants (Bloom et al.). In Kampala, firms with backup inventory or power and a trusted stand-in manager recovered better from disruptions (Kundu et al.). The aim is minimum effective formalisation, not paperwork.",
     openQuestion:
@@ -189,15 +150,6 @@ export const PILLARS: Pillar[] = [
       "Learning behaviour",
       "Key-person risk",
     ],
-    diagnosticQuestions: [
-      "Does the founder make decisions with data or with instinct alone?",
-      "Is the founder financially literate about their own business?",
-      "Is the founder open to advice and willing to be challenged?",
-      "Does the team execute consistently on what it commits to?",
-    ],
-    weak: "Decisions are impulsive, financial literacy is thin, feedback is resisted, and commitments are inconsistently executed.",
-    strong:
-      "Decisions are disciplined and evidence-led, the founder is financially literate, open to advice, and the team executes consistently.",
     evidence:
       "Task-related experience and knowledge matter more than general credentials (Unger et al.). Personal-initiative training beat traditional training in Togo (Campos et al.), and in Kenya local mentors passed on knowledge a classroom could not (Brooks et al.). A capable founder is not one who makes every decision, but one who builds a team and systems that keep working in their absence.",
     openQuestion:
@@ -225,15 +177,6 @@ export const PILLARS: Pillar[] = [
       "Capital type matched to need",
       "Corrective action when assumptions fail",
     ],
-    diagnosticQuestions: [
-      "Before funding, is there a sequenced use-of-funds plan with owners and milestones?",
-      "Who approves spending once funds arrive, and up to what limit?",
-      "Is the type of capital matched to the business need (debt vs equity vs grant)?",
-      "After a past financing event, was actual spending compared with the plan, and were deviations explained and corrected?",
-    ],
-    weak: "Money arrives before the plan does. Hiring, branding or premises are brought forward, owner withdrawals creep up, and no one can explain how actual spending departed from the plan.",
-    strong:
-      "A staged, governed use-of-funds plan exists before money lands. Deployment is tracked against milestones, and deviations are explained, corrected and learned from.",
     evidence:
       "Capital experiments are clear that funds are not self-executing. Identical grants produced very unequal returns in Sri Lanka (de Mel et al.); in Ghana, in-kind support stayed in the business while cash leaked out (Fafchamps et al.); and consulting plus cash did not create lasting gains for Ghanaian tailors (Karlan et al.). Yet most studies record sales or profit at follow-up, not the sequence of decisions made after the money arrived.",
     openQuestion:
@@ -261,6 +204,8 @@ export interface Archetype {
   name: string;
   description: string;
   need: string;
+  /** The growth stage where this profile is most often seen. */
+  typicalStage: "Early-stage" | "Growing" | "Scaling" | "Any stage";
 }
 
 export const ARCHETYPES: Archetype[] = [
@@ -268,30 +213,48 @@ export const ARCHETYPES: Archetype[] = [
     name: "Survival-stage SME",
     description: "Fighting for cash flow week to week, with little structure or record.",
     need: "Stabilisation and basic financial visibility before any finance.",
+    typicalStage: "Early-stage",
   },
   {
     name: "High-potential but system-weak SME",
     description: "Real demand and revenue, but fragile systems and unreliable numbers.",
     need: "Operational systems and records to convert potential into readiness.",
+    typicalStage: "Early-stage",
   },
   {
     name: "Advisory-first SME",
     description: "Fundamentally sound but needs guidance before taking on capital.",
     need: "Advisory support and governance ahead of debt or equity.",
+    typicalStage: "Any stage",
+  },
+  {
+    name: "Founder-bottlenecked growth firm",
+    description: "Strong demand and a growing team, but every decision still runs through the founder.",
+    need: "Delegated authority, a real management team and an advisory board, so growth doesn't stall at the founder's desk.",
+    typicalStage: "Growing",
   },
   {
     name: "Finance-preparing SME",
     description: "Close to ready, with a few specific, closable gaps.",
     need: "Targeted preparation to reach full finance readiness.",
+    typicalStage: "Any stage",
+  },
+  {
+    name: "Funded but stretched",
+    description: "Has raised significant capital, but reporting, controls and management depth haven't kept pace with the money or the growth.",
+    need: "Deployment discipline first: staged plans, investor-grade reporting and controls before the next raise.",
+    typicalStage: "Growing",
   },
   {
     name: "Capital-ready SME",
     description: "Evidence, discipline, and a credible use of funds are in place.",
     need: "Access to the right type of capital, matched to the model.",
+    typicalStage: "Any stage",
   },
   {
     name: "Growth-ready SME",
     description: "Proven absorption capacity and a track record of deploying capital well.",
-    need: "Growth capital and partners to scale responsibly.",
+    need: "Growth capital and partners to scale responsibly, with board-level governance to match.",
+    typicalStage: "Scaling",
   },
 ];

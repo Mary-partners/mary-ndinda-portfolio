@@ -2,6 +2,7 @@
 export const CONTRIBUTION_PROMPTS: string[] = [
   "What do SMEs need before they receive capital?",
   "What makes an SME genuinely investment-ready?",
+  "What breaks first when a growing business doubles in size?",
   "Have you seen a business receive funding and still struggle? Why?",
   "What is the biggest financial-management gap in African SMEs?",
   "If you are a founder, what support do you wish you had before taking money?",
@@ -10,6 +11,8 @@ export const CONTRIBUTION_PROMPTS: string[] = [
   "Is money the problem, or is management capability the problem?",
   "What does capital absorption mean in real business life?",
   "What question should this research answer for Africa?",
+  "When does a growing business need a board, and what should it actually do?",
+  "What does a growing business need in place before its first institutional investor?",
 ];
 
 // A curated subset surfaced as prompt cards on the home page.

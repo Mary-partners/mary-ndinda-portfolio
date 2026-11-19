@@ -33,10 +33,13 @@ const EXAMPLES = [
   "Some need advisory support before debt",
   "Some need climate or shock resilience before capital",
   "Some are capable but simply underfinanced",
+  "Some are growing faster than their systems",
+  "Some have outgrown the founder as the only decision-maker",
+  "Some need investor-grade reporting before raising equity",
 ];
 
 const IMPACT = [
-  { icon: Building2, who: "Founders", how: "A clear mirror of what to strengthen before, and after, taking on capital." },
+  { icon: Building2, who: "Founders and management teams", how: "A clear mirror of what to strengthen before, and after, taking on capital, at whatever stage the business is." },
   { icon: Landmark, who: "Banks", how: "Evidence-based signals of bankability that go beyond collateral." },
   { icon: TrendingUp, who: "Investors", how: "A sharper read on absorption capacity and readiness for finance." },
   { icon: HandHeart, who: "ESOs", how: "A map for directing advisory effort where it changes outcomes." },

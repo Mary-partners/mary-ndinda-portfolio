@@ -37,7 +37,7 @@ export const RESEARCH_PHASES: ResearchPhase[] = [
     status: "In Progress",
     milestone: "Conceptual model and hypotheses drafted",
     description:
-      "The conceptual model, hypotheses H1–H6 and measurement proposition MP1 are set. Next: turning the six provisional dimensions into a construct map and behaviourally anchored items, keeping deployment readiness separate from realised absorption.",
+      "The conceptual model, hypotheses H1–H6 and measurement proposition MP1 are set. Next: turning the six provisional dimensions into a construct map and behaviourally anchored items for early-stage, growing and scaling firms, keeping deployment readiness separate from realised absorption.",
     href: "/framework",
     order: 3,
   },
@@ -104,6 +104,6 @@ export const RESEARCH_PROGRESS_NOTE =
 
 export const CURRENT_FOCUS = {
   title: "What I'm working on now",
-  body: "Chapter Two is in. I'm now turning its conceptual model into the Chapter Three research design for Kenya and South Africa, and building the construct map that keeps capital-deployment readiness (before funding) separate from realised capital absorption (after funding). In parallel, I'm growing the literature base from 64 towards 80 articles, prioritising Kenya- and South Africa-specific studies, investor readiness and post-funding behaviour.",
+  body: "Chapter Two is in. I'm now turning its conceptual model into the Chapter Three research design for Kenya and South Africa, and building the construct map that keeps capital-deployment readiness (before funding) separate from realised capital absorption (after funding). I'm also widening the index beyond start-ups: each pillar now has stage-specific indicators for early-stage, growing and scaling businesses, ready to test in the fieldwork. In parallel, I'm growing the literature base from 64 towards 80 articles, prioritising Kenya- and South Africa-specific studies, investor readiness and post-funding behaviour.",
   updated: "2026-11-12",
 };
