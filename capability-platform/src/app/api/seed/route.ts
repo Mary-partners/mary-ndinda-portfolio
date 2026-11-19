@@ -1,37 +1,36 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { ensureFramework } from "@/lib/install";
-import { DIMENSION_META } from "@/lib/constants";
+import { DIMENSION_META, FRAMEWORK_VERSION } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
-// If the installed default framework's pillars differ from the current code
-// (e.g. after realigning to the Management Capital Index), replace it — but only
-// when no assessments depend on it, so live data is never silently discarded.
-async function resyncFrameworkIfStale(): Promise<string | null> {
+// Replace the installed default framework when its pillars or version differ
+// from the current code. Normally refuses when assessments depend on it; with
+// force=1 it removes those assessments first (token-guarded).
+async function resyncFramework(force: boolean): Promise<string | null> {
   const existing = await prisma.framework.findFirst({ where: { isDefault: true }, include: { dimensions: { select: { key: true } } } });
   if (!existing) return null;
   const have = existing.dimensions.map((d) => d.key).sort().join(",");
   const want = DIMENSION_META.map((d) => d.key).sort().join(",");
-  if (have === want) return null;
-  const assessments = await prisma.assessment.count();
-  if (assessments > 0) return "stale-but-has-assessments";
+  const stale = have !== want || existing.version !== FRAMEWORK_VERSION;
+  if (!stale) return null;
+  const assessments = await prisma.assessment.count({ where: { frameworkId: existing.id } });
+  if (assessments > 0 && !force) return "stale-but-has-assessments";
+  if (assessments > 0) await prisma.assessment.deleteMany({ where: { frameworkId: existing.id } });
   await prisma.framework.delete({ where: { id: existing.id } });
-  return "replaced";
+  return assessments > 0 ? "replaced-with-force" : "replaced";
 }
 
-// One-time installation of the default capability framework into the hosted
-// database. Protected by SEED_TOKEN. Idempotent — safe to call again.
-// It does NOT create any sample enterprises: real data is entered through the app.
-async function run(token: string | null) {
+async function run(token: string | null, force: boolean) {
   if (!process.env.SEED_TOKEN || token !== process.env.SEED_TOKEN) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
   try {
-    const resync = await resyncFrameworkIfStale();
+    const resync = await resyncFramework(force);
     if (resync === "stale-but-has-assessments") {
-      return NextResponse.json({ error: "Installed framework differs from the code but has assessments; not auto-migrating." }, { status: 409 });
+      return NextResponse.json({ error: "Installed framework differs from the code but has assessments; pass force=1 to replace (removes those assessments)." }, { status: 409 });
     }
     const framework = await ensureFramework(prisma);
     const [dimensions, questions, users] = await Promise.all([
@@ -55,10 +54,10 @@ async function run(token: string | null) {
 }
 
 export async function GET(req: Request) {
-  const token = new URL(req.url).searchParams.get("token");
-  return run(token);
+  const url = new URL(req.url);
+  return run(url.searchParams.get("token"), url.searchParams.get("force") === "1");
 }
 export async function POST(req: Request) {
-  const token = new URL(req.url).searchParams.get("token");
-  return run(token);
+  const url = new URL(req.url);
+  return run(url.searchParams.get("token"), url.searchParams.get("force") === "1");
 }
