@@ -74,33 +74,36 @@ export const CONSTRAINT_LABELS: Record<string, string> = {
   SkilledLabour: "Skilled labour",
 };
 
-// Answer scale (0-4) used when responding to each diagnostic question.
+// Management Capital Index instrument version.
+export const FRAMEWORK_VERSION = "1.1";
+
+// Answer scale (0-4) — MCI 1.1 practice levels.
 export const MATURITY_ANCHORS = [
-  { score: 0, label: "Absent", desc: "The practice does not exist, or there is no credible evidence of it." },
-  { score: 1, label: "Informal", desc: "Exists informally, is inconsistent, or depends entirely on one individual." },
-  { score: 2, label: "Introduced", desc: "A defined practice exists with evidence of initial adoption." },
-  { score: 3, label: "Consistent", desc: "Used across repeated operating cycles, with assigned responsibility and records." },
-  { score: 4, label: "Embedded", desc: "Consistently applied, monitored and improved; evidence shows it informs decisions." },
+  { score: 0, label: "Not in place", desc: "The practice does not exist." },
+  { score: 1, label: "Occasional", desc: "Occasional, or entirely dependent on one person." },
+  { score: 2, label: "Basic", desc: "Basic, but inconsistent." },
+  { score: 3, label: "Regular", desc: "Used regularly and supported by recent examples." },
+  { score: 4, label: "Embedded", desc: "Embedded, reviewed and improved over time." },
 ] as const;
 
-// The Management Capital Index — 6 pillars, as published at
-// https://www.managementcapitallab.com/framework (Mary Ndinda, DBA research).
-export const DIMENSION_META: { key: string; name: string; description: string }[] = [
-  { key: "financial", name: "Financial Management Capability", description: "The ability to plan, track, control and interpret the financial position." },
-  { key: "governance", name: "Governance and Accountability", description: "Structures, controls and accountability that make decisions traceable and reduce founder concentration." },
-  { key: "strategic", name: "Strategic Clarity", description: "A coherent understanding of the model, customer, market and how capital translates into growth." },
-  { key: "operational", name: "Operational Systems", description: "Processes, tools and structures that let the business deliver consistently and scale without chaos." },
-  { key: "founder", name: "Founder and Management Capability", description: "The judgement, discipline, financial literacy and leadership maturity of the people running the business." },
-  { key: "absorption", name: "Capital Absorption Capability", description: "The ability to receive capital and convert it into productive outcomes." },
+// The Management Capital Index (MCI 1.1) — six pillars, proposed weights and
+// plain-language labels. managementcapitallab.com/framework (Mary Ndinda, DBA).
+export const DIMENSION_META: { key: string; name: string; label: string; weight: number; description: string }[] = [
+  { key: "financial", name: "Financial Management Capability", label: "Know the numbers", weight: 15, description: "Reliable records, pricing, cash planning, and informed choices." },
+  { key: "governance", name: "Governance and Accountability", label: "Clear responsibility", weight: 15, description: "Roles, decisions, checks, accountability and oversight." },
+  { key: "strategic", name: "Strategic Clarity", label: "Know where to grow", weight: 20, description: "Customers, demand, value proposition, priorities and direction." },
+  { key: "operational", name: "Operational Systems", label: "Deliver consistently", weight: 20, description: "Repeatable processes, service quality, tracking and reliability." },
+  { key: "founder", name: "Founder and Management Capability", label: "Lead and adapt", weight: 20, description: "Team leadership, delegation, learning, problem solving and execution." },
+  { key: "absorption", name: "Capital Absorption Capability", label: "Use resources well", weight: 10, description: "Plan resources, choose suitable financing and measure what changes." },
 ];
 
-// Management Capital Index readiness bands (overall score out of 100).
-export const READINESS_BANDS: { min: number; max: number; label: string; tone: "bad" | "warn" | "ok"; description: string }[] = [
-  { min: 0, max: 20, label: "Fragile", tone: "bad", description: "Survival-focused; systems and records are largely absent." },
-  { min: 21, max: 40, label: "Emerging", tone: "bad", description: "Some structure forming, but numbers are not yet reliable." },
-  { min: 41, max: 60, label: "Developing", tone: "warn", description: "Basic systems in place; readiness is uneven across pillars." },
-  { min: 61, max: 80, label: "Finance-preparing", tone: "ok", description: "Close to ready; specific gaps to close before financing." },
-  { min: 81, max: 100, label: "Finance-ready", tone: "ok", description: "Evidence, discipline and absorption capacity are in place." },
+// MCI capability stages (overall 0-100). Legacy website bands kept as aliases.
+export const READINESS_BANDS: { min: number; max: number; label: string; legacy: string; tone: "bad" | "warn" | "ok"; description: string }[] = [
+  { min: 0, max: 20, label: "Fragile", legacy: "Fragile", tone: "bad", description: "Most essential business routines absent." },
+  { min: 21, max: 40, label: "Emerging", legacy: "Emerging", tone: "bad", description: "First practices present but inconsistent." },
+  { min: 41, max: 60, label: "Developing", legacy: "Developing", tone: "warn", description: "Some routines work; important gaps remain." },
+  { min: 61, max: 80, label: "Established", legacy: "Finance-preparing", tone: "ok", description: "Core practices mostly consistent." },
+  { min: 81, max: 100, label: "Strong", legacy: "Finance-ready", tone: "ok", description: "Well-embedded practices and ongoing improvement." },
 ];
 
 export const DIMENSION_NAME: Record<string, string> = Object.fromEntries(
