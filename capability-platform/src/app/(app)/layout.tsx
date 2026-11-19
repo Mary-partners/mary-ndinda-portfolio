@@ -8,6 +8,8 @@ export const dynamic = "force-dynamic";
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
+  // Founders get their own simple dashboard, not the institutional app.
+  if (user.role === "FOUNDER" && !user.isPlatformAdmin) redirect("/me");
 
   return (
     <div className="flex min-h-screen">
