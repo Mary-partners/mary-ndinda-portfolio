@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { DIMENSION_META } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 30;
@@ -36,6 +37,8 @@ export async function GET(req: Request) {
     hasPgbouncerParam,
     hasSessionSecret: Boolean(process.env.SESSION_SECRET),
     appEnv: process.env.NEXT_PUBLIC_APP_ENV ?? null,
+    frameworkPillars: DIMENSION_META.length,
+    pillarKeys: DIMENSION_META.map((d) => d.key),
   };
 
   try {

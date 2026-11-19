@@ -45,6 +45,29 @@ export async function ensureFramework(prisma: PrismaClient) {
   return framework;
 }
 
+const PUBLIC_ORG_NAME = "Public self-assessments";
+
+// The organisation that holds founder-initiated public self-assessments.
+// Created on demand; every platform administrator is added as a member so they
+// can see the incoming assessments (via the org switcher).
+export async function ensurePublicOrg(prisma: PrismaClient) {
+  let org = await prisma.organisation.findFirst({ where: { name: PUBLIC_ORG_NAME } });
+  if (!org) {
+    org = await prisma.organisation.create({
+      data: { name: PUBLIC_ORG_NAME, type: "Research intake", country: null, description: "Founder-initiated self-assessments taken from the public website." },
+    });
+  }
+  const admins = await prisma.user.findMany({ where: { isPlatformAdmin: true }, select: { id: true } });
+  for (const a of admins) {
+    await prisma.membership.upsert({
+      where: { userId_orgId_role: { userId: a.id, orgId: org.id, role: "ADMIN" } },
+      update: {},
+      create: { userId: a.id, orgId: org.id, role: "ADMIN" },
+    });
+  }
+  return org;
+}
+
 export interface OwnerInput {
   name: string;
   email: string;

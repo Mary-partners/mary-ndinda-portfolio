@@ -3,7 +3,7 @@ import { requireUser } from "@/lib/auth";
 import { latestAssessments } from "@/lib/portfolio";
 import { PageHeader, Panel } from "@/components/ui/Page";
 import { DIMENSION_META } from "@/lib/constants";
-import { fmtScore, maturityBand, cn } from "@/lib/utils";
+import { fmtScore, fmtIndex, maturityBand, cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +20,7 @@ export default async function ScoresPage() {
 
   return (
     <>
-      <PageHeader title="Capability Scores" subtitle="Dimension-level maturity across the portfolio (latest finalised assessment). 0–4 custom SME maturity scale." />
+      <PageHeader title="Capability Scores" subtitle="Pillar-level scores across the portfolio (latest finalised assessment). Each pillar is answered on a 0–4 scale; the overall Management Capital Index is shown out of 100." />
       <Panel>
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
@@ -45,7 +45,7 @@ export default async function ScoresPage() {
                         <div className={cn("m-0.5 rounded px-2 py-2 text-center text-sm font-medium", cellTone(byKey[d.key]))}>{fmtScore(byKey[d.key])}</div>
                       </td>
                     ))}
-                    <td className="td font-semibold">{fmtScore(latest?.overallScore)} <span className="text-xs font-normal text-ink-muted">{maturityBand(latest?.overallScore).label}</span></td>
+                    <td className="td font-semibold">{fmtIndex(latest?.overallScore)}<span className="text-xs font-normal text-ink-muted">/100 · {maturityBand(latest?.overallScore).label}</span></td>
                   </tr>
                 );
               })}

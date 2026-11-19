@@ -100,10 +100,12 @@ model Company {
   ownership     String?
   employees     Int?
   founderName   String?
+  founderEmail  String?
   advisorId     String?
   primaryContact String?
   scenarioTag   String? // narrative label for the demo scenario
   isDemo        Boolean  @default(true)
+  inviteToken   String?  @unique // anonymous self-assessment link token
   createdAt     DateTime @default(now())
 
   org        Organisation @relation(fields: [orgId], references: [id], onDelete: Cascade)

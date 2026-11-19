@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { READINESS_BANDS } from "./constants";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -37,13 +38,24 @@ export function pctChange(
   return { value: ((current - baseline) / Math.abs(baseline)) * 100 };
 }
 
+// Convert a 0-4 score into the Management Capital Index (0-100).
+export function indexScore(score: number | null | undefined): number | null {
+  if (score === null || score === undefined || Number.isNaN(score)) return null;
+  return Math.round((score / 4) * 100);
+}
+
+// Format the Index for display (e.g. "68").
+export function fmtIndex(score: number | null | undefined): string {
+  const i = indexScore(score);
+  return i === null ? "—" : String(i);
+}
+
+// Management Capital Index readiness band for a 0-4 score.
 export function maturityBand(score: number | null | undefined): { label: string; tone: string } {
-  if (score === null || score === undefined) return { label: "Not assessed", tone: "neutral" };
-  if (score < 1) return { label: "Absent", tone: "bad" };
-  if (score < 2) return { label: "Informal", tone: "bad" };
-  if (score < 2.75) return { label: "Introduced", tone: "warn" };
-  if (score < 3.5) return { label: "Consistent", tone: "ok" };
-  return { label: "Embedded", tone: "ok" };
+  const idx = indexScore(score);
+  if (idx === null) return { label: "Not assessed", tone: "neutral" };
+  const b = READINESS_BANDS.find((x) => idx >= x.min && idx <= x.max) ?? READINESS_BANDS[READINESS_BANDS.length - 1];
+  return { label: b.label, tone: b.tone };
 }
 
 export function toCsv(rows: Record<string, unknown>[], headers: string[]): string {

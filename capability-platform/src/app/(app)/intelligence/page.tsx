@@ -3,7 +3,7 @@ import { getPortfolioStats, latestAssessments } from "@/lib/portfolio";
 import { prisma } from "@/lib/prisma";
 import { PageHeader, Panel, StatCard } from "@/components/ui/Page";
 import { DistributionBars, DimensionBars, AdoptionFunnel } from "@/components/charts";
-import { fmtScore } from "@/lib/utils";
+import { fmtIndex, maturityBand } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -45,7 +45,7 @@ export default async function IntelligencePage() {
     <>
       <PageHeader title="Portfolio Intelligence" subtitle="Executive analytics across the active organisation. Click a KPI on the Overview to trace its underlying enterprises." />
       <div className="mb-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Avg maturity" value={fmtScore(s.avgMaturity)} tone="gold" />
+        <StatCard label="Avg. Management Capital Index" value={s.avgMaturity !== null ? `${fmtIndex(s.avgMaturity)}/100` : "—"} sub={maturityBand(s.avgMaturity).label} tone="gold" />
         <StatCard label="Verified adoption" value={`${s.pctVerifiedAdoption.toFixed(0)}%`} tone="ok" />
         <StatCard label="Evidence coverage" value={`${s.evidenceCoverage.toFixed(0)}%`} />
         <StatCard label="Overdue milestones" value={s.overdueMilestones} tone={s.overdueMilestones ? "warn" : "ok"} />
@@ -53,10 +53,10 @@ export default async function IntelligencePage() {
 
       <div className="grid gap-5 lg:grid-cols-2">
         <Panel title="Capability distribution"><DistributionBars data={s.distribution} /></Panel>
-        <Panel title="Average scores by dimension"><DimensionBars data={s.dimensionAverages.map((d) => ({ name: d.name, score: d.score }))} /></Panel>
+        <Panel title="Average scores by pillar"><DimensionBars data={s.dimensionAverages.map((d) => ({ name: d.name, score: d.score }))} /></Panel>
         <Panel title="Capability by sector"><DimensionBars data={sectorData} /></Panel>
         <Panel title="Capability by business size"><DimensionBars data={sizeData} /></Panel>
-        <Panel title="Average maturity by advisor"><DimensionBars data={advisorData} /></Panel>
+        <Panel title="Average score by advisor"><DimensionBars data={advisorData} /></Panel>
         <Panel title="Adoption funnel"><AdoptionFunnel steps={s.funnel} /></Panel>
       </div>
     </>

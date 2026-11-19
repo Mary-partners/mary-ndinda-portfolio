@@ -7,7 +7,7 @@ import { PageHeader, Panel, StatCard } from "@/components/ui/Page";
 import { Badge } from "@/components/ui/Badge";
 import { CapabilityRadar, DimensionBars } from "@/components/charts";
 import { interventionPriority } from "@/lib/scoring";
-import { fmtScore, maturityBand } from "@/lib/utils";
+import { fmtScore, fmtIndex, maturityBand } from "@/lib/utils";
 import { CONSTRAINT_LABELS } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
@@ -50,7 +50,7 @@ export default async function ResultsPage({ params }: { params: Promise<{ id: st
       />
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Overall maturity" value={fmtScore(latest.overallScore)} sub={<Badge tone={maturityBand(latest.overallScore).tone as "ok" | "warn" | "bad" | "neutral"}>{maturityBand(latest.overallScore).label}</Badge>} tone="gold" />
+        <StatCard label="Management Capital Index" value={latest.overallScore != null ? `${fmtIndex(latest.overallScore)}/100` : "—"} sub={<Badge tone={maturityBand(latest.overallScore).tone as "ok" | "warn" | "bad" | "neutral"}>{maturityBand(latest.overallScore).label}</Badge>} tone="gold" />
         <StatCard label="Completeness" value={`${Math.round((latest.completeness ?? 0) * 100)}%`} sub="applicable questions answered" />
         <StatCard label="Evidence coverage" value={`${Math.round((latest.evidenceCoverage ?? 0) * 100)}%`} sub="answered items verified" />
         <StatCard label="Strongest / weakest" value={<span className="text-base">{strongest[0]?.name.split(" ")[0]} / {weakest[0]?.name.split(" ")[0]}</span>} />
@@ -98,7 +98,7 @@ export default async function ResultsPage({ params }: { params: Promise<{ id: st
         </Panel>
         <Panel title="Assessment limitations">
           <ul className="list-disc space-y-1 pl-5 text-sm text-ink-muted">
-            <li>Scores are a custom SME maturity assessment, not validated WMS scores.</li>
+            <li>Scores reflect the Management Capital Index (0–100), an original SME framework from this DBA research — not validated WMS scores.</li>
             <li>Evidence marked by a founder is not independently verified until a reviewer confirms it.</li>
             <li>Associations between management quality and financial outcomes are not treated as causal.</li>
             <li>Completeness ({Math.round((latest.completeness ?? 0) * 100)}%) is reported separately from maturity.</li>
