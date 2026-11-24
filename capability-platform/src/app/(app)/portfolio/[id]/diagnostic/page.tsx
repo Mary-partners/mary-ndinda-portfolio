@@ -53,7 +53,7 @@ export default async function DiagnosticPage({
   return (
     <>
       <PageHeader
-        title={`Diagnostic — ${company.tradingName ?? company.legalName}`}
+        title={`Diagnostic: ${company.tradingName ?? company.legalName}`}
         subtitle={`${assessment.label ?? assessment.type} · ${assessment.status === "draft" ? "Editable draft" : "Finalised (read-only)"} · Framework v${assessment.frameworkVersion}`}
         actions={<Link href={`/portfolio/${id}`} className="btn-ghost">Back to company</Link>}
       />
@@ -63,7 +63,7 @@ export default async function DiagnosticPage({
         {MATURITY_ANCHORS.map((a) => (
           <span key={a.score}><strong className="text-navy-600">{a.score}</strong> {a.label}</span>
         ))}
-        <span className="ml-auto italic">Custom SME anchors — not the official WMS scale.</span>
+        <span className="ml-auto italic">Custom SME anchors, not the official WMS scale.</span>
       </div>
 
       <DiagnosticEditor

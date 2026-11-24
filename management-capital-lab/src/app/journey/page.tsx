@@ -14,7 +14,7 @@ import {
 export const metadata: Metadata = {
   title: "Research Journey",
   description:
-    "Follow the DBA research journey behind the Management Capital Lab, phase by phase — from topic approval to findings and publications.",
+    "Follow the DBA research journey behind the Management Capital Lab, phase by phase, from topic approval to findings and publications.",
 };
 
 export default function JourneyPage() {

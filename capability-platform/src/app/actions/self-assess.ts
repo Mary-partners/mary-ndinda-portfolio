@@ -33,8 +33,8 @@ export async function founderSignup(formData: FormData) {
       orgId: org.id,
       legalName: business,
       tradingName: business,
-      country: t(formData.get("country")) || "—",
-      sector: t(formData.get("sector")) || "—",
+      country: t(formData.get("country")) || "Not given",
+      sector: t(formData.get("sector")) || "Not given",
       founderName: name,
       founderEmail: email,
       ownerUserId: user.id,
@@ -63,8 +63,8 @@ export async function startPublicAssessment(formData: FormData) {
       orgId: org.id,
       legalName: business,
       tradingName: business,
-      country: t(formData.get("country")) || "—",
-      sector: t(formData.get("sector")) || "—",
+      country: t(formData.get("country")) || "Not given",
+      sector: t(formData.get("sector")) || "Not given",
       founderName: t(formData.get("founderName")) || null,
       founderEmail: t(formData.get("email")) || null,
       isDemo: false,
@@ -83,7 +83,7 @@ export interface SelfResponse {
   hasEvidence: boolean;
 }
 
-// Anonymous self-assessment submission — access is the tokenised link only.
+// Anonymous self-assessment submission: access is the tokenised link only.
 // Responses are recorded as self-reported (evidence is "claimed" at most, never
 // "verified"), so they flow into analytics as maturity but add no verified
 // evidence until an independent reviewer confirms it.

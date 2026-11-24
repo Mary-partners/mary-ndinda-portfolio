@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 export default async function SignupPage({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
   const { error } = await searchParams;
-  const msg = error === "exists" ? "An account with that email already exists — please sign in instead." : error ? "Please complete all fields (password at least 8 characters)." : null;
+  const msg = error === "exists" ? "An account with that email already exists. Please sign in instead." : error ? "Please complete all fields (password at least 8 characters)." : null;
 
   return (
     <AuthShell footnote="Your answers are self-reported and confidential.">

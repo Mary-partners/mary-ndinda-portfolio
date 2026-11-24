@@ -67,7 +67,7 @@ export default function AboutPage() {
           <SectionHeading eyebrow="Introduction" title="Why this research exists" />
           <div className="prose-lab">
             <p>
-              SMEs are central to African economies — to employment, to
+              SMEs are central to African economies: to employment, to
               livelihoods, and to the future of the continent&apos;s growth. For
               decades, the dominant narrative around them has been{" "}
               <strong>access to finance</strong>.

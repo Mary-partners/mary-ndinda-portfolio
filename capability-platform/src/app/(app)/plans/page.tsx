@@ -18,7 +18,7 @@ export default async function PlansPage() {
 
   return (
     <>
-      <PageHeader title="Improvement Plans" subtitle="Targeted management interventions — no more than three priorities per enterprise by default." />
+      <PageHeader title="Improvement Plans" subtitle="Targeted management interventions, with no more than three priorities per enterprise by default." />
       <Panel>
         <div className="overflow-x-auto">
           <table className="w-full">

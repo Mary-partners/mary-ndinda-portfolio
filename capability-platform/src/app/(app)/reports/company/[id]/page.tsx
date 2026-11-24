@@ -38,9 +38,9 @@ export default async function CompanyReport({ params }: { params: Promise<{ id: 
         <div><span className="text-ink-muted">Sector:</span> {company.sector}</div>
         <div><span className="text-ink-muted">Country:</span> {company.country}</div>
         <div><span className="text-ink-muted">Stage:</span> {company.stage}</div>
-        <div><span className="text-ink-muted">Employees:</span> {company.employees ?? "—"}</div>
-        <div><span className="text-ink-muted">Advisor:</span> {company.advisor?.name ?? "—"}</div>
-        <div><span className="text-ink-muted">Programme:</span> {company.programme?.name ?? "—"}</div>
+        <div><span className="text-ink-muted">Employees:</span> {company.employees ?? "n/a"}</div>
+        <div><span className="text-ink-muted">Advisor:</span> {company.advisor?.name ?? "n/a"}</div>
+        <div><span className="text-ink-muted">Programme:</span> {company.programme?.name ?? "n/a"}</div>
       </section>
 
       <section className="mt-5">
@@ -51,7 +51,7 @@ export default async function CompanyReport({ params }: { params: Promise<{ id: 
           <div><div className="text-xs text-ink-muted">Evidence coverage</div><div className="text-2xl font-bold text-navy-700">{Math.round((latest?.evidenceCoverage ?? 0) * 100)}%</div></div>
         </div>
         <p className="mt-2 text-sm text-ink">
-          Strongest capabilities: {ranked.slice(-2).map((d) => d.name).join(", ") || "—"}. Most material gaps: {ranked.slice(0, 2).map((d) => d.name).join(", ") || "—"}.
+          Strongest capabilities: {ranked.slice(-2).map((d) => d.name).join(", ") || "n/a"}. Most material gaps: {ranked.slice(0, 2).map((d) => d.name).join(", ") || "n/a"}.
         </p>
       </section>
 
@@ -77,7 +77,7 @@ export default async function CompanyReport({ params }: { params: Promise<{ id: 
       <section className="mt-5">
         <h2 className="text-sm font-bold uppercase text-navy-700">Underlying constraints</h2>
         {company.constraints.length === 0 ? <p className="mt-1 text-sm text-ink-muted">No non-management constraints flagged.</p> : (
-          <ul className="mt-1 text-sm">{company.constraints.map((c) => <li key={c.id}>• {CONSTRAINT_LABELS[c.type] ?? c.type} — {c.severity} ({c.note})</li>)}</ul>
+          <ul className="mt-1 text-sm">{company.constraints.map((c) => <li key={c.id}>• {CONSTRAINT_LABELS[c.type] ?? c.type}: {c.severity} ({c.note})</li>)}</ul>
         )}
       </section>
 
@@ -87,14 +87,14 @@ export default async function CompanyReport({ params }: { params: Promise<{ id: 
           <thead><tr className="border-b border-navy/20"><th className="py-1 text-left">KPI</th><th className="py-1 text-right">Baseline</th><th className="py-1 text-right">Current</th><th className="py-1 text-right">Change</th></tr></thead>
           <tbody>
             {company.kpis.map((k) => { const ch = pctChange(k.baseline, k.actual); return (
-              <tr key={k.id} className="border-b border-navy/5"><td className="py-1">{k.definition.name}</td><td className="py-1 text-right text-ink-muted">{k.baseline === null ? "—" : fmtNumber(k.baseline)}</td><td className="py-1 text-right">{k.actual === null ? "—" : fmtNumber(k.actual)}</td><td className="py-1 text-right">{ch.value === null ? ch.note : `${ch.value >= 0 ? "+" : ""}${ch.value.toFixed(1)}%`}</td></tr>
+              <tr key={k.id} className="border-b border-navy/5"><td className="py-1">{k.definition.name}</td><td className="py-1 text-right text-ink-muted">{k.baseline === null ? "n/a" : fmtNumber(k.baseline)}</td><td className="py-1 text-right">{k.actual === null ? "n/a" : fmtNumber(k.actual)}</td><td className="py-1 text-right">{ch.value === null ? ch.note : `${ch.value >= 0 ? "+" : ""}${ch.value.toFixed(1)}%`}</td></tr>
             ); })}
           </tbody>
         </table>
       </section>
 
       <section className="mt-5 rounded border border-navy/15 bg-surface-muted p-3 text-xs text-ink-muted">
-        <strong className="text-navy-700">Evidence & assessment limitations.</strong> Scores reflect the Management Capital Index (managementcapitallab.com/framework), an original SME framework — not validated WMS scores. Founder-provided evidence is independently verified only when confirmed by a reviewer. Associations between management quality and financial outcomes are not treated as causal.
+        <strong className="text-navy-700">Evidence & assessment limitations.</strong> Scores reflect the Management Capital Index (managementcapitallab.com/framework), an original SME framework, not validated WMS scores. Founder-provided evidence is independently verified only when confirmed by a reviewer. Associations between management quality and financial outcomes are not treated as causal.
       </section>
     </div>
   );

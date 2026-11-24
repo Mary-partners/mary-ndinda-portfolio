@@ -118,8 +118,8 @@ export async function buildCompanyReportPdf(detail: Detail, orgName: string): Pr
   const col = CW / 2;
   const prof: [string, string][] = [
     ["Sector", company.sector], ["Country", company.country],
-    ["Stage", company.stage || "—"], ["Employees", company.employees != null ? fmtNumber(company.employees) : "—"],
-    ["Advisor", company.advisor?.name || "—"], ["Programme", company.programme?.name || "—"],
+    ["Stage", company.stage || "n/a"], ["Employees", company.employees != null ? fmtNumber(company.employees) : "n/a"],
+    ["Advisor", company.advisor?.name || "n/a"], ["Programme", company.programme?.name || "n/a"],
   ];
   for (let i = 0; i < prof.length; i += 2) {
     d.ensure(16);
@@ -130,11 +130,11 @@ export async function buildCompanyReportPdf(detail: Detail, orgName: string): Pr
   }
   d.hr();
 
-  // Executive summary — stat blocks
+  // Executive summary: stat blocks
   d.section("Executive summary");
   const band = maturityBand(latest?.overallScore);
   const stats: [string, string, string, RGB][] = [
-    ["Management Capital Index", latest?.overallScore != null ? fmtIndex(latest?.overallScore) + "/100" : "—", band.label, GOLD_DEEP],
+    ["Management Capital Index", latest?.overallScore != null ? fmtIndex(latest?.overallScore) + "/100" : "n/a", band.label, GOLD_DEEP],
     ["Completeness", Math.round((latest?.completeness ?? 0) * 100) + "%", "applicable answered", NAVY],
     ["Evidence coverage", Math.round((latest?.evidenceCoverage ?? 0) * 100) + "%", "independently verified", NAVY],
   ];
@@ -179,7 +179,7 @@ export async function buildCompanyReportPdf(detail: Detail, orgName: string): Pr
   d.section("Priority recommendations");
   if (ranked.length === 0) d.text("Complete a diagnostic to generate recommendations.", { size: 10, color: MUTED, maxWidth: CW });
   ranked.slice(0, 3).forEach((r, i) => {
-    d.text(`${i + 1}.  Strengthen ${r.name.toLowerCase()} — current ${fmtScore(r.current)}, gap to Embedded (4.0) = ${(4 - (r.current ?? 0)).toFixed(2)}.`, { size: 10, color: INK, gap: 6, maxWidth: CW });
+    d.text(`${i + 1}.  Strengthen ${r.name.toLowerCase()}: current ${fmtScore(r.current)}, gap to Embedded (4.0) = ${(4 - (r.current ?? 0)).toFixed(2)}.`, { size: 10, color: INK, gap: 6, maxWidth: CW });
   });
   d.hr();
 
@@ -187,7 +187,7 @@ export async function buildCompanyReportPdf(detail: Detail, orgName: string): Pr
   d.section("Underlying constraints");
   if (company.constraints.length === 0) d.text("No non-management constraints flagged.", { size: 10, color: MUTED, maxWidth: CW });
   for (const c of company.constraints) {
-    d.text(`- ${CONSTRAINT_LABELS[c.type] ?? c.type} (${c.severity})${c.note ? " — " + c.note : ""}`, { size: 9.5, color: INK, gap: 5, maxWidth: CW });
+    d.text(`- ${CONSTRAINT_LABELS[c.type] ?? c.type} (${c.severity})${c.note ? ": " + c.note : ""}`, { size: 9.5, color: INK, gap: 5, maxWidth: CW });
   }
   d.hr();
 
@@ -204,9 +204,9 @@ export async function buildCompanyReportPdf(detail: Detail, orgName: string): Pr
       d.ensure(15);
       const ch = pctChange(k.baseline, k.actual);
       d.cell(k.definition.name, k1, { size: 9.5 });
-      d.cell(k.baseline == null ? "—" : fmtNumber(k.baseline), k2, { size: 9.5, color: MUTED, align: "right", w: 70 });
-      d.cell(k.actual == null ? "—" : fmtNumber(k.actual), k3, { size: 9.5, align: "right", w: 70 });
-      d.cell(ch.value == null ? (ch.note ?? "—") : `${ch.value >= 0 ? "+" : ""}${ch.value.toFixed(1)}%`, k4, { size: 9.5, color: ch.value == null ? MUTED : ch.value >= 0 ? OK : BAD, align: "right", w: CW - (k4 - M) });
+      d.cell(k.baseline == null ? "n/a" : fmtNumber(k.baseline), k2, { size: 9.5, color: MUTED, align: "right", w: 70 });
+      d.cell(k.actual == null ? "n/a" : fmtNumber(k.actual), k3, { size: 9.5, align: "right", w: 70 });
+      d.cell(ch.value == null ? (ch.note ?? "n/a") : `${ch.value >= 0 ? "+" : ""}${ch.value.toFixed(1)}%`, k4, { size: 9.5, color: ch.value == null ? MUTED : ch.value >= 0 ? OK : BAD, align: "right", w: CW - (k4 - M) });
       d.y -= 15;
     }
     d.hr();
@@ -230,7 +230,7 @@ export async function buildPortfolioReportPdf(stats: Stats, orgName: string): Pr
   d.section("Headline metrics");
   const cards: [string, string, string, RGB][] = [
     ["Enterprises", String(stats.totalEnterprises), `${stats.assessed} assessed`, NAVY],
-    ["Avg. Index", stats.avgMaturity != null ? fmtIndex(stats.avgMaturity) + "/100" : "—", maturityBand(stats.avgMaturity).label, GOLD_DEEP],
+    ["Avg. Index", stats.avgMaturity != null ? fmtIndex(stats.avgMaturity) + "/100" : "n/a", maturityBand(stats.avgMaturity).label, GOLD_DEEP],
     ["Verified adoption", Math.round(stats.pctVerifiedAdoption) + "%", "of enterprises", NAVY],
     ["Evidence coverage", Math.round(stats.evidenceCoverage) + "%", "verified / submitted", NAVY],
   ];

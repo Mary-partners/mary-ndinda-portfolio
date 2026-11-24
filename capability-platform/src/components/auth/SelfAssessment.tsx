@@ -54,8 +54,8 @@ export function SelfAssessment({ token, companyName, orgName, defaultFounder, di
             <span className="grid h-9 w-9 place-items-center rounded-lg bg-gold text-navy-900"><Gauge className="h-5 w-5" /></span>
             <div className="leading-tight"><div className="text-sm font-semibold">Management Capital Lab</div><div className="text-[11px] text-white/55">Self-assessment · invited by {orgName}</div></div>
           </div>
-          <h1 className="mt-5 text-2xl font-semibold">Management capability check — {companyName}</h1>
-          <p className="mt-2 max-w-xl text-sm text-white/70">About {total} short questions, roughly 15 minutes. Answer as honestly as you can — there are no right or wrong answers, and an honest baseline is the most useful. Rate each practice from 0 to 4.</p>
+          <h1 className="mt-5 text-2xl font-semibold">Management capability check: {companyName}</h1>
+          <p className="mt-2 max-w-xl text-sm text-white/70">About {total} short questions, roughly 15 minutes. Answer as honestly as you can. There are no right or wrong answers, and an honest baseline is the most useful. Rate each practice from 0 to 4.</p>
         </div>
       </header>
 
@@ -67,7 +67,7 @@ export function SelfAssessment({ token, companyName, orgName, defaultFounder, di
             {MATURITY_ANCHORS.map((m) => (
               <div key={m.score} className="flex gap-2 text-sm">
                 <span className="font-semibold text-gold-700">{m.score}</span>
-                <span><span className="font-medium text-navy-700">{m.label}</span> <span className="text-ink-muted">— {m.desc}</span></span>
+                <span><span className="font-medium text-navy-700">{m.label}:</span> <span className="text-ink-muted">{m.desc}</span></span>
               </div>
             ))}
           </div>

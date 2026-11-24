@@ -27,7 +27,7 @@ export default async function AssessDonePage({ params }: { params: Promise<{ tok
           <div className="h-1.5 bg-gradient-to-r from-gold-300 via-gold to-gold-600" />
           <div className="p-6 sm:p-8">
             <div className="flex items-center gap-2 text-emerald-700"><CheckCircle2 className="h-5 w-5" /><span className="text-sm font-semibold">Assessment submitted</span></div>
-            <h1 className="mt-3 text-xl font-semibold text-navy-700">Thank you — your report is ready</h1>
+            <h1 className="mt-3 text-xl font-semibold text-navy-700">Thank you. Your report is ready</h1>
             <p className="mt-1.5 text-sm text-ink-muted">You&apos;ve completed the management capability check for {name}. Here&apos;s your result, and a full PDF report to download.</p>
 
             <div className="mt-5 rounded-xl border border-navy/10 bg-surface-muted p-4">

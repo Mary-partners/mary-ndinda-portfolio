@@ -109,7 +109,7 @@ export function computeScores(
 }
 
 // Transparent priority score for recommending interventions (higher = sooner).
-// Not an opaque AI score — all inputs are explicit.
+// Not an opaque AI score: all inputs are explicit.
 export function interventionPriority(input: {
   gap: number; // target - current (0..4)
   importance: number; // 1..3 strategic importance

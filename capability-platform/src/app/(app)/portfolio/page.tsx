@@ -59,10 +59,10 @@ export default async function PortfolioPage() {
                     <td className="td text-ink-muted">{company.country}</td>
                     <td className="td text-ink-muted">{company.sector}</td>
                     <td className="td text-ink-muted">{company.stage}</td>
-                    <td className="td text-ink-muted">{company.advisor?.name ?? "—"}</td>
+                    <td className="td text-ink-muted">{company.advisor?.name ?? "n/a"}</td>
                     <td className="td font-medium">{fmtIndex(latest?.overallScore)}</td>
                     <td className="td"><Badge tone={band.tone as "ok" | "warn" | "bad" | "neutral"}>{band.label}</Badge></td>
-                    <td className="td text-ink-muted">{company.employees ? `${fmtNumber(company.employees)} staff` : "—"}</td>
+                    <td className="td text-ink-muted">{company.employees ? `${fmtNumber(company.employees)} staff` : "n/a"}</td>
                   </tr>
                 );
               })}

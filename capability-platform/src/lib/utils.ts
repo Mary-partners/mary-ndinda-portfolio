@@ -7,21 +7,21 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function fmtDate(d: Date | string | null | undefined): string {
-  if (!d) return "—";
+  if (!d) return "n/a";
   try {
     return new Date(d).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
   } catch {
-    return "—";
+    return "n/a";
   }
 }
 
 export function fmtNumber(n: number | null | undefined, opts: Intl.NumberFormatOptions = {}): string {
-  if (n === null || n === undefined || Number.isNaN(n)) return "—";
+  if (n === null || n === undefined || Number.isNaN(n)) return "n/a";
   return new Intl.NumberFormat("en-GB", opts).format(n);
 }
 
 export function fmtScore(n: number | null | undefined): string {
-  if (n === null || n === undefined || Number.isNaN(n)) return "—";
+  if (n === null || n === undefined || Number.isNaN(n)) return "n/a";
   return n.toFixed(2);
 }
 
@@ -47,7 +47,7 @@ export function indexScore(score: number | null | undefined): number | null {
 // Format the Index for display (e.g. "68").
 export function fmtIndex(score: number | null | undefined): string {
   const i = indexScore(score);
-  return i === null ? "—" : String(i);
+  return i === null ? "n/a" : String(i);
 }
 
 // Management Capital Index readiness band for a 0-4 score.

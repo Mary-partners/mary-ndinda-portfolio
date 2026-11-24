@@ -228,7 +228,7 @@ export default function IndexPage() {
               Take the Management Capital diagnostic
             </h2>
             <p className="mt-4 max-w-2xl text-lg leading-relaxed text-cream/85">
-              A founder-centred self-assessment across the six pillars — about 15
+              A founder-centred self-assessment across the six pillars. It takes about 15
               minutes. It returns your Management Capital Index, your readiness band
               and closest archetype, and a downloadable report with your most
               valuable next step. Free and confidential.

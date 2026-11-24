@@ -56,7 +56,7 @@ export default async function FounderHome() {
                   {detail.dimRows.map((d) => (
                     <div key={d.key} className="flex items-center gap-3">
                       <div className="w-44 shrink-0 text-sm text-navy-700">{d.name}</div>
-                      <div className="h-2 flex-1 rounded-full bg-navy/10"><div className="h-2 rounded-full bg-gold" style={{ width: `${fmtIndex(d.current) === "—" ? 0 : fmtIndex(d.current)}%` }} /></div>
+                      <div className="h-2 flex-1 rounded-full bg-navy/10"><div className="h-2 rounded-full bg-gold" style={{ width: `${fmtIndex(d.current) === "n/a" ? 0 : fmtIndex(d.current)}%` }} /></div>
                       <div className="w-10 text-right text-sm font-medium text-navy-700">{fmtIndex(d.current)}</div>
                     </div>
                   ))}
