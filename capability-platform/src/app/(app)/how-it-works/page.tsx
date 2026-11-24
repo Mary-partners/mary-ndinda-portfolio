@@ -42,8 +42,8 @@ const LADDER = [
   { range: "0–20", label: "Fragile", tone: "bg-bad" },
   { range: "21–40", label: "Emerging", tone: "bg-bad/70" },
   { range: "41–60", label: "Developing", tone: "bg-warn" },
-  { range: "61–80", label: "Finance-preparing", tone: "bg-ok/80" },
-  { range: "81–100", label: "Finance-ready", tone: "bg-ok" },
+  { range: "61–80", label: "Established", tone: "bg-ok/80" },
+  { range: "81–100", label: "Strong", tone: "bg-ok" },
 ];
 
 const WINDOWS = [

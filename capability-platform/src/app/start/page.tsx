@@ -4,7 +4,7 @@ import { Gauge, ArrowRight, ClipboardCheck, Compass, ShieldCheck } from "lucide-
 export const dynamic = "force-dynamic";
 
 const POINTS = [
-  { icon: ClipboardCheck, text: "About 24 short questions across the six pillars — roughly 15 minutes." },
+  { icon: ClipboardCheck, text: "36 short questions across the six pillars — roughly 15 minutes." },
   { icon: Compass, text: "Your Management Capital Index (0–100), your readiness band and closest archetype." },
   { icon: ShieldCheck, text: "A downloadable PDF report with your most valuable next step." },
 ];
@@ -71,7 +71,8 @@ export default async function StartPage({ searchParams }: { searchParams: Promis
             </form>
           </div>
         </div>
-        <p className="mt-5 text-center text-xs text-ink-muted">Your answers are self-reported and confidential. Scores use the <a href="https://www.managementcapitallab.com/framework" className="text-gold-700 hover:underline">Management Capital Index</a>.</p>
+        <p className="mt-5 text-center text-sm text-ink-muted">Prefer an account you can return to, to track progress over time? <a href="/platform/signup" className="font-medium text-gold-700 hover:underline">Create a founder account</a>.</p>
+        <p className="mt-2 text-center text-xs text-ink-muted">Your answers are self-reported and confidential. Scores use the <a href="https://www.managementcapitallab.com/framework" className="text-gold-700 hover:underline">Management Capital Index</a>.</p>
       </div>
     </div>
   );

@@ -58,7 +58,7 @@ export default function ResearchPage() {
         <Panel title="Measurement definitions & calculations">
           <ul className="list-disc space-y-1.5 pl-5 text-sm text-ink-muted">
             <li><strong>Pillar score</strong> = weighted average of applicable, answered question scores (0–4). Unanswered questions are never scored as zero.</li>
-            <li><strong>Management Capital Index</strong> = the overall score across pillars, rescaled to 0–100 (equal pillar weights by default; configurable by authorised admins).</li>
+            <li><strong>Management Capital Index</strong> = sum of (pillar score × pillar weight), on a 0–100 scale. Proposed weights: Financial 15, Governance 15, Strategic 20, Operational 20, Founder &amp; Management 20, Capital Absorption 10.</li>
             <li><strong>Completeness</strong> = applicable questions answered ÷ total applicable. Reported separately from the Index.</li>
             <li><strong>Evidence coverage</strong> = answered items with verified evidence ÷ answered items. Founder-provided evidence is not counted as verified until a reviewer confirms it.</li>
             <li><strong>Three distinct measures</strong>: management capability, implementation progress, and business performance — each has its own metrics. Capability changes only through a documented reassessment, never because a task was marked complete.</li>
@@ -67,7 +67,7 @@ export default function ResearchPage() {
         </Panel>
 
         <Panel title="Version history">
-          <ul className="text-sm text-ink-muted"><li><strong>Management Capital Index v1.0</strong> — six pillars, their published diagnostic questions, equal weights, scored 0–100.</li></ul>
+          <ul className="text-sm text-ink-muted"><li><strong>Management Capital Index v1.1</strong> — six pillars, 36 behaviour-based questions, proposed weights (15/15/20/20/20/10), scored 0–100. Weights are provisional and versioned, not empirically validated.</li></ul>
         </Panel>
       </div>
     </>

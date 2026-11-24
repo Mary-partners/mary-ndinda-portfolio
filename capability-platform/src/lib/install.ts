@@ -1,6 +1,6 @@
 import type { PrismaClient } from "@prisma/client";
 import { FRAMEWORK_CONTENT } from "./framework-content";
-import { DIMENSION_META } from "./constants";
+import { DIMENSION_META, FRAMEWORK_VERSION } from "./constants";
 import { hashPassword } from "./password";
 
 // First-run installation helpers for a real (non-demo) deployment.
@@ -21,12 +21,12 @@ export async function ensureFramework(prisma: PrismaClient) {
   let framework = await prisma.framework.findFirst({ where: { isDefault: true } });
   if (!framework) {
     framework = await prisma.framework.create({
-      data: { name: "MCL SME Capability Framework", version: "1.0", isDefault: true, orgId: null },
+      data: { name: "Management Capital Index", version: FRAMEWORK_VERSION, isDefault: true, orgId: null },
     });
     for (let i = 0; i < DIMENSION_META.length; i++) {
       const meta = DIMENSION_META[i];
       const dim = await prisma.dimension.create({
-        data: { frameworkId: framework.id, key: meta.key, name: meta.name, description: meta.description, weight: 1, order: i + 1 },
+        data: { frameworkId: framework.id, key: meta.key, name: meta.name, description: meta.description, weight: meta.weight, order: i + 1 },
       });
       const content = FRAMEWORK_CONTENT.find((c) => c.key === meta.key);
       if (content) {
