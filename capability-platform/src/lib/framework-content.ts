@@ -14,6 +14,112 @@ export interface SeedDimension {
   questions: SeedQuestion[];
 }
 
+// Suggested first corrective action per question (in order), from the MCI 1.1
+// question bank. Used by the deterministic action engine for weak items.
+export const SUGGESTED_ACTIONS: Record<string, string[]> = {
+  financial: [
+    "Create a simple sales and spending tracker; reconcile the last 90 days",
+    "Hold a monthly performance review with named actions",
+    "Set up and update a weekly cash plan",
+    "Calculate margins on the three biggest offers",
+    "Review monthly variances and agree actions",
+    "Create a payment and obligations calendar",
+  ],
+  governance: [
+    "Assign an owner to each core responsibility",
+    "Set approval limits and a second-person check",
+    "Introduce monthly control checks",
+    "Hold a quarterly management or adviser review",
+    "Maintain a single obligations calendar",
+    "Create an issue register and name an escalation owner",
+  ],
+  strategic: [
+    "Identify three priority customer segments",
+    "Test demand before expanding",
+    "Review the economics for the main product or job",
+    "Interview five customers and lost prospects",
+    "Set three measurable 90-day priorities",
+    "Map growth bottlenecks and dependencies",
+  ],
+  operational: [
+    "Document five core processes",
+    "Track on-time delivery and quality weekly",
+    "Start weekly stock or capacity checks",
+    "Use a shared customer follow-up register",
+    "Introduce a 30-minute weekly operating review",
+    "Delegate two recurring decisions and test cover",
+  ],
+  founder: [
+    "Start a decision log with outcomes",
+    "Set weekly team check-ins",
+    "Delegate one measurable outcome per team lead",
+    "Review overdue actions weekly",
+    "Run a 30-day customer-feedback experiment",
+    "Hold a monthly lessons and risks discussion",
+  ],
+  absorption: [
+    "Compare non-financing and financing solutions",
+    "Turn the growth idea into a milestone plan",
+    "Track resources against planned outputs",
+    "Stress-test repayment before taking on debt",
+    "Set a baseline and monthly outcome measures",
+    "Create a quarterly stakeholder update",
+  ],
+};
+
+// Plain-language guidance that helps a founder think through each question,
+// in pillar order. Shown under the question in the self-assessment.
+export const QUESTION_HELP: Record<string, string[]> = {
+  financial: [
+    "This asks whether your income and costs are written down somewhere you can show, not just held in your head. A notebook, spreadsheet or app where each month's sales and expenses are listed and add up is enough.",
+    "This is about whether someone actually looks at the monthly numbers and decides what to do next, rather than filing them away. Think of a short monthly sit-down: what went well, what did not, and what to change.",
+    "This asks whether you can see money coming in and going out over the next two months, so a shortfall does not surprise you. A simple week-by-week list of expected payments in and out covers it.",
+    "This is about knowing which products or jobs actually make money once you subtract their direct costs, not just which ones sell the most. Think about your top offers and the profit left on each.",
+    "This asks whether you set a rough plan for the month, then check how the real results compared and act when they differ. It is the habit of comparing plan against actual.",
+    "This is about knowing what you owe and when, before it falls due, so taxes, suppliers and loan payments are never a shock. A simple calendar of due dates and amounts is enough.",
+  ],
+  governance: [
+    "This asks whether your team can say who is responsible for each important decision and result, so nothing falls through the cracks. Consider whether roles are clear or everything comes back to you.",
+    "This is about whether big purchases or payments are checked by someone before they happen, to prevent mistakes and misuse. For example, spending above a set amount needs a second person to approve.",
+    "This asks whether stock, cash, customer data and equipment are checked and protected regularly, so losses or theft are caught early. Think simple routine checks, not a formal audit.",
+    "This is about having a regular meeting where leaders review results and are free to question decisions, rather than decisions going unchallenged. Even a quarterly review with an adviser counts.",
+    "This asks whether the business keeps track of permits, contracts, staff obligations and deadlines in one place, so nothing important lapses. A single calendar or list is enough.",
+    "This is about whether, when something goes wrong, it gets written down, given to someone to fix, and actually resolved. Consider whether issues are tracked or just forgotten.",
+  ],
+  strategic: [
+    "This asks whether your team can clearly name your main customers and why they choose you, rather than trying to sell to everyone. Think about your two or three most important customer groups.",
+    "This is about having real evidence, like repeat orders or a pipeline, that customers want the next thing you plan to grow into, before you invest in it.",
+    "This asks whether you know what you earn from a typical sale, job or customer after direct costs, so growth adds profit and not just more work.",
+    "This is about whether customers and staff can explain why buyers pick you over competitors. If the only answer is price, that is worth noticing.",
+    "This asks whether you have about three clear, measurable priorities for the next three months, each with an owner and a due date, instead of a long vague wish list.",
+    "This is about understanding what actually has to change, in people, systems or capacity, for you to serve more customers well, rather than assuming growth just happens.",
+  ],
+  operational: [
+    "This asks whether your most important recurring tasks are written down as simple steps and followed, so quality does not depend on one person remembering. Think checklists for your core work.",
+    "This is about whether you track if orders or services are finished on time and to standard, so you can see and fix slippage early.",
+    "This asks whether you can spot shortages, waste or capacity limits before they affect customers, rather than discovering them when something runs out.",
+    "This is about keeping customer requests, complaints and repeat sales in one shared place, so follow-up does not depend on one person's memory or phone.",
+    "This asks whether teams regularly look at a few practical measures and solve the problems that keep recurring, instead of firefighting the same issues.",
+    "This is about whether normal work could continue for two weeks if you, the founder, stepped back from managing every task. It tests how much the business depends on you personally.",
+  ],
+  founder: [
+    "This asks whether leaders can explain a recent decision and the information they used, showing decisions are thought through rather than purely by gut.",
+    "This is about whether each manager knows their targets and reviews progress with their team, so everyone is pulling in the same direction.",
+    "This asks whether managers give people ownership of outcomes, rather than needing to approve every small step themselves.",
+    "This is about whether agreed actions actually get done by their deadlines, and when they slip, the reason is understood and addressed.",
+    "This asks whether customer feedback has led to a real change in the business in the last three months, showing you listen and adapt.",
+    "This is about whether the team spots problems early, welcomes challenge and adjusts plans, rather than pushing on regardless.",
+  ],
+  absorption: [
+    "This asks whether you can honestly say whether your next step needs better use of what you already have, a partner, or outside funding, rather than assuming the answer is money.",
+    "This is about whether a planned investment has its activities, costs, owners and milestones written down, so money would be used to a plan.",
+    "This asks whether, for money or resources you received before, you can show what they were used for and what came of it.",
+    "This is about whether, before borrowing, you have tested that you could still make repayments in a weak sales month, not only a good one.",
+    "This asks whether you compare what a project actually achieved against the improvement you expected, so you learn what works.",
+    "This is about whether management can give clear, honest updates with figures to funders, partners or a board, which builds trust and support.",
+  ],
+};
+
 export const FRAMEWORK_CONTENT: SeedDimension[] = [
   {
     key: "financial",

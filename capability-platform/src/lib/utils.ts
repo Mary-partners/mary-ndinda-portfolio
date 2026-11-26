@@ -51,11 +51,11 @@ export function fmtIndex(score: number | null | undefined): string {
 }
 
 // Management Capital Index readiness band for a 0-4 score.
-export function maturityBand(score: number | null | undefined): { label: string; tone: string } {
+export function maturityBand(score: number | null | undefined): { label: string; tone: string; description: string } {
   const idx = indexScore(score);
-  if (idx === null) return { label: "Not assessed", tone: "neutral" };
+  if (idx === null) return { label: "Not assessed", tone: "neutral", description: "Complete the diagnostic to see your band." };
   const b = READINESS_BANDS.find((x) => idx >= x.min && idx <= x.max) ?? READINESS_BANDS[READINESS_BANDS.length - 1];
-  return { label: b.label, tone: b.tone };
+  return { label: b.label, tone: b.tone, description: b.description };
 }
 
 export function toCsv(rows: Record<string, unknown>[], headers: string[]): string {

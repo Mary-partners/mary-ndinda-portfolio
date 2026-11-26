@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { SelfAssessment } from "@/components/auth/SelfAssessment";
+import { QUESTION_HELP } from "@/lib/framework-content";
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +18,7 @@ export default async function AssessPage({ params }: { params: Promise<{ token: 
     include: {
       dimensions: {
         orderBy: { order: "asc" },
-        include: { questions: { orderBy: { order: "asc" }, select: { id: true, text: true, helpText: true } } },
+        include: { questions: { orderBy: { order: "asc" }, select: { id: true, text: true, helpText: true, order: true } } },
       },
     },
   });
@@ -25,7 +26,13 @@ export default async function AssessPage({ params }: { params: Promise<{ token: 
 
   const dimensions = framework.dimensions.map((d) => ({
     key: d.key, name: d.name, description: d.description,
-    questions: d.questions.map((q) => ({ id: q.id, text: q.text, helpText: q.helpText })),
+    questions: d.questions.map((q) => ({
+      id: q.id,
+      text: q.text,
+      // Richer "help me think" guidance lives in code (no reseed needed).
+      help: QUESTION_HELP[d.key]?.[q.order - 1] ?? null,
+      evidence: q.helpText,
+    })),
   }));
 
   return (

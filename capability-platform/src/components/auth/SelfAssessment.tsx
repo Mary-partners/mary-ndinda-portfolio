@@ -5,7 +5,7 @@ import { submitSelfAssessment, type SelfResponse } from "@/app/actions/self-asse
 import { MATURITY_ANCHORS } from "@/lib/constants";
 import { Gauge, Loader2, Check } from "lucide-react";
 
-type Q = { id: string; text: string; helpText: string | null };
+type Q = { id: string; text: string; help: string | null; evidence: string | null };
 type Dim = { key: string; name: string; description: string | null; questions: Q[] };
 type Answer = { score: number | null; na: boolean; hasEvidence: boolean };
 
@@ -54,20 +54,20 @@ export function SelfAssessment({ token, companyName, orgName, defaultFounder, di
             <span className="grid h-9 w-9 place-items-center rounded-lg bg-gold text-navy-900"><Gauge className="h-5 w-5" /></span>
             <div className="leading-tight"><div className="text-sm font-semibold">Management Capital Lab</div><div className="text-[11px] text-white/55">Self-assessment · invited by {orgName}</div></div>
           </div>
-          <h1 className="mt-5 text-2xl font-semibold">Management capability check — {companyName}</h1>
-          <p className="mt-2 max-w-xl text-sm text-white/70">About {total} short questions, roughly 15 minutes. Answer as honestly as you can — there are no right or wrong answers, and an honest baseline is the most useful. Rate each practice from 0 to 4.</p>
+          <h1 className="mt-5 text-2xl font-semibold">Management capability check for {companyName}</h1>
+          <p className="mt-2 max-w-xl text-sm text-white/70">About {total} short questions, roughly 15 minutes. Answer as honestly as you can. There are no right or wrong answers, and an honest baseline is the most useful. Rate each practice from 0 to 4.</p>
         </div>
       </header>
 
       <div className="mx-auto w-full max-w-3xl px-5" style={{ paddingLeft: "max(20px, env(safe-area-inset-left,0px))", paddingRight: "max(20px, env(safe-area-inset-right,0px))" }}>
         {/* scale legend */}
         <div className="mt-5 rounded-xl border border-navy/10 bg-white p-4">
-          <div className="text-xs font-semibold uppercase tracking-wide text-ink-muted">The 0–4 scale</div>
+          <div className="text-xs font-semibold uppercase tracking-wide text-ink-muted">What the 0 to 4 scale means</div>
           <div className="mt-2 grid gap-x-4 gap-y-1.5 sm:grid-cols-2">
             {MATURITY_ANCHORS.map((m) => (
               <div key={m.score} className="flex gap-2 text-sm">
                 <span className="font-semibold text-gold-700">{m.score}</span>
-                <span><span className="font-medium text-navy-700">{m.label}</span> <span className="text-ink-muted">— {m.desc}</span></span>
+                <span><span className="font-medium text-navy-700">{m.label}.</span> <span className="text-ink-muted">{m.desc}</span></span>
               </div>
             ))}
           </div>
@@ -92,8 +92,14 @@ export function SelfAssessment({ token, companyName, orgName, defaultFounder, di
                 const a = ans[q.id];
                 return (
                   <div key={q.id} className="rounded-xl border border-navy/10 bg-white p-4">
-                    <p className="text-sm text-navy-800">{q.text}</p>
-                    {q.helpText && <p className="mt-1 text-xs text-ink-muted">{q.helpText}</p>}
+                    <p className="text-sm font-medium text-navy-800">{q.text}</p>
+                    {q.help && (
+                      <div className="mt-2 rounded-lg border border-gold/25 bg-gold/5 p-3">
+                        <div className="text-[11px] font-semibold uppercase tracking-wide text-gold-700">How to think about this</div>
+                        <p className="mt-1 text-xs leading-relaxed text-ink-muted">{q.help}</p>
+                        {q.evidence && <p className="mt-1.5 text-xs leading-relaxed text-navy-700"><span className="font-medium">What you could point to:</span> {q.evidence.replace(/^Evidence:\s*/i, "")}</p>}
+                      </div>
+                    )}
                     <div className="mt-3 flex flex-wrap items-center gap-1.5">
                       {[0, 1, 2, 3, 4].map((n) => {
                         const active = a?.score === n && !a?.na;
@@ -118,7 +124,7 @@ export function SelfAssessment({ token, companyName, orgName, defaultFounder, di
           </section>
         ))}
 
-        <p className="mt-6 text-xs text-ink-muted">Your answers are self-reported. They help build a capability baseline; any evidence you offer is only treated as verified once an independent reviewer confirms it.</p>
+        <p className="mt-6 text-xs text-ink-muted">Your answers are self-reported. They help build a capability baseline. Any evidence you offer is only treated as verified once an independent reviewer confirms it.</p>
       </div>
 
       {/* sticky submit bar */}
