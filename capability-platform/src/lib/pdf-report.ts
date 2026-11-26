@@ -1,10 +1,11 @@
-import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { PDFDocument, StandardFonts, rgb, PDFString, PDFName } from "pdf-lib";
 import type { PDFFont, PDFPage, RGB } from "pdf-lib";
 import { DIMENSION_META, CONSTRAINT_LABELS } from "./constants";
 import { fmtScore, fmtIndex, fmtNumber, fmtDate, pctChange, maturityBand } from "./utils";
 import { getActionPlan } from "./recommend";
 import { getFounderV2 } from "./founder-v2";
 import type { V2Result, V2Plan } from "./scoring-v2";
+import { PRACTICE_GUIDE, PILLAR_PLAIN, DONE_WHEN, START_PHRASE, EVIDENCE_REFS } from "./practice-guide";
 import type { getCompanyDetail } from "./company";
 import type { getPortfolioStats } from "./portfolio";
 
@@ -112,84 +113,213 @@ function header(d: Doc, eyebrow: string, title: string, orgName: string) {
 }
 
 // Enterprise Management Diagnostic (revised v2 rubric).
-function renderV2Report(d: Doc, result: V2Result, plan: V2Plan) {
-  // Executive summary
-  d.section("Executive summary");
-  const stats: [string, string, string, RGB][] = [
-    ["Management Capital Index", result.mci != null ? result.mci + "/100" : "n/a", result.overallBand.label, GOLD_DEEP],
-    ["Answer coverage", Math.round(result.answerCoverage * 100) + "%", `${result.totalNumeric} of ${result.totalApplicable} scored`, NAVY],
-    ["Independent verification", "0%", "reviewer-confirmed", NAVY],
-  ];
-  d.ensure(50);
-  const sx = [M, M + 180, M + 340];
-  stats.forEach((s, i) => {
-    d.page.drawText(san(s[0]), { x: sx[i], y: d.y - 9, size: 8.5, font: d.reg, color: MUTED });
-    d.page.drawText(san(s[1]), { x: sx[i], y: d.y - 30, size: 22, font: d.bold, color: s[3] });
-    d.page.drawText(san(s[2]), { x: sx[i], y: d.y - 42, size: 8, font: d.reg, color: MUTED });
+// Clickable URI link annotation over a rectangle on the current page.
+function addLink(d: Doc, url: string, x: number, y: number, w: number, h: number) {
+  const annot = d.doc.context.obj({
+    Type: "Annot", Subtype: "Link", Rect: [x, y, x + w, y + h], Border: [0, 0, 0],
+    A: { Type: "Action", S: "URI", URI: PDFString.of(url) },
   });
-  d.y -= 52;
-  d.text(result.overallBand.blurb, { size: 10, color: INK, gap: 6, maxWidth: CW });
-  const q = result.pillars.filter((p) => p.display !== null);
-  if (q.length) {
-    const hi = [...q].sort((a, b) => (b.display ?? 0) - (a.display ?? 0))[0];
-    const lo = [...q].sort((a, b) => (a.display ?? 0) - (b.display ?? 0))[0];
-    d.text(`Strongest area: ${hi.name} (${hi.display}). Lowest: ${lo.name} (${lo.display}).`, { size: 10, color: INK, gap: 6, maxWidth: CW });
-  }
-  d.hr();
+  const ref = d.doc.context.register(annot);
+  const existing = d.page.node.Annots();
+  if (existing) existing.push(ref);
+  else d.page.node.set(PDFName.of("Annots"), d.doc.context.obj([ref]));
+}
 
-  // Capability breakdown
-  d.section("Capability breakdown");
-  d.text("Latest raw score out of 4, maturity, applicable responses rated, and the gap to a fully embedded practice (4.00). This is the first assessment, so it is also the baseline.", { size: 8.5, color: MUTED, gap: 7, maxWidth: CW });
-  const c1 = M, c2 = M + 226, c3 = M + 274, cband = M + 322, crated = M + 420, cgap = M + 462;
-  const wRated = 34, wGap = CW - (cgap - M);
-  d.cell("Pillar", c1, { size: 8.5, bold: true, color: MUTED });
-  d.cell("/4", c2, { size: 8.5, bold: true, color: MUTED, align: "right", w: 30 });
-  d.cell("/100", c3, { size: 8.5, bold: true, color: MUTED, align: "right", w: 30 });
-  d.cell("Maturity", cband, { size: 8.5, bold: true, color: MUTED });
-  d.cell("Rated", crated, { size: 8.5, bold: true, color: MUTED, align: "right", w: wRated });
-  d.cell("Gap", cgap, { size: 8.5, bold: true, color: MUTED, align: "right", w: wGap });
-  d.y -= 14;
+const SKY = rgb(0.93, 0.95, 0.99);
+const CREAM = rgb(0.97, 0.94, 0.87);
+const SUB = rgb(0.3, 0.36, 0.42);
+const LINKC = rgb(0.16, 0.31, 0.55);
+function matuTone(label: string): RGB {
+  return label === "Embedded" || label === "Strong" ? OK : label === "Developing" ? WARN : BAD;
+}
+
+// Founder Snapshot and Practice Guide (two A4 pages) for a v2 assessment.
+async function buildFounderSnapshotPdf(result: V2Result, plan: V2Plan, company: Detail["company"], generatedAt: Date, isBaseline: boolean): Promise<Uint8Array> {
+  const d = await Doc.create();
+  const put = (s: string, x: number, y: number, o: { size?: number; bold?: boolean; color?: RGB } = {}) =>
+    d.page.drawText(san(s), { x, y, size: o.size ?? 10, font: o.bold ? d.bold : d.reg, color: o.color ?? INK });
+  const right = (s: string, y: number, size: number, color: RGB, bold = false) => {
+    const f = bold ? d.bold : d.reg;
+    const w = f.widthOfTextAtSize(san(s), size);
+    d.page.drawText(san(s), { x: W - M - w, y, size, font: f, color });
+  };
+  const rule = (y: number, color: RGB = LINE, x0 = M, x1 = W - M) =>
+    d.page.drawLine({ start: { x: x0, y }, end: { x: x1, y }, thickness: 0.75, color });
+
+  const name = company.tradingName || company.legalName;
+  const gen = new Intl.DateTimeFormat("en-GB", { timeZone: "Africa/Nairobi", day: "numeric", month: "short", year: "numeric" }).format(generatedAt)
+    + ", " + new Intl.DateTimeFormat("en-GB", { timeZone: "Africa/Nairobi", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false }).format(generatedAt) + " EAT";
+
+  // Interpretation (tie-aware on unrounded values).
+  const q = result.pillars.filter((p) => p.raw !== null);
+  const maxRaw = q.length ? Math.max(...q.map((p) => p.raw!)) : 0;
+  const minRaw = q.length ? Math.min(...q.map((p) => p.raw!)) : 0;
+  const strongest = q.filter((p) => Math.abs((p.raw ?? 0) - maxRaw) < 1e-9);
+  const lowest = q.filter((p) => Math.abs((p.raw ?? 0) - minRaw) < 1e-9);
+  let interp = result.overallBand.blurb + " ";
+  if (strongest.length === 1) interp += `Your strongest area was ${PILLAR_PLAIN[strongest[0].key]}. `;
+  else if (strongest.length > 1) interp += `Your strongest areas were ${strongest.map((p) => p.name).join(" and ")}. `;
+  if (lowest.length >= 2) interp += `${lowest.map((p) => p.name).join(" and ")} tied for the lowest scores.`;
+  else if (lowest.length === 1) interp += `${lowest[0].name} had the lowest score.`;
+
+  const pr = plan.priorities;
+  const scoreLabel = (c: (typeof pr)[number]) => (c.status === "numeric" && c.score !== null ? `${c.score}/4` : "to check");
+
+  // ---------- PAGE 1 ----------
+  let y = H - M;
+  d.page.drawRectangle({ x: M, y: y - 1, width: 26, height: 3, color: GOLD });
+  put("MANAGEMENT CAPITAL LAB", M + 34, y - 3, { size: 9, bold: true, color: NAVY });
+  right("PRIVATE SELF-ASSESSMENT", y - 3, 9, GOLD_DEEP, true);
+  y -= 30;
+  put(name, M, y - 24, { size: 27, bold: true, color: NAVY }); y -= 32;
+  put("Enterprise Management Diagnostic", M, y - 12, { size: 13, color: SUB }); y -= 26;
+  const metaLeft = [company.sector, company.country].filter(Boolean).join("   /   ");
+  if (metaLeft) put(metaLeft, M, y - 9, { size: 9.5, color: MUTED });
+  right(`Report generated ${gen}`, y - 9, 9.5, MUTED); y -= 22;
+
+  const interpLines = d.wrap(interp, d.reg, 10.5, CW - 184);
+  const bandH = Math.max(78, 30 + interpLines.length * 14);
+  d.page.drawRectangle({ x: M, y: y - bandH, width: CW, height: bandH, color: SKY });
+  put(`${result.mci ?? "n/a"}/100`, M + 20, y - 34, { size: 26, bold: true, color: NAVY });
+  put(result.overallBand.label, M + 20, y - 52, { size: 11, bold: true, color: NAVY });
+  put(isBaseline ? "Your first assessment" : "Latest assessment", M + 20, y - 65, { size: 8.5, color: MUTED });
+  let iy = y - 24;
+  for (const ln of interpLines) { put(ln, M + 180, iy, { size: 10.5, color: INK }); iy -= 14; }
+  y -= bandH + 22;
+
+  if (result.mci === null) {
+    put(`Not enough questions were answered to show an overall Index (${result.totalNumeric} of ${result.totalApplicable} scored).`, M, y - 10, { size: 9, color: BAD });
+    y -= 22;
+  }
+
+  put("Capability breakdown", M, y - 15, { size: 15, bold: true, color: NAVY }); y -= 30;
+  put("Score out of 4", M + 232, y, { size: 8.5, bold: true, color: MUTED });
+  put("Maturity", M + 372, y, { size: 8.5, bold: true, color: MUTED });
+  y -= 16;
   for (const p of result.pillars) {
-    d.ensure(16);
-    d.cell(p.name, c1, { size: 9 });
+    const rowY = y - 10;
+    put(p.name, M, rowY, { size: 9.5, color: INK });
     if (p.qualifies && p.raw !== null) {
-      d.cell(p.raw.toFixed(2), c2, { size: 9.5, align: "right", w: 30 });
-      d.cell(String(p.display), c3, { size: 9.5, bold: true, align: "right", w: 30 });
-      d.cell(p.band.label, cband, { size: 8.5, color: toneColor(p.band.label === "Embedded" || p.band.label === "Strong" ? "ok" : p.band.label === "Developing" ? "warn" : "bad") });
-      d.cell(`${p.numericCount}/${p.applicableCount}`, crated, { size: 9, color: MUTED, align: "right", w: wRated });
-      d.cell((4 - p.raw).toFixed(2), cgap, { size: 9.5, color: MUTED, align: "right", w: wGap });
+      const bw = 76;
+      d.page.drawRectangle({ x: M + 232, y: rowY - 1, width: bw, height: 4, color: rgb(0.86, 0.88, 0.91) });
+      d.page.drawRectangle({ x: M + 232, y: rowY - 1, width: Math.max(2, (p.raw / 4) * bw), height: 4, color: GOLD });
+      put(p.raw.toFixed(2), M + 320, rowY, { size: 9.5, bold: true });
+      put(p.band.label, M + 372, rowY, { size: 9, color: matuTone(p.band.label) });
     } else {
-      d.cell("Insufficient information", c2, { size: 8.5, color: MUTED });
+      put("Insufficient information", M + 232, rowY, { size: 8.5, color: MUTED });
     }
-    d.y -= 16;
+    rule(y - 20);
+    y -= 24;
   }
-  d.hr();
+  y -= 12;
 
-  // 90-day action plan
-  d.section("Your action plan for the next 90 days");
-  if (plan.priorities.length === 0) {
-    d.text("You rated most practices at a routine level or higher. Keep these habits in place and reassess in about 90 days.", { size: 10, color: MUTED, maxWidth: CW });
-  }
-  plan.priorities.forEach((c, i) => {
-    d.ensure(48);
-    const tag = `${c.horizon}   ${c.pillarName} · ${c.code}${c.score !== null ? ` · ${c.score}/4` : ""}${c.startNow ? "   · START NOW" : ""}`;
-    d.text(tag, { size: 8.5, bold: true, color: GOLD_DEEP, gap: 3 });
-    d.text(`${i + 1}. ${c.item.action}`, { size: 10, bold: true, color: INK, gap: 4, maxWidth: CW });
-    const selected = c.status === "numeric" && c.selectedAnchor ? `You reported: ${c.selectedAnchor}` : c.status === "dontknow" ? "You answered: Don't know" : "Not answered";
-    d.text(selected, { size: 9, color: MUTED, gap: 3, maxWidth: CW });
-    d.text(`Why it matters: ${c.item.why}`, { size: 9, color: MUTED, gap: 6, maxWidth: CW });
+  put("Your next 90 days", M, y - 15, { size: 15, bold: true, color: NAVY }); y -= 28;
+  let startText: string;
+  if (plan.startNow.length) startText = plan.startNow.map((c) => START_PHRASE[c.code]).filter(Boolean).join(", and ");
+  else if (pr.length) startText = (PRACTICE_GUIDE[pr[0].code]?.milestone ?? pr[0].item.action).toLowerCase();
+  else startText = "keep your current routines and reassess in 90 days";
+  startText = startText.charAt(0).toUpperCase() + startText.slice(1) + ".";
+  d.page.drawRectangle({ x: M, y: y - 26, width: CW, height: 26, color: CREAM });
+  put("Start this week", M + 12, y - 17, { size: 9, bold: true, color: NAVY });
+  put(startText, M + 112, y - 17, { size: 9.5, color: INK });
+  y -= 26 + 16;
+
+  pr.slice(0, 3).forEach((c, i) => {
+    const g = PRACTICE_GUIDE[c.code];
+    rule(y);
+    y -= 6;
+    put(`BY DAY ${30 * (i + 1)}`, M, y - 9, { size: 8, bold: true, color: MUTED });
+    put(g?.milestone ?? c.item.action, M + 96, y - 9, { size: 11.5, bold: true, color: NAVY });
+    y -= 23;
+    put(`${g?.label ?? c.pillarName} · ${scoreLabel(c)}`, M + 96, y, { size: 8.5, color: MUTED });
+    y -= 13;
+    const reason = c.status === "numeric" ? (g?.reason ?? "") : "You did not answer this. Confirm it from your records and record the result.";
+    for (const ln of d.wrap(reason, d.reg, 9.5, CW - 96)) { put(ln, M + 96, y, { size: 9.5, color: INK }); y -= 12.5; }
+    put("Done when", M + 96, y, { size: 9, bold: true, color: NAVY });
+    put(DONE_WHEN[c.code] ?? c.item.action, M + 152, y, { size: 9, color: INK });
+    y -= 18;
   });
-  d.hr();
 
-  // Limitations
-  d.gap(4);
-  d.text("Evidence and assessment limitations", { size: 9, bold: true, color: NAVY, gap: 5 });
-  d.text("Maturity and verification measure different things. Founder answers describe the practices reported by the respondent. Independent coverage reflects what a reviewer has confirmed. Scores are self-reported and are not a credit or funding decision.", { size: 8.5, color: MUTED, gap: 4, maxWidth: CW });
+  rule(y); y -= 14;
+  for (const ln of d.wrap("At day 90, revisit these answers and record what changed. Compare the next assessment with this baseline.", d.reg, 8.5, CW)) { put(ln, M, y, { size: 8.5, color: MUTED }); y -= 12; }
+  y -= 4;
+  put(`Results are based on your answers. "${result.mci ?? "n/a"}/100" summarises the practices assessed here.`, M, y, { size: 8.5, color: MUTED });
+
+  // ---------- PAGE 2 ----------
+  d.page = d.doc.addPage([W, H]);
+  y = H - M;
+  d.page.drawRectangle({ x: M, y: y - 1, width: 26, height: 3, color: GOLD });
+  put("MANAGEMENT CAPITAL LAB", M + 34, y - 3, { size: 9, bold: true, color: NAVY });
+  right(`${name.toUpperCase()} / PRACTICE GUIDE`, y - 3, 9, GOLD_DEEP, true);
+  y -= 34;
+  put(pr.length === 1 ? "Why this practice?" : `Why these ${pr.length === 2 ? "two" : "three"} practices?`, M, y - 24, { size: 24, bold: true, color: NAVY });
+  y -= 36;
+
+  const financeFirst = pr.some((c) => c.startNow);
+  const titles = pr.map((c) => (PRACTICE_GUIDE[c.code]?.guideTitle ?? c.pillarName).toLowerCase());
+  const titleList = titles.length <= 1 ? titles.join("") : titles.slice(0, -1).join(", ") + " and " + titles[titles.length - 1];
+  let intro = pr.length ? `Your plan focuses on ${titleList}. ` : "You rated most practices at a routine level or higher, so no priorities are flagged. ";
+  intro += financeFirst
+    ? "Essential finance routines come first, even where another area scored lower, so you can see what cash the business has and what it will need."
+    : "They are ordered by the practices you rated lowest and how much each affects how the business runs.";
+  for (const ln of d.wrap(intro, d.reg, 10.5, CW)) { put(ln, M, y, { size: 10.5, color: INK }); y -= 14.5; }
+  y -= 12;
+
+  for (let i = 0; i < Math.min(3, pr.length); i++) {
+    const c = pr[i];
+    const g = PRACTICE_GUIDE[c.code];
+    rule(y); y -= 8;
+    put(g?.guideTitle ?? c.pillarName, M, y - 14, { size: 13, bold: true, color: NAVY });
+    right(`${scoreLabel(c)} · By day ${30 * (i + 1)}`, y - 14, 9.5, MUTED);
+    y -= 26;
+    const rows: [string, string][] = [
+      ["Why it matters", g?.why ?? c.item.why],
+      ["Put it to work", (g?.work ?? c.item.action) + (g?.solo ? " " + g.solo : "")],
+      ["What to watch", g?.watch ?? "Check whether the practice is being used in your weekly routine."],
+    ];
+    for (const [lab, txt] of rows) {
+      put(lab, M, y, { size: 9, bold: true, color: SUB });
+      const lines = d.wrap(txt, d.reg, 9.5, CW - 120);
+      let ty = y;
+      for (const ln of lines) { put(ln, M + 120, ty, { size: 9.5, color: INK }); ty -= 12.5; }
+      y -= Math.max(1, lines.length) * 12.5 + 4;
+    }
+    y -= 8;
+  }
+
+  // What the evidence says
+  const evLines1 = d.wrap("The IFC SME Governance Guidebook recommends managing cash flow, separating business funds from the owner's, and making clear who has authority to decide. [1]", d.reg, 9, CW - 28);
+  const evLines2 = d.wrap(`McKenzie and Woodruff used a 26-practice index that included record-keeping and financial planning. In follow-up data from Kenya, Nigeria and Sri Lanka, firms that used more of the practices at baseline had higher survival rates and faster sales growth. [2]`, d.reg, 9, CW - 28);
+  const evLines3 = d.wrap(`That finding concerns the research index as a whole. Use your ${result.mci ?? "n/a"}/100 as a baseline to track adoption. Predicting your own growth or survival would require a separate, validated model.`, d.reg, 9, CW - 28);
+  const panelH = 26 + (evLines1.length + evLines2.length + evLines3.length) * 12 + 24;
+  d.page.drawRectangle({ x: M, y: y - panelH, width: CW, height: panelH, color: SKY });
+  let ey = y - 20;
+  put("What the evidence says", M + 14, ey, { size: 11, bold: true, color: NAVY }); ey -= 18;
+  for (const group of [evLines1, evLines2, evLines3]) {
+    for (const ln of group) { put(ln, M + 14, ey, { size: 9, color: INK }); ey -= 12; }
+    ey -= 4;
+  }
+  y -= panelH + 14;
+
+  put("[1] " + EVIDENCE_REFS.ifc.label, M, y, { size: 8, color: LINKC });
+  addLink(d, EVIDENCE_REFS.ifc.url, M, y - 2, d.reg.widthOfTextAtSize(san("[1] " + EVIDENCE_REFS.ifc.label), 8), 11);
+  y -= 12;
+  put("[2] " + EVIDENCE_REFS.mw.label, M, y, { size: 8, color: LINKC });
+  addLink(d, EVIDENCE_REFS.mw.url, M, y - 2, d.reg.widthOfTextAtSize(san("[2] " + EVIDENCE_REFS.mw.label), 8), 11);
+
+  right("2 / 2", M - 8, 8.5, MUTED);
+
+  return d.save();
 }
 
 export async function buildCompanyReportPdf(detail: Detail, orgName: string): Promise<Uint8Array> {
-  const d = await Doc.create();
   const { company, latest, dimRows } = detail;
+  // Revised (v2) rubric: the Founder Snapshot and Practice Guide (2 pages).
+  const fvEarly = await getFounderV2(company.id);
+  if (fvEarly.state === "v2") {
+    return buildFounderSnapshotPdf(fvEarly.result, fvEarly.plan, company, new Date(), fvEarly.isBaseline);
+  }
+  const d = await Doc.create();
   const name = company.tradingName || company.legalName;
   header(d, "Enterprise Management Diagnostic Report", name, orgName);
 
@@ -208,14 +338,6 @@ export async function buildCompanyReportPdf(detail: Detail, orgName: string): Pr
     d.y -= 16;
   }
   d.hr();
-
-  // Revised (v2) rubric: render the Enterprise Management Diagnostic from the
-  // version-aware scoring service. Legacy assessments keep the original layout below.
-  const fv = await getFounderV2(company.id);
-  if (fv.state === "v2") {
-    renderV2Report(d, fv.result, fv.plan);
-    return d.save();
-  }
 
   // Executive summary: stat blocks
   d.section("Executive summary");

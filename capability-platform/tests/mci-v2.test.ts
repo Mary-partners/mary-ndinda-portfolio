@@ -79,6 +79,35 @@ test("coverage gate: a pillar with only 3 applicable items cannot qualify", () =
   assert.equal(r.mci, null);
 });
 
+// CFOIP regression: 48/100 Developing, Governance and Strategic Clarity tied at
+// 1.17/4, priorities FM03 (1/4), FM02 (1/4), GA01 (0/4).
+const CFOIP: Record<string, number[]> = {
+  financial: [3, 1, 1, 3, 2, 2],
+  governance: [0, 2, 1, 2, 1, 1],
+  strategic: [1, 1, 1, 2, 1, 1],
+  operational: [2, 2, 2, 3, 2, 3],
+  founder: [2, 2, 2, 3, 2, 3],
+  absorption: [2, 3, 2, 3, 2, 3],
+};
+
+test("CFOIP regression: 48/100 Developing with Governance and Strategic tied", () => {
+  const r = computeV2(inputs(CFOIP));
+  assert.equal(r.mci, 48);
+  assert.equal(r.overallBand.label, "Developing");
+  const by = Object.fromEntries(r.pillars.map((p) => [p.key, p.raw]));
+  assert.ok(Math.abs(by.governance - 7 / 6) < 1e-9);
+  assert.ok(Math.abs(by.strategic - 7 / 6) < 1e-9);
+  // both are the joint lowest
+  const minRaw = Math.min(...r.pillars.map((p) => p.raw ?? 9));
+  assert.ok(Math.abs(by.governance - minRaw) < 1e-9 && Math.abs(by.strategic - minRaw) < 1e-9);
+});
+
+test("CFOIP regression: priorities FM03, FM02, GA01 with scores 1,1,0", () => {
+  const p = buildPlanV2(inputs(CFOIP));
+  assert.deepEqual(p.priorities.map((x) => x.code), ["FM03", "FM02", "GA01"]);
+  assert.deepEqual(p.priorities.map((x) => x.score), [1, 1, 0]);
+});
+
 test("75% coverage: 4 of 5 applicable qualifies, 4 of 6 fails", () => {
   // pillar with 1 N/A + 1 unknown + 4 numeric => 5 applicable, 4 numeric = 80% -> qualifies
   const pass: V2Input[] = MCI_ITEMS.map((i) => {
