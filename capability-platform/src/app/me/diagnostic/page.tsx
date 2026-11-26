@@ -1,0 +1,56 @@
+import { redirect } from "next/navigation";
+import { prisma } from "@/lib/prisma";
+import { getCurrentUser } from "@/lib/auth";
+import { SelfAssessment } from "@/components/auth/SelfAssessment";
+import { QUESTION_HELP } from "@/lib/framework-content";
+
+export const dynamic = "force-dynamic";
+
+export default async function FounderDiagnosticPage() {
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
+
+  const company = await prisma.company.findFirst({
+    where: { ownerUserId: user.id },
+    orderBy: { createdAt: "desc" },
+    select: { legalName: true, tradingName: true, founderName: true, inviteToken: true, org: { select: { name: true } } },
+  });
+  if (!company || !company.inviteToken) redirect("/me");
+
+  const framework = await prisma.framework.findFirst({
+    where: { isDefault: true },
+    include: {
+      dimensions: {
+        orderBy: { order: "asc" },
+        include: { questions: { orderBy: { order: "asc" }, select: { id: true, text: true, helpText: true, order: true } } },
+      },
+    },
+  });
+  if (!framework) redirect("/me");
+
+  const dimensions = framework.dimensions.map((d) => ({
+    key: d.key,
+    name: d.name,
+    description: d.description,
+    questions: d.questions.map((q) => ({
+      id: q.id,
+      text: q.text,
+      help: QUESTION_HELP[d.key]?.[q.order - 1] ?? null,
+      evidence: q.helpText,
+    })),
+  }));
+
+  return (
+    <div className="py-6">
+      <SelfAssessment
+        embedded
+        returnTo="/me"
+        token={company.inviteToken}
+        companyName={company.tradingName || company.legalName}
+        orgName={company.org.name}
+        defaultFounder={company.founderName ?? user.name ?? ""}
+        dimensions={dimensions}
+      />
+    </div>
+  );
+}

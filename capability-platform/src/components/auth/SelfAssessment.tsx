@@ -9,8 +9,9 @@ type Q = { id: string; text: string; help: string | null; evidence: string | nul
 type Dim = { key: string; name: string; description: string | null; questions: Q[] };
 type Answer = { score: number | null; na: boolean; hasEvidence: boolean };
 
-export function SelfAssessment({ token, companyName, orgName, defaultFounder, dimensions }: {
+export function SelfAssessment({ token, companyName, orgName, defaultFounder, dimensions, embedded = false, returnTo }: {
   token: string; companyName: string; orgName: string; defaultFounder: string; dimensions: Dim[];
+  embedded?: boolean; returnTo?: string;
 }) {
   const allQ = React.useMemo(() => dimensions.flatMap((d) => d.questions), [dimensions]);
   const [founder, setFounder] = React.useState(defaultFounder);
@@ -36,7 +37,7 @@ export function SelfAssessment({ token, companyName, orgName, defaultFounder, di
       return { questionId: q.id, score: a.na ? null : a.score, applicable: !a.na, hasEvidence: a.hasEvidence };
     });
     try {
-      await submitSelfAssessment(token, founder, responses);
+      await submitSelfAssessment(token, founder, responses, returnTo);
     } catch (e) {
       // redirect() throws NEXT_REDIRECT by design; only real errors reach here.
       if (e && typeof e === "object" && "digest" in e && String((e as { digest?: string }).digest).startsWith("NEXT_REDIRECT")) return;
@@ -46,20 +47,28 @@ export function SelfAssessment({ token, companyName, orgName, defaultFounder, di
   }
 
   return (
-    <div className="min-h-screen bg-surface-muted pb-28">
-      {/* header */}
-      <header className="bg-navy-800 text-white">
-        <div className="mx-auto w-full max-w-3xl px-5 py-7" style={{ paddingLeft: "max(20px, env(safe-area-inset-left,0px))", paddingRight: "max(20px, env(safe-area-inset-right,0px))" }}>
-          <div className="flex items-center gap-2.5">
-            <span className="grid h-9 w-9 place-items-center rounded-lg bg-gold text-navy-900"><Gauge className="h-5 w-5" /></span>
-            <div className="leading-tight"><div className="text-sm font-semibold">Management Capital Lab</div><div className="text-[11px] text-white/55">Self-assessment · invited by {orgName}</div></div>
+    <div className={embedded ? "pb-28" : "min-h-screen bg-surface-muted pb-28"}>
+      {/* header (standalone only) */}
+      {!embedded && (
+        <header className="bg-navy-800 text-white">
+          <div className="mx-auto w-full max-w-3xl px-5 py-7" style={{ paddingLeft: "max(20px, env(safe-area-inset-left,0px))", paddingRight: "max(20px, env(safe-area-inset-right,0px))" }}>
+            <div className="flex items-center gap-2.5">
+              <span className="grid h-9 w-9 place-items-center rounded-lg bg-gold text-navy-900"><Gauge className="h-5 w-5" /></span>
+              <div className="leading-tight"><div className="text-sm font-semibold">Management Capital Lab</div><div className="text-[11px] text-white/55">Self-assessment · invited by {orgName}</div></div>
+            </div>
+            <h1 className="mt-5 text-2xl font-semibold">Management capability check for {companyName}</h1>
+            <p className="mt-2 max-w-xl text-sm text-white/70">About {total} short questions, roughly 15 minutes. Answer as honestly as you can. There are no right or wrong answers, and an honest baseline is the most useful. Rate each practice from 0 to 4.</p>
           </div>
-          <h1 className="mt-5 text-2xl font-semibold">Management capability check for {companyName}</h1>
-          <p className="mt-2 max-w-xl text-sm text-white/70">About {total} short questions, roughly 15 minutes. Answer as honestly as you can. There are no right or wrong answers, and an honest baseline is the most useful. Rate each practice from 0 to 4.</p>
-        </div>
-      </header>
+        </header>
+      )}
 
       <div className="mx-auto w-full max-w-3xl px-5" style={{ paddingLeft: "max(20px, env(safe-area-inset-left,0px))", paddingRight: "max(20px, env(safe-area-inset-right,0px))" }}>
+        {embedded && (
+          <div className="pt-1">
+            <h1 className="text-xl font-semibold text-navy-700">Your diagnostic</h1>
+            <p className="mt-1.5 text-sm text-ink-muted">About {total} short questions, roughly 15 minutes. Answer as honestly as you can. There are no right or wrong answers, and an honest baseline is the most useful. Rate each practice from 0 to 4. Your progress saves when you submit at the bottom.</p>
+          </div>
+        )}
         {/* scale legend */}
         <div className="mt-5 rounded-xl border border-navy/10 bg-white p-4">
           <div className="text-xs font-semibold uppercase tracking-wide text-ink-muted">What the 0 to 4 scale means</div>
@@ -128,7 +137,7 @@ export function SelfAssessment({ token, companyName, orgName, defaultFounder, di
       </div>
 
       {/* sticky submit bar */}
-      <div className="fixed inset-x-0 bottom-0 z-20 border-t border-navy/10 bg-white/95 backdrop-blur" style={{ paddingBottom: "env(safe-area-inset-bottom,0px)" }}>
+      <div className={`fixed inset-x-0 bottom-0 z-20 border-t border-navy/10 bg-white/95 backdrop-blur ${embedded ? "lg:left-60" : ""}`} style={{ paddingBottom: "env(safe-area-inset-bottom,0px)" }}>
         <div className="mx-auto flex w-full max-w-3xl items-center gap-4 px-5 py-3" style={{ paddingLeft: "max(20px, env(safe-area-inset-left,0px))", paddingRight: "max(20px, env(safe-area-inset-right,0px))" }}>
           <div className="min-w-0 flex-1">
             <div className="flex items-center justify-between text-xs text-ink-muted"><span>{answered} of {total} answered</span><span>{pct}%</span></div>

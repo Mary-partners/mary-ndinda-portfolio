@@ -88,7 +88,7 @@ export interface SelfResponse {
 // Responses are recorded as self-reported (evidence is "claimed" at most, never
 // "verified"), so they flow into analytics as maturity but add no verified
 // evidence until an independent reviewer confirms it.
-export async function submitSelfAssessment(token: string, founderName: string, responses: SelfResponse[]) {
+export async function submitSelfAssessment(token: string, founderName: string, responses: SelfResponse[], returnTo?: string) {
   const company = await prisma.company.findUnique({ where: { inviteToken: token }, select: { id: true, founderName: true } });
   if (!company) redirect("/assess/invalid");
 
@@ -139,5 +139,5 @@ export async function submitSelfAssessment(token: string, founderName: string, r
 
   await prisma.auditLog.create({ data: { entity: "Assessment", entityId: assessment.id, action: "self-assessment.submit", detail: company.id } });
 
-  redirect(`/assess/${token}/done`);
+  redirect(returnTo || `/assess/${token}/done`);
 }

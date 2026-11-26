@@ -156,17 +156,29 @@ export async function buildCompanyReportPdf(detail: Detail, orgName: string): Pr
 
   // Capability breakdown
   d.section("Capability breakdown");
+  // On a first assessment the baseline IS the current result, so showing both is
+  // confusing. Show Now + gap to a fully embedded practice (4.0) instead, and only
+  // show Base vs Now once a genuinely earlier assessment exists.
+  const retaken = Boolean(detail.baseline && detail.latest && detail.baseline.id !== detail.latest.id);
+  if (!retaken) {
+    d.text("This is the first assessment, so it is also the baseline. The gap shows the distance to a fully embedded practice (4.0).", { size: 8.5, color: MUTED, gap: 7, maxWidth: CW });
+  }
   const c1 = M, c2 = M + 210, c3 = M + 270, cbar = M + 330, cband = M + 452;
   d.cell("Pillar", c1, { size: 8.5, bold: true, color: MUTED });
-  d.cell("Base", c2, { size: 8.5, bold: true, color: MUTED, align: "right", w: 34 });
-  d.cell("Now", c3, { size: 8.5, bold: true, color: MUTED, align: "right", w: 34 });
+  d.cell(retaken ? "Base" : "Now", c2, { size: 8.5, bold: true, color: MUTED, align: "right", w: 34 });
+  d.cell(retaken ? "Now" : "Gap", c3, { size: 8.5, bold: true, color: MUTED, align: "right", w: 34 });
   d.cell("Maturity", cbar, { size: 8.5, bold: true, color: MUTED });
   d.y -= 14;
   for (const r of dimRows) {
     d.ensure(16);
     d.cell(r.name, c1, { size: 9.5 });
-    d.cell(fmtScore(r.baseline), c2, { size: 9.5, color: MUTED, align: "right", w: 34 });
-    d.cell(fmtScore(r.current), c3, { size: 9.5, bold: true, align: "right", w: 34 });
+    if (retaken) {
+      d.cell(fmtScore(r.baseline), c2, { size: 9.5, color: MUTED, align: "right", w: 34 });
+      d.cell(fmtScore(r.current), c3, { size: 9.5, bold: true, align: "right", w: 34 });
+    } else {
+      d.cell(fmtScore(r.current), c2, { size: 9.5, bold: true, align: "right", w: 34 });
+      d.cell(r.current != null ? (4 - r.current).toFixed(2) : "—", c3, { size: 9.5, color: MUTED, align: "right", w: 34 });
+    }
     // bar
     const bw = 110, by = d.y - 9;
     d.page.drawRectangle({ x: cbar, y: by, width: bw, height: 5, color: rgb(0.9, 0.91, 0.93) });
