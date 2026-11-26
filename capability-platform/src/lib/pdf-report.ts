@@ -1,5 +1,8 @@
 import { PDFDocument, StandardFonts, rgb, PDFString, PDFName } from "pdf-lib";
 import type { PDFFont, PDFPage, RGB } from "pdf-lib";
+import fontkit from "@pdf-lib/fontkit";
+import { gunzipSync } from "zlib";
+import { POPPINS_REGULAR_GZ, POPPINS_SEMIBOLD_GZ } from "./poppins";
 import { DIMENSION_META, CONSTRAINT_LABELS } from "./constants";
 import { fmtScore, fmtIndex, fmtNumber, fmtDate, pctChange, maturityBand } from "./utils";
 import { getActionPlan } from "./recommend";
@@ -49,8 +52,14 @@ class Doc {
   static async create() {
     const d = new Doc();
     d.doc = await PDFDocument.create();
-    d.reg = await d.doc.embedFont(StandardFonts.Helvetica);
-    d.bold = await d.doc.embedFont(StandardFonts.HelveticaBold);
+    try {
+      d.doc.registerFontkit(fontkit);
+      d.reg = await d.doc.embedFont(gunzipSync(Buffer.from(POPPINS_REGULAR_GZ, "base64")), { subset: true });
+      d.bold = await d.doc.embedFont(gunzipSync(Buffer.from(POPPINS_SEMIBOLD_GZ, "base64")), { subset: true });
+    } catch {
+      d.reg = await d.doc.embedFont(StandardFonts.Helvetica);
+      d.bold = await d.doc.embedFont(StandardFonts.HelveticaBold);
+    }
     d.page = d.doc.addPage([W, H]);
     return d;
   }
@@ -164,137 +173,141 @@ async function buildFounderSnapshotPdf(result: V2Result, plan: V2Plan, company: 
 
   const pr = plan.priorities;
   const scoreLabel = (c: (typeof pr)[number]) => (c.status === "numeric" && c.score !== null ? `${c.score}/4` : "to check");
+  const LX = M + 94; // content column (left label gutter)
 
   // ---------- PAGE 1 ----------
   let y = H - M;
-  d.page.drawRectangle({ x: M, y: y - 1, width: 26, height: 3, color: GOLD });
-  put("MANAGEMENT CAPITAL LAB", M + 34, y - 3, { size: 9, bold: true, color: NAVY });
-  right("PRIVATE SELF-ASSESSMENT", y - 3, 9, GOLD_DEEP, true);
+  d.page.drawRectangle({ x: M, y: y - 1, width: 24, height: 2.5, color: GOLD });
+  put("MANAGEMENT CAPITAL LAB", M + 32, y - 3, { size: 8.5, bold: true, color: NAVY });
+  right("PRIVATE SELF-ASSESSMENT", y - 3, 8.5, GOLD_DEEP, true);
   y -= 30;
-  put(name, M, y - 24, { size: 27, bold: true, color: NAVY }); y -= 32;
-  put("Enterprise Management Diagnostic", M, y - 12, { size: 13, color: SUB }); y -= 26;
+  put(name, M, y - 20, { size: 21, bold: true, color: NAVY }); y -= 28;
+  put("Enterprise Management Diagnostic", M, y - 11, { size: 11.5, color: SUB }); y -= 24;
   const metaLeft = [company.sector, company.country].filter(Boolean).join("   /   ");
-  if (metaLeft) put(metaLeft, M, y - 9, { size: 9.5, color: MUTED });
-  right(`Report generated ${gen}`, y - 9, 9.5, MUTED); y -= 22;
+  if (metaLeft) put(metaLeft, M, y - 8, { size: 9, color: MUTED });
+  right(`Report generated ${gen}`, y - 8, 9, MUTED); y -= 20;
 
-  const interpLines = d.wrap(interp, d.reg, 10.5, CW - 184);
-  const bandH = Math.max(78, 30 + interpLines.length * 14);
+  const interpLines = d.wrap(interp, d.reg, 9.5, CW - 196);
+  const bandH = Math.max(76, 30 + interpLines.length * 13.5);
   d.page.drawRectangle({ x: M, y: y - bandH, width: CW, height: bandH, color: SKY });
-  put(`${result.mci ?? "n/a"}/100`, M + 20, y - 34, { size: 26, bold: true, color: NAVY });
-  put(result.overallBand.label, M + 20, y - 52, { size: 11, bold: true, color: NAVY });
-  put(isBaseline ? "Your first assessment" : "Latest assessment", M + 20, y - 65, { size: 8.5, color: MUTED });
-  let iy = y - 24;
-  for (const ln of interpLines) { put(ln, M + 180, iy, { size: 10.5, color: INK }); iy -= 14; }
-  y -= bandH + 22;
+  put(`${result.mci ?? "n/a"}/100`, M + 20, y - 32, { size: 22, bold: true, color: NAVY });
+  put(result.overallBand.label, M + 20, y - 48, { size: 10.5, bold: true, color: NAVY });
+  put(isBaseline ? "Your first assessment" : "Latest assessment", M + 20, y - 60, { size: 8, color: MUTED });
+  let iy = y - 22;
+  for (const ln of interpLines) { put(ln, M + 188, iy, { size: 9.5, color: INK }); iy -= 13.5; }
+  y -= bandH + 20;
 
   if (result.mci === null) {
-    put(`Not enough questions were answered to show an overall Index (${result.totalNumeric} of ${result.totalApplicable} scored).`, M, y - 10, { size: 9, color: BAD });
-    y -= 22;
+    put(`Not enough questions were answered to show an overall Index (${result.totalNumeric} of ${result.totalApplicable} scored).`, M, y - 9, { size: 9, color: BAD });
+    y -= 20;
   }
 
-  put("Capability breakdown", M, y - 15, { size: 15, bold: true, color: NAVY }); y -= 30;
-  put("Score out of 4", M + 232, y, { size: 8.5, bold: true, color: MUTED });
-  put("Maturity", M + 372, y, { size: 8.5, bold: true, color: MUTED });
-  y -= 16;
+  put("Capability breakdown", M, y - 13, { size: 13, bold: true, color: NAVY }); y -= 26;
+  put("Score out of 4", M + 236, y, { size: 8, bold: true, color: MUTED });
+  put("Maturity", M + 376, y, { size: 8, bold: true, color: MUTED });
+  y -= 15;
   for (const p of result.pillars) {
-    const rowY = y - 10;
+    const rowY = y - 9;
     put(p.name, M, rowY, { size: 9.5, color: INK });
     if (p.qualifies && p.raw !== null) {
       const bw = 76;
-      d.page.drawRectangle({ x: M + 232, y: rowY - 1, width: bw, height: 4, color: rgb(0.86, 0.88, 0.91) });
-      d.page.drawRectangle({ x: M + 232, y: rowY - 1, width: Math.max(2, (p.raw / 4) * bw), height: 4, color: GOLD });
-      put(p.raw.toFixed(2), M + 320, rowY, { size: 9.5, bold: true });
-      put(p.band.label, M + 372, rowY, { size: 9, color: matuTone(p.band.label) });
+      d.page.drawRectangle({ x: M + 236, y: rowY - 1, width: bw, height: 4, color: rgb(0.86, 0.88, 0.91) });
+      d.page.drawRectangle({ x: M + 236, y: rowY - 1, width: Math.max(2, (p.raw / 4) * bw), height: 4, color: GOLD });
+      put(p.raw.toFixed(2), M + 324, rowY, { size: 9.5, bold: true });
+      put(p.band.label, M + 376, rowY, { size: 9, color: matuTone(p.band.label) });
     } else {
-      put("Insufficient information", M + 232, rowY, { size: 8.5, color: MUTED });
+      put("Insufficient information", M + 236, rowY, { size: 8.5, color: MUTED });
     }
-    rule(y - 20);
-    y -= 24;
+    rule(y - 19);
+    y -= 22;
   }
   y -= 12;
 
-  put("Your next 90 days", M, y - 15, { size: 15, bold: true, color: NAVY }); y -= 28;
+  put("Your next 90 days", M, y - 13, { size: 13, bold: true, color: NAVY }); y -= 25;
+  put("Three practices to focus on first, in order. \"Done when\" shows what finished looks like.", M, y, { size: 8.5, color: MUTED }); y -= 17;
   let startText: string;
   if (plan.startNow.length) startText = plan.startNow.map((c) => START_PHRASE[c.code]).filter(Boolean).join(", and ");
   else if (pr.length) startText = (PRACTICE_GUIDE[pr[0].code]?.milestone ?? pr[0].item.action).toLowerCase();
   else startText = "keep your current routines and reassess in 90 days";
   startText = startText.charAt(0).toUpperCase() + startText.slice(1) + ".";
-  d.page.drawRectangle({ x: M, y: y - 26, width: CW, height: 26, color: CREAM });
-  put("Start this week", M + 12, y - 17, { size: 9, bold: true, color: NAVY });
-  put(startText, M + 112, y - 17, { size: 9.5, color: INK });
-  y -= 26 + 16;
+  d.page.drawRectangle({ x: M, y: y - 24, width: CW, height: 24, color: CREAM });
+  put("Start this week", M + 12, y - 16, { size: 8.5, bold: true, color: NAVY });
+  put(startText, M + 108, y - 16, { size: 9.5, color: INK });
+  y -= 24 + 16;
 
   pr.slice(0, 3).forEach((c, i) => {
     const g = PRACTICE_GUIDE[c.code];
     rule(y);
-    y -= 6;
-    put(`BY DAY ${30 * (i + 1)}`, M, y - 9, { size: 8, bold: true, color: MUTED });
-    put(g?.milestone ?? c.item.action, M + 96, y - 9, { size: 11.5, bold: true, color: NAVY });
-    y -= 23;
-    put(`${g?.label ?? c.pillarName} · ${scoreLabel(c)}`, M + 96, y, { size: 8.5, color: MUTED });
-    y -= 13;
+    y -= 7;
+    put(`BY DAY ${30 * (i + 1)}`, M, y - 8, { size: 7.5, bold: true, color: MUTED });
+    put(g?.milestone ?? c.item.action, LX, y - 8, { size: 11, bold: true, color: NAVY });
+    y -= 21;
+    put(`${g?.label ?? c.pillarName} · ${scoreLabel(c)}`, LX, y, { size: 8, color: GOLD_DEEP });
+    y -= 12.5;
     const reason = c.status === "numeric" ? (g?.reason ?? "") : "You did not answer this. Confirm it from your records and record the result.";
-    for (const ln of d.wrap(reason, d.reg, 9.5, CW - 96)) { put(ln, M + 96, y, { size: 9.5, color: INK }); y -= 12.5; }
-    put("Done when", M + 96, y, { size: 9, bold: true, color: NAVY });
-    put(DONE_WHEN[c.code] ?? c.item.action, M + 152, y, { size: 9, color: INK });
-    y -= 18;
+    for (const ln of d.wrap(reason, d.reg, 9.5, CW - (LX - M))) { put(ln, LX, y, { size: 9.5, color: INK }); y -= 12.5; }
+    put("Done when", LX, y, { size: 8.5, bold: true, color: NAVY });
+    const lw = d.bold.widthOfTextAtSize("Done when", 8.5);
+    put(DONE_WHEN[c.code] ?? c.item.action, LX + lw + 7, y, { size: 9, color: INK });
+    y -= 17;
   });
 
-  rule(y); y -= 14;
-  for (const ln of d.wrap("At day 90, revisit these answers and record what changed. Compare the next assessment with this baseline.", d.reg, 8.5, CW)) { put(ln, M, y, { size: 8.5, color: MUTED }); y -= 12; }
-  y -= 4;
+  rule(y); y -= 13;
+  for (const ln of d.wrap("At day 90, revisit these answers and record what changed. Compare your next assessment with this baseline.", d.reg, 8.5, CW)) { put(ln, M, y, { size: 8.5, color: MUTED }); y -= 11.5; }
+  y -= 3;
   put(`Results are based on your answers. "${result.mci ?? "n/a"}/100" summarises the practices assessed here.`, M, y, { size: 8.5, color: MUTED });
 
   // ---------- PAGE 2 ----------
   d.page = d.doc.addPage([W, H]);
   y = H - M;
-  d.page.drawRectangle({ x: M, y: y - 1, width: 26, height: 3, color: GOLD });
-  put("MANAGEMENT CAPITAL LAB", M + 34, y - 3, { size: 9, bold: true, color: NAVY });
-  right(`${name.toUpperCase()} / PRACTICE GUIDE`, y - 3, 9, GOLD_DEEP, true);
-  y -= 34;
-  put(pr.length === 1 ? "Why this practice?" : `Why these ${pr.length === 2 ? "two" : "three"} practices?`, M, y - 24, { size: 24, bold: true, color: NAVY });
-  y -= 36;
+  d.page.drawRectangle({ x: M, y: y - 1, width: 24, height: 2.5, color: GOLD });
+  put("MANAGEMENT CAPITAL LAB", M + 32, y - 3, { size: 8.5, bold: true, color: NAVY });
+  right(`${name.toUpperCase()} / PRACTICE GUIDE`, y - 3, 8.5, GOLD_DEEP, true);
+  y -= 32;
+  put(pr.length === 1 ? "Why this practice?" : `Why these ${pr.length === 2 ? "two" : "three"} practices?`, M, y - 20, { size: 19, bold: true, color: NAVY });
+  y -= 40;
 
   const financeFirst = pr.some((c) => c.startNow);
-  const titles = pr.map((c) => (PRACTICE_GUIDE[c.code]?.guideTitle ?? c.pillarName).toLowerCase());
-  const titleList = titles.length <= 1 ? titles.join("") : titles.slice(0, -1).join(", ") + " and " + titles[titles.length - 1];
-  let intro = pr.length ? `Your plan focuses on ${titleList}. ` : "You rated most practices at a routine level or higher, so no priorities are flagged. ";
+  let intro = pr.length
+    ? "These are the practices your answers scored lowest, so they are where to start. "
+    : "You rated most practices at a routine level or higher, so no priorities are flagged. ";
   intro += financeFirst
-    ? "Essential finance routines come first, even where another area scored lower, so you can see what cash the business has and what it will need."
-    : "They are ordered by the practices you rated lowest and how much each affects how the business runs.";
-  for (const ln of d.wrap(intro, d.reg, 10.5, CW)) { put(ln, M, y, { size: 10.5, color: INK }); y -= 14.5; }
+    ? "Essential money routines come first, even where another area scored lower, so you can see what cash the business has and what it will need. Work through them in order."
+    : "They are ordered by what will strengthen how the business runs first. Work through them in order.";
+  for (const ln of d.wrap(intro, d.reg, 9.5, CW)) { put(ln, M, y, { size: 9.5, color: INK }); y -= 13.5; }
   y -= 12;
 
+  const RX = M + 108; // right-text column on page 2
   for (let i = 0; i < Math.min(3, pr.length); i++) {
     const c = pr[i];
     const g = PRACTICE_GUIDE[c.code];
     rule(y); y -= 8;
-    put(g?.guideTitle ?? c.pillarName, M, y - 14, { size: 13, bold: true, color: NAVY });
-    right(`${scoreLabel(c)} · By day ${30 * (i + 1)}`, y - 14, 9.5, MUTED);
-    y -= 26;
+    put(g?.guideTitle ?? c.pillarName, M, y - 13, { size: 12, bold: true, color: NAVY });
+    right(`${scoreLabel(c)} · By day ${30 * (i + 1)}`, y - 13, 9, MUTED);
+    y -= 24;
     const rows: [string, string][] = [
       ["Why it matters", g?.why ?? c.item.why],
       ["Put it to work", (g?.work ?? c.item.action) + (g?.solo ? " " + g.solo : "")],
       ["What to watch", g?.watch ?? "Check whether the practice is being used in your weekly routine."],
     ];
     for (const [lab, txt] of rows) {
-      put(lab, M, y, { size: 9, bold: true, color: SUB });
-      const lines = d.wrap(txt, d.reg, 9.5, CW - 120);
+      put(lab, M, y, { size: 8.5, bold: true, color: SUB });
+      const lines = d.wrap(txt, d.reg, 9.5, CW - (RX - M));
       let ty = y;
-      for (const ln of lines) { put(ln, M + 120, ty, { size: 9.5, color: INK }); ty -= 12.5; }
-      y -= Math.max(1, lines.length) * 12.5 + 4;
+      for (const ln of lines) { put(ln, RX, ty, { size: 9.5, color: INK }); ty -= 12.5; }
+      y -= Math.max(1, lines.length) * 12.5 + 5;
     }
     y -= 8;
   }
 
   // What the evidence says
   const evLines1 = d.wrap("The IFC SME Governance Guidebook recommends managing cash flow, separating business funds from the owner's, and making clear who has authority to decide. [1]", d.reg, 9, CW - 28);
-  const evLines2 = d.wrap(`McKenzie and Woodruff used a 26-practice index that included record-keeping and financial planning. In follow-up data from Kenya, Nigeria and Sri Lanka, firms that used more of the practices at baseline had higher survival rates and faster sales growth. [2]`, d.reg, 9, CW - 28);
+  const evLines2 = d.wrap("McKenzie and Woodruff used a 26-practice index that included record-keeping and financial planning. In follow-up data from Kenya, Nigeria and Sri Lanka, firms that used more of the practices at baseline had higher survival rates and faster sales growth. [2]", d.reg, 9, CW - 28);
   const evLines3 = d.wrap(`That finding concerns the research index as a whole. Use your ${result.mci ?? "n/a"}/100 as a baseline to track adoption. Predicting your own growth or survival would require a separate, validated model.`, d.reg, 9, CW - 28);
-  const panelH = 26 + (evLines1.length + evLines2.length + evLines3.length) * 12 + 24;
+  const panelH = 24 + (evLines1.length + evLines2.length + evLines3.length) * 12 + 22;
   d.page.drawRectangle({ x: M, y: y - panelH, width: CW, height: panelH, color: SKY });
-  let ey = y - 20;
-  put("What the evidence says", M + 14, ey, { size: 11, bold: true, color: NAVY }); ey -= 18;
+  let ey = y - 19;
+  put("What the evidence says", M + 14, ey, { size: 10.5, bold: true, color: NAVY }); ey -= 17;
   for (const group of [evLines1, evLines2, evLines3]) {
     for (const ln of group) { put(ln, M + 14, ey, { size: 9, color: INK }); ey -= 12; }
     ey -= 4;
@@ -307,7 +320,7 @@ async function buildFounderSnapshotPdf(result: V2Result, plan: V2Plan, company: 
   put("[2] " + EVIDENCE_REFS.mw.label, M, y, { size: 8, color: LINKC });
   addLink(d, EVIDENCE_REFS.mw.url, M, y - 2, d.reg.widthOfTextAtSize(san("[2] " + EVIDENCE_REFS.mw.label), 8), 11);
 
-  right("2 / 2", M - 8, 8.5, MUTED);
+  right("2 / 2", 40, 8, MUTED);
 
   return d.save();
 }

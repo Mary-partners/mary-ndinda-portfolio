@@ -94,7 +94,7 @@ test("CFOIP regression: 48/100 Developing with Governance and Strategic tied", (
   const r = computeV2(inputs(CFOIP));
   assert.equal(r.mci, 48);
   assert.equal(r.overallBand.label, "Developing");
-  const by = Object.fromEntries(r.pillars.map((p) => [p.key, p.raw]));
+  const by = Object.fromEntries(r.pillars.map((p) => [p.key, p.raw ?? NaN]));
   assert.ok(Math.abs(by.governance - 7 / 6) < 1e-9);
   assert.ok(Math.abs(by.strategic - 7 / 6) < 1e-9);
   // both are the joint lowest
