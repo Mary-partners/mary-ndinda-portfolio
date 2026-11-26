@@ -10,8 +10,9 @@ import { hashPassword } from "@/lib/password";
 
 const t = (v: FormDataEntryValue | null) => String(v ?? "").trim();
 
-// Founder self-registration: creates an account + their firm, then sends them
-// into the diagnostic. They can log back in later to view and retake it.
+// Founder self-registration: creates an account + their firm, then lands them
+// on their dashboard. They start the diagnostic from there, and can log back in
+// later to view results and reassess.
 export async function founderSignup(formData: FormData) {
   const name = t(formData.get("name"));
   const email = t(formData.get("email")).toLowerCase();
@@ -33,8 +34,8 @@ export async function founderSignup(formData: FormData) {
       orgId: org.id,
       legalName: business,
       tradingName: business,
-      country: t(formData.get("country")) || "Not given",
-      sector: t(formData.get("sector")) || "Not given",
+      country: t(formData.get("country")) || "",
+      sector: t(formData.get("sector")) || "",
       founderName: name,
       founderEmail: email,
       ownerUserId: user.id,
@@ -46,7 +47,7 @@ export async function founderSignup(formData: FormData) {
   await prisma.membership.create({ data: { userId: user.id, orgId: org.id, role: "FOUNDER" } });
   await prisma.auditLog.create({ data: { orgId: org.id, entity: "Company", entityId: company.id, action: "founder.signup", detail: email } });
   await login(user.id);
-  redirect(`/assess/${token}`);
+  redirect(`/me`);
 }
 
 // Public, self-serve entry: a founder starts their own assessment from the
@@ -63,8 +64,8 @@ export async function startPublicAssessment(formData: FormData) {
       orgId: org.id,
       legalName: business,
       tradingName: business,
-      country: t(formData.get("country")) || "Not given",
-      sector: t(formData.get("sector")) || "Not given",
+      country: t(formData.get("country")) || "",
+      sector: t(formData.get("sector")) || "",
       founderName: t(formData.get("founderName")) || null,
       founderEmail: t(formData.get("email")) || null,
       isDemo: false,

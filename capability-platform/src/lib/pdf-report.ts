@@ -2,6 +2,7 @@ import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import type { PDFFont, PDFPage, RGB } from "pdf-lib";
 import { DIMENSION_META, CONSTRAINT_LABELS } from "./constants";
 import { fmtScore, fmtIndex, fmtNumber, fmtDate, pctChange, maturityBand } from "./utils";
+import { getActionPlan } from "./recommend";
 import type { getCompanyDetail } from "./company";
 import type { getPortfolioStats } from "./portfolio";
 
@@ -175,12 +176,29 @@ export async function buildCompanyReportPdf(detail: Detail, orgName: string): Pr
   }
   d.hr();
 
-  // Recommendations
-  d.section("Priority recommendations");
-  if (ranked.length === 0) d.text("Complete a diagnostic to generate recommendations.", { size: 10, color: MUTED, maxWidth: CW });
-  ranked.slice(0, 3).forEach((r, i) => {
-    d.text(`${i + 1}.  Strengthen ${r.name.toLowerCase()}: current ${fmtScore(r.current)}, gap to Embedded (4.0) = ${(4 - (r.current ?? 0)).toFixed(2)}.`, { size: 10, color: INK, gap: 6, maxWidth: CW });
-  });
+  // Action plan: traceable 30/60/90 steps from the weakest rated practices
+  d.section("Your action plan for the next 90 days");
+  const plan = await getActionPlan(company.id);
+  if (!plan || plan.priorities.length === 0) {
+    d.text(
+      ranked.length === 0
+        ? "Complete a diagnostic to generate your action plan."
+        : "Most practices were rated as regular or embedded. Keep these habits in place and reassess in a few months to track progress.",
+      { size: 10, color: MUTED, maxWidth: CW });
+  } else {
+    plan.priorities.forEach((p, i) => {
+      d.ensure(30);
+      d.text(`${p.horizon}   ${p.pillarName}`, { size: 8.5, bold: true, color: GOLD_DEEP, gap: 3 });
+      d.text(`${i + 1}. ${p.action}.`, { size: 10, color: INK, gap: 8, maxWidth: CW });
+    });
+    if (plan.moreActions.length) {
+      d.gap(2);
+      d.text("Then look at:", { size: 9, bold: true, color: NAVY, gap: 4 });
+      plan.moreActions.slice(0, 5).forEach((m) => {
+        d.text(`- ${m.action} (${m.pillarName}).`, { size: 9.5, color: INK, gap: 4, maxWidth: CW });
+      });
+    }
+  }
   d.hr();
 
   // Constraints
