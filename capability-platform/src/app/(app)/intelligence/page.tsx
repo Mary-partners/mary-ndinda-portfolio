@@ -45,7 +45,7 @@ export default async function IntelligencePage() {
     <>
       <PageHeader title="Portfolio Intelligence" subtitle="Executive analytics across the active organisation. Click a KPI on the Overview to trace its underlying enterprises." />
       <div className="mb-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Avg. Management Capital Index" value={s.avgMaturity !== null ? `${fmtIndex(s.avgMaturity)}/100` : "—"} sub={maturityBand(s.avgMaturity).label} tone="gold" />
+        <StatCard label="Avg. Management Capital Index" value={s.avgMaturity !== null ? `${fmtIndex(s.avgMaturity)}/100` : "n/a"} sub={maturityBand(s.avgMaturity).label} tone="gold" />
         <StatCard label="Verified adoption" value={`${s.pctVerifiedAdoption.toFixed(0)}%`} tone="ok" />
         <StatCard label="Evidence coverage" value={`${s.evidenceCoverage.toFixed(0)}%`} />
         <StatCard label="Overdue milestones" value={s.overdueMilestones} tone={s.overdueMilestones ? "warn" : "ok"} />

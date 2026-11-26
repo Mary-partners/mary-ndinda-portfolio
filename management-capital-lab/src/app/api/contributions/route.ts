@@ -11,7 +11,7 @@ const COLORS: NoteColor[] = ["yellow", "blue", "green", "pink", "cream", "lavend
 function pickColor(seed: string): NoteColor {
   let sum = 0;
   for (let i = 0; i < seed.length; i++) sum += seed.charCodeAt(i);
-  // Use lavender sparingly (index 5) — only ~1 in 12.
+  // Use lavender sparingly (index 5), only ~1 in 12.
   const idx = sum % 12;
   return idx < 10 ? COLORS[idx % 5] : "lavender";
 }
@@ -101,7 +101,7 @@ export async function POST(request: Request) {
     <p style="font:13px sans-serif;color:#5b6b7a;">Review it in the admin dashboard: <strong>/admin</strong></p>
   `;
   await sendNotificationEmail({
-    subject: `New post-it to review — ${contribution.isAnonymous ? "Anonymous" : contribution.name}`,
+    subject: `New post-it to review: ${contribution.isAnonymous ? "Anonymous" : contribution.name}`,
     html,
     replyTo: contribution.email || undefined,
   });

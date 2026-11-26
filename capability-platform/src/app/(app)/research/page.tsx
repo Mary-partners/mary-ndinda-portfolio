@@ -9,14 +9,14 @@ export default function ResearchPage() {
     <>
       <PageHeader title="Research & Methodology" subtitle="The framework, the scale, the measurement definitions and the limitations." />
       <div className="mx-auto max-w-3xl space-y-5">
-        <Panel title="The framework — the Management Capital Index">
+        <Panel title="The framework: the Management Capital Index">
           <div className="space-y-3 text-sm text-ink">
             <p>This platform operationalises the <strong>Management Capital Index</strong>, the framework from Mary Ndinda&apos;s DBA research into management capital and SME finance-readiness. It assesses a business across <strong>six pillars</strong> and expresses overall readiness as a single index from 0 to 100.</p>
             <a href="https://www.managementcapitallab.com/framework" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 font-medium text-gold-700 hover:underline">
               Read the published framework <ExternalLink className="h-3.5 w-3.5" />
             </a>
             <p className="rounded-lg border border-amber-200 bg-amber-50/70 p-3 text-amber-900">
-              <strong>Research-integrity notice.</strong> This is an original SME instrument — it is <strong>not</strong> the World Management Survey (WMS) and its scores are <strong>not</strong> validated WMS scores. Associations between management quality and financial outcomes are not treated as causal, and size-aware expectations apply (questions can be marked not-applicable). Self-assessments are self-reported until an independent reviewer verifies the evidence.
+              <strong>Research-integrity notice.</strong> This is an original SME instrument. It is <strong>not</strong> the World Management Survey (WMS) and its scores are <strong>not</strong> validated WMS scores. Associations between management quality and financial outcomes are not treated as causal, and size-aware expectations apply (questions can be marked not-applicable). Self-assessments are self-reported until an independent reviewer verifies the evidence.
             </p>
           </div>
         </Panel>
@@ -61,13 +61,13 @@ export default function ResearchPage() {
             <li><strong>Management Capital Index</strong> = sum of (pillar score × pillar weight), on a 0–100 scale. Proposed weights: Financial 15, Governance 15, Strategic 20, Operational 20, Founder &amp; Management 20, Capital Absorption 10.</li>
             <li><strong>Completeness</strong> = applicable questions answered ÷ total applicable. Reported separately from the Index.</li>
             <li><strong>Evidence coverage</strong> = answered items with verified evidence ÷ answered items. Founder-provided evidence is not counted as verified until a reviewer confirms it.</li>
-            <li><strong>Three distinct measures</strong>: management capability, implementation progress, and business performance — each has its own metrics. Capability changes only through a documented reassessment, never because a task was marked complete.</li>
+            <li><strong>Three distinct measures</strong>: management capability, implementation progress, and business performance. Each has its own metrics. Capability changes only through a documented reassessment, never because a task was marked complete.</li>
             <li><strong>Intervention priority</strong> = gap×2 + importance×1.5 + risk×1.5 + feasibility×1 + evidence-confidence×0.5 (transparent; advisor-overridable with a recorded reason).</li>
           </ul>
         </Panel>
 
         <Panel title="Version history">
-          <ul className="text-sm text-ink-muted"><li><strong>Management Capital Index v1.1</strong> — six pillars, 36 behaviour-based questions, proposed weights (15/15/20/20/20/10), scored 0–100. Weights are provisional and versioned, not empirically validated.</li></ul>
+          <ul className="text-sm text-ink-muted"><li><strong>Management Capital Index v1.1</strong>: six pillars, 36 behaviour-based questions, proposed weights (15/15/20/20/20/10), scored 0–100. Weights are provisional and versioned, not empirically validated.</li></ul>
         </Panel>
       </div>
     </>

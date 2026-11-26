@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
 
 export default async function OverviewPage() {
   const user = await requireUser();
-  // A brand-new administrator has no organisation yet — send them to create one.
+  // A brand-new administrator has no organisation yet, so send them to create one.
   if (!user.activeOrgId) redirect("/organisations");
   const s = await getPortfolioStats(user.activeOrgId);
 
@@ -34,7 +34,7 @@ export default async function OverviewPage() {
         <StatCard label="Assessments completed" value={s.assessed} sub={`${s.totalEnterprises - s.assessed} outstanding`} href="/diagnostics" />
         <StatCard
           label="Avg. Management Capital Index"
-          value={s.avgMaturity !== null ? `${fmtIndex(s.avgMaturity)}/100` : "—"}
+          value={s.avgMaturity !== null ? `${fmtIndex(s.avgMaturity)}/100` : "n/a"}
           sub={maturityBand(s.avgMaturity).label}
           tone="gold"
         />

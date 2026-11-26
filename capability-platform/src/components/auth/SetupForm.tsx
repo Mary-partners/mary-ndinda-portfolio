@@ -35,14 +35,14 @@ export function SetupForm({ error }: { error?: boolean }) {
       <div className="p-6 sm:p-8">
       <h1 className="text-xl font-semibold text-navy-700">Create your administrator account</h1>
       <p className="mt-1.5 text-sm text-ink-muted">
-        This is your personal login. You&apos;ll add your organisations — the funds, accelerators and programmes you
-        support — once you&apos;re inside.
+        This is your personal login. You&apos;ll add your organisations (the funds, accelerators and programmes you
+        support) once you&apos;re inside.
       </p>
 
       {error && (
         <div className="mt-4 flex items-start gap-2 rounded-xl border border-bad/20 bg-bad/5 px-3 py-2.5 text-sm text-bad">
           <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
-          <span>Please check the form — a name, a valid email and a password of at least 8 characters are required.</span>
+          <span>Please check the form. A name, a valid email and a password of at least 8 characters are required.</span>
         </div>
       )}
 

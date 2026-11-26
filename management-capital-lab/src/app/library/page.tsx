@@ -5,7 +5,7 @@ import { LibraryBrowser } from "./LibraryBrowser";
 export const metadata: Metadata = {
   title: "Research Library",
   description:
-    "A structured library of the SME finance, management practices, investment readiness, and capital absorption literature grounding the Management Capital Lab.",
+    "The 64-article literature review database behind Chapter Two of the Management Capital Lab DBA: SME finance, management practices, capital use, human capital, strategy, governance, absorptive capacity and African SME evidence.",
 };
 
 export default function LibraryPage() {
@@ -14,7 +14,7 @@ export default function LibraryPage() {
       <PageHeader
         eyebrow="Research Library"
         title="The evidence base"
-        intro="A structured, growing library of the literature this research builds on — from the SME finance gap to management practices and capital absorption. Each entry notes why it matters to the study."
+        intro="The 64 verified articles behind the Chapter Two literature review, from credit-rationing theory to field experiments with African SMEs. Each entry records its key finding and why it matters to the Management Capital Index."
       />
       <div className="container-lab py-16 sm:py-20">
         <LibraryBrowser />

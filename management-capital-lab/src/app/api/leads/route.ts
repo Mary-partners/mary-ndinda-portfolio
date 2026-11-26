@@ -70,7 +70,7 @@ export async function POST(request: Request) {
     ])}
   `;
   await sendNotificationEmail({
-    subject: `New collaboration interest — ${lead.name}`,
+    subject: `New collaboration interest: ${lead.name}`,
     html,
     replyTo: lead.email,
   });

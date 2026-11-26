@@ -4,8 +4,9 @@ export const SITE = {
   author: "Mary Ndinda",
   email: "mary@managementcapitallab.com",
   tagline: "Beyond access to finance.",
-  // The Enterprise Capability Intelligence platform, served under this site at /platform.
-  platformUrl: "/platform",
-  // Public founder self-assessment entry point.
-  diagnosticUrl: "/platform/start",
+  // The Capability Platform, served under this site at /platform. Founders and
+  // programme teams enter through the login page, which also offers sign-up.
+  platformUrl: "/platform/login",
+  // Entry point for the founder diagnostic: the login page, which offers sign-up.
+  diagnosticUrl: "/platform/login",
 } as const;

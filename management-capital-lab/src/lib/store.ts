@@ -10,7 +10,7 @@ import * as notion from "./notion";
 
 // On a serverless host (e.g. Vercel) the project filesystem is read-only, so
 // writes must target the OS temp dir. This keeps the prototype from crashing on
-// submit; note that /tmp is ephemeral, so submissions are not durable there —
+// submit; note that /tmp is ephemeral, so submissions are not durable there;
 // use a real database (Postgres, Vercel KV, etc.) for production persistence.
 const DATA_DIR =
   process.env.VERCEL || process.env.MCL_DATA_DIR

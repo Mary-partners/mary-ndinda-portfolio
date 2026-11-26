@@ -19,7 +19,7 @@ export default async function PerformancePage() {
 
   return (
     <>
-      <PageHeader title="Business Performance" subtitle="Financial, commercial, operational and people indicators — measured separately from management maturity." />
+      <PageHeader title="Business Performance" subtitle="Financial, commercial, operational and people indicators, measured separately from management maturity." />
       <div className="space-y-5">
         {Object.entries(byCategory).map(([cat, list]) => (
           <Panel key={cat} title={cat[0].toUpperCase() + cat.slice(1)}>
@@ -43,9 +43,9 @@ export default async function PerformancePage() {
                       <tr key={k.id} className="border-b border-navy/5 last:border-0">
                         <td className="td"><Link href={`/portfolio/${k.companyId}`} className="font-medium text-navy-700 hover:underline">{k.company.tradingName ?? k.company.legalName}</Link></td>
                         <td className="td">{k.definition.name} <span className="text-xs text-ink-muted">({k.definition.unit})</span></td>
-                        <td className="td text-ink-muted">{k.baseline === null ? "—" : fmtNumber(k.baseline)}</td>
-                        <td className="td">{k.actual === null ? "—" : fmtNumber(k.actual)}</td>
-                        <td className="td text-ink-muted">{k.target === null ? "—" : fmtNumber(k.target)}</td>
+                        <td className="td text-ink-muted">{k.baseline === null ? "n/a" : fmtNumber(k.baseline)}</td>
+                        <td className="td">{k.actual === null ? "n/a" : fmtNumber(k.actual)}</td>
+                        <td className="td text-ink-muted">{k.target === null ? "n/a" : fmtNumber(k.target)}</td>
                         <td className="td text-xs text-ink-muted">{k.dataStatus}</td>
                         <td className="td text-xs">{ch.value === null ? <span className="text-ink-muted">{ch.note}</span> : <span className={ch.value >= 0 ? "text-emerald-700" : "text-red-700"}>{ch.value >= 0 ? "+" : ""}{ch.value.toFixed(1)}%</span>}</td>
                       </tr>

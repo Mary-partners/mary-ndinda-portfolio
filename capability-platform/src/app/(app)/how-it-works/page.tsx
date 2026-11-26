@@ -11,7 +11,7 @@ export const metadata = { title: "How it works" };
 const LOOP = [
   { icon: ClipboardCheck, title: "Diagnose", desc: "Score management capability across the 6 Index pillars, with the founder." },
   { icon: ListChecks, title: "Plan", desc: "Turn the weakest areas into prioritised improvement plans." },
-  { icon: KanbanSquare, title: "Implement", desc: "Work the plan — milestones, owners and advisory sessions." },
+  { icon: KanbanSquare, title: "Implement", desc: "Work the plan: milestones, owners and advisory sessions." },
   { icon: ShieldCheck, title: "Verify", desc: "An independent reviewer confirms what was actually adopted." },
   { icon: PieChart, title: "See the portfolio", desc: "Roll it all up into portfolio intelligence and reports." },
 ];
@@ -49,28 +49,28 @@ const LADDER = [
 const WINDOWS = [
   { icon: Gauge, title: "Capability Scores", sub: "how mature the management IS" },
   { icon: KanbanSquare, title: "Implementation", sub: "what they've actually DONE about it" },
-  { icon: LineChart, title: "Business Performance", sub: "the real KPIs — revenue, margin, cash" },
+  { icon: LineChart, title: "Business Performance", sub: "the real KPIs: revenue, margin, cash" },
 ];
 
 const OUTCOMES = [
-  { who: "The SME / founder", get: "A prioritised list of practices to build — and proof of progress to show a lender or investor." },
+  { who: "The SME / founder", get: "A prioritised list of practices to build, and proof of progress to show a lender or investor." },
   { who: "The advisor", get: "Structure and evidence for coaching; a defensible record of impact." },
   { who: "The fund / programme manager", get: "Portfolio-wide visibility: who is improving, where the real constraint is capital vs. management, and verified outcomes for reporting." },
   { who: "The independent reviewer", get: "A clean, simple way to keep the data honest." },
-  { who: "You", get: "Structured, verifiable research data — and a product for funders who currently fly blind on management capability." },
+  { who: "You", get: "Structured, verifiable research data, and a product for funders who currently fly blind on management capability." },
 ];
 
 export default function HowItWorksPage() {
   return (
     <>
-      <PageHeader title="How the platform works" subtitle="The model behind Management Capital Lab — for everyone who uses it." />
+      <PageHeader title="How the platform works" subtitle="The model behind Management Capital Lab, for everyone who uses it." />
 
       {/* Pitch */}
       <div className="mb-6 overflow-hidden rounded-2xl border border-navy/10 bg-navy-700 p-6 text-white sm:p-8">
         <div className="h-1 w-16 rounded-full bg-gold" />
         <p className="mt-4 max-w-3xl text-lg leading-relaxed">
           For decades the answer to a struggling SME was <span className="text-white/60">“more money.”</span>{" "}
-          This platform measures whether the real constraint is <span className="font-semibold text-gold-300">management capability</span> —
+          This platform measures whether the real constraint is <span className="font-semibold text-gold-300">management capability</span>,
           then helps build it, and proves it moved.
         </p>
         <a href="https://www.managementcapitallab.com/framework" target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-gold-300 hover:text-gold-200">
@@ -116,7 +116,7 @@ export default function HowItWorksPage() {
       </Panel>
 
       {/* Pillars = practices */}
-      <Panel title="The 6 pillars of the Management Capital Index — and the practices they build" className="mb-6">
+      <Panel title="The 6 pillars of the Management Capital Index, and the practices they build" className="mb-6">
         <div className="grid gap-3 sm:grid-cols-2">
           {DIMENSION_META.map((d) => {
             const Icon = DIM_ICON[d.key] ?? Compass;
@@ -148,7 +148,7 @@ export default function HowItWorksPage() {
       </Panel>
 
       {/* Three separate windows */}
-      <Panel title="Three things we keep separate — on purpose" className="mb-6">
+      <Panel title="Three things we keep separate, on purpose" className="mb-6">
         <div className="grid gap-3 sm:grid-cols-3">
           {WINDOWS.map((w) => (
             <div key={w.title} className="rounded-xl border border-navy/10 bg-white p-4">
@@ -160,7 +160,7 @@ export default function HowItWorksPage() {
         </div>
         <p className="mt-4 text-sm text-ink-muted">
           <strong className="text-navy-700">Maturity ≠ implementation ≠ performance.</strong> Keeping these distinct is what lets us ask honestly
-          whether better management actually drives better results — instead of assuming it.
+          whether better management actually drives better results, instead of assuming it.
         </p>
       </Panel>
 

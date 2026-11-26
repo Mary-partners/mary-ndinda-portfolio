@@ -68,23 +68,43 @@ export interface FieldNote {
   status: "published" | "draft";
 }
 
+export type SourceRegion = "Kenya" | "South Africa" | "Other Africa" | "Global";
+
 export interface ResearchSource {
   id: string;
   title: string;
+  /** Short citation form, e.g. "Bloom & Van Reenen" or "McKenzie et al." */
   author: string;
   year: string;
   theme: string;
+  /** Key finding of the source. */
   summary: string;
   whyItMatters: string;
-  url?: string;
+  url?: string | null;
   createdAt: string;
+  // Fields below are present for records in the literature review database.
+  dbId?: number;
+  authorsFull?: string;
+  journal?: string;
+  geography?: string;
+  region?: SourceRegion;
+  method?: string;
+  openAccess?: boolean;
+  reviewStatus?: "Abstract reviewed" | "Full text pending";
+  citations?: number | null;
+  /** True when the summary was reviewed by hand rather than taken from the database. */
+  curated?: boolean;
 }
 
 export interface ResearchPhase {
   id: string;
   phase: number;
   title: string;
-  status: "Completed" | "In Progress" | "Open" | "Upcoming";
+  status: "Completed" | "Submitted" | "In Progress" | "Open" | "Upcoming";
+  /** Optional short milestone label shown under the title, e.g. "Submitted Nov 2026". */
+  milestone?: string;
+  /** Optional link to more detail, e.g. "/findings". */
+  href?: string;
   description: string;
   order: number;
 }

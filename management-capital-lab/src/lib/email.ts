@@ -47,7 +47,7 @@ export async function sendNotificationEmail({
 }: SendArgs): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
-    // No provider configured — skip silently so submissions still succeed.
+    // No provider configured, so skip silently so submissions still succeed.
     return false;
   }
 
