@@ -1,9 +1,10 @@
 import { requireUser } from "@/lib/auth";
 import { getPortfolioStats } from "@/lib/portfolio";
+import { getPlatformOverview } from "@/lib/platform";
 import { PageHeader, StatCard, Panel } from "@/components/ui/Page";
 import { CapabilityRadar, DimensionBars, DistributionBars, AdoptionFunnel } from "@/components/charts";
-import { fmtIndex, maturityBand } from "@/lib/utils";
-import { DIMENSION_META } from "@/lib/constants";
+import { fmtIndex, fmtDate, maturityBand } from "@/lib/utils";
+import { DIMENSION_META, READINESS_BANDS } from "@/lib/constants";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ArrowUpRight } from "lucide-react";
@@ -12,6 +13,75 @@ export const dynamic = "force-dynamic";
 
 export default async function OverviewPage() {
   const user = await requireUser();
+
+  // Platform administrator: show every diagnostic completed across all workspaces,
+  // not just the active organisation (which is where the "zero" came from).
+  if (user.isPlatformAdmin) {
+    const p = await getPlatformOverview();
+    const avgBand = p.avgIndex !== null ? (READINESS_BANDS.find((b) => p.avgIndex! >= b.min && p.avgIndex! <= b.max)?.label ?? "") : "";
+    const maxBand = Math.max(1, ...p.distribution.map((d) => d.count));
+    return (
+      <>
+        <PageHeader
+          title="Platform Overview"
+          subtitle="Every diagnostic completed across all workspaces. This is the admin view of how the platform is being used."
+        />
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <StatCard label="Businesses registered" value={p.businesses} />
+          <StatCard label="Diagnostics completed" value={p.completed} sub={`${p.totalFinalized} submissions in total`} tone="gold" />
+          <StatCard label="Average Index" value={p.avgIndex !== null ? `${p.avgIndex}/100` : "n/a"} sub={avgBand} />
+          <StatCard label="Awaiting diagnostic" value={Math.max(0, p.businesses - p.completed)} sub="registered, not yet completed" />
+        </div>
+
+        <div className="mt-5 grid gap-5 lg:grid-cols-3">
+          <Panel title="Readiness band distribution" className="lg:col-span-1">
+            <div className="space-y-2.5">
+              {p.distribution.map((d) => (
+                <div key={d.band} className="flex items-center gap-3">
+                  <div className="w-24 shrink-0 text-sm text-navy-700">{d.band}</div>
+                  <div className="h-2 flex-1 rounded-full bg-navy/10"><div className="h-2 rounded-full bg-gold" style={{ width: `${(d.count / maxBand) * 100}%` }} /></div>
+                  <div className="w-6 text-right text-sm font-medium text-navy-700">{d.count}</div>
+                </div>
+              ))}
+            </div>
+          </Panel>
+          <Panel title="Completed diagnostics" className="lg:col-span-2" actions={<span className="text-xs text-ink-muted">{p.completed} businesses</span>}>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-navy/10">
+                    <th className="th">Business</th>
+                    <th className="th">Source</th>
+                    <th className="th">Sector</th>
+                    <th className="th">Index</th>
+                    <th className="th">Band</th>
+                    <th className="th">Completed</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {p.rows.length === 0 && (
+                    <tr><td className="td text-ink-muted" colSpan={6}>No diagnostics completed yet.</td></tr>
+                  )}
+                  {p.rows.map((r) => (
+                    <tr key={r.companyId} className="border-b border-navy/5 last:border-0">
+                      <td className="td font-medium text-navy-700">{r.companyName}</td>
+                      <td className="td text-ink-muted">{r.source}</td>
+                      <td className="td text-ink-muted">{r.sector ?? "—"}</td>
+                      <td className="td font-medium">{r.index ?? "—"}</td>
+                      <td className="td text-ink-muted">{r.band}</td>
+                      <td className="td text-ink-muted">{r.finalizedAt ? fmtDate(r.finalizedAt) : "—"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Panel>
+        </div>
+        <p className="mt-4 text-xs text-ink-muted">Figures are computed from stored records. Scores are self-reported management maturity, not validated WMS scores or a credit decision.</p>
+      </>
+    );
+  }
+
   // A brand-new administrator has no organisation yet, so send them to create one.
   if (!user.activeOrgId) redirect("/organisations");
   const s = await getPortfolioStats(user.activeOrgId);
