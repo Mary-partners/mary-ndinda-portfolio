@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
 import { SelfAssessment } from "@/components/auth/SelfAssessment";
-import { QUESTION_HELP } from "@/lib/framework-content";
+import { itemAt } from "@/lib/mci-v2";
 
 export const dynamic = "force-dynamic";
 
@@ -32,12 +32,16 @@ export default async function FounderDiagnosticPage() {
     key: d.key,
     name: d.name,
     description: d.description,
-    questions: d.questions.map((q) => ({
-      id: q.id,
-      text: q.text,
-      help: QUESTION_HELP[d.key]?.[q.order - 1] ?? null,
-      evidence: q.helpText,
-    })),
+    questions: d.questions.map((q) => {
+      const item = itemAt(d.key, q.order);
+      return {
+        id: q.id,
+        text: q.text,
+        anchors: item?.anchors ?? [],
+        eligibility: item?.eligibility ?? null,
+        evidence: item?.evidence ?? null,
+      };
+    }),
   }));
 
   return (

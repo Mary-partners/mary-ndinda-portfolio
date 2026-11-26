@@ -3,6 +3,8 @@ import type { PDFFont, PDFPage, RGB } from "pdf-lib";
 import { DIMENSION_META, CONSTRAINT_LABELS } from "./constants";
 import { fmtScore, fmtIndex, fmtNumber, fmtDate, pctChange, maturityBand } from "./utils";
 import { getActionPlan } from "./recommend";
+import { getFounderV2 } from "./founder-v2";
+import type { V2Result, V2Plan } from "./scoring-v2";
 import type { getCompanyDetail } from "./company";
 import type { getPortfolioStats } from "./portfolio";
 
@@ -109,6 +111,81 @@ function header(d: Doc, eyebrow: string, title: string, orgName: string) {
   d.y = H - 104 - 26;
 }
 
+// Enterprise Management Diagnostic (revised v2 rubric).
+function renderV2Report(d: Doc, result: V2Result, plan: V2Plan) {
+  // Executive summary
+  d.section("Executive summary");
+  const stats: [string, string, string, RGB][] = [
+    ["Management Capital Index", result.mci != null ? result.mci + "/100" : "n/a", result.overallBand.label, GOLD_DEEP],
+    ["Answer coverage", Math.round(result.answerCoverage * 100) + "%", `${result.totalNumeric} of ${result.totalApplicable} scored`, NAVY],
+    ["Independent verification", "0%", "reviewer-confirmed", NAVY],
+  ];
+  d.ensure(50);
+  const sx = [M, M + 180, M + 340];
+  stats.forEach((s, i) => {
+    d.page.drawText(san(s[0]), { x: sx[i], y: d.y - 9, size: 8.5, font: d.reg, color: MUTED });
+    d.page.drawText(san(s[1]), { x: sx[i], y: d.y - 30, size: 22, font: d.bold, color: s[3] });
+    d.page.drawText(san(s[2]), { x: sx[i], y: d.y - 42, size: 8, font: d.reg, color: MUTED });
+  });
+  d.y -= 52;
+  d.text(result.overallBand.blurb, { size: 10, color: INK, gap: 6, maxWidth: CW });
+  const q = result.pillars.filter((p) => p.display !== null);
+  if (q.length) {
+    const hi = [...q].sort((a, b) => (b.display ?? 0) - (a.display ?? 0))[0];
+    const lo = [...q].sort((a, b) => (a.display ?? 0) - (b.display ?? 0))[0];
+    d.text(`Strongest area: ${hi.name} (${hi.display}). Lowest: ${lo.name} (${lo.display}).`, { size: 10, color: INK, gap: 6, maxWidth: CW });
+  }
+  d.hr();
+
+  // Capability breakdown
+  d.section("Capability breakdown");
+  d.text("Latest raw score out of 4, maturity, applicable responses rated, and the gap to a fully embedded practice (4.00). This is the first assessment, so it is also the baseline.", { size: 8.5, color: MUTED, gap: 7, maxWidth: CW });
+  const c1 = M, c2 = M + 232, c3 = M + 286, cband = M + 336, crated = M + 452, cgap = M + 500;
+  d.cell("Pillar", c1, { size: 8.5, bold: true, color: MUTED });
+  d.cell("/4", c2, { size: 8.5, bold: true, color: MUTED, align: "right", w: 30 });
+  d.cell("/100", c3, { size: 8.5, bold: true, color: MUTED, align: "right", w: 30 });
+  d.cell("Maturity", cband, { size: 8.5, bold: true, color: MUTED });
+  d.cell("Rated", crated, { size: 8.5, bold: true, color: MUTED, align: "right", w: 34 });
+  d.cell("Gap", cgap, { size: 8.5, bold: true, color: MUTED, align: "right", w: CW - (cgap - M) });
+  d.y -= 14;
+  for (const p of result.pillars) {
+    d.ensure(16);
+    d.cell(p.name, c1, { size: 9 });
+    if (p.qualifies && p.raw !== null) {
+      d.cell(p.raw.toFixed(2), c2, { size: 9.5, align: "right", w: 30 });
+      d.cell(String(p.display), c3, { size: 9.5, bold: true, align: "right", w: 30 });
+      d.cell(p.band.label, cband, { size: 8.5, color: toneColor(p.band.label === "Embedded" || p.band.label === "Strong" ? "ok" : p.band.label === "Developing" ? "warn" : "bad") });
+      d.cell(`${p.numericCount}/${p.applicableCount}`, crated, { size: 9, color: MUTED, align: "right", w: 34 });
+      d.cell((4 - p.raw).toFixed(2), cgap, { size: 9.5, color: MUTED, align: "right", w: CW - (cgap - M) });
+    } else {
+      d.cell("Insufficient information", c2, { size: 8.5, color: MUTED });
+    }
+    d.y -= 16;
+  }
+  d.hr();
+
+  // 90-day action plan
+  d.section("Your action plan for the next 90 days");
+  if (plan.priorities.length === 0) {
+    d.text("You rated most practices at a routine level or higher. Keep these habits in place and reassess in about 90 days.", { size: 10, color: MUTED, maxWidth: CW });
+  }
+  plan.priorities.forEach((c, i) => {
+    d.ensure(48);
+    const tag = `${c.horizon}   ${c.pillarName} · ${c.code}${c.score !== null ? ` · ${c.score}/4` : ""}${c.startNow ? "   · START NOW" : ""}`;
+    d.text(tag, { size: 8.5, bold: true, color: GOLD_DEEP, gap: 3 });
+    d.text(`${i + 1}. ${c.item.action}`, { size: 10, bold: true, color: INK, gap: 4, maxWidth: CW });
+    const selected = c.status === "numeric" && c.selectedAnchor ? `You reported: ${c.selectedAnchor}` : c.status === "dontknow" ? "You answered: Don't know" : "Not answered";
+    d.text(selected, { size: 9, color: MUTED, gap: 3, maxWidth: CW });
+    d.text(`Why it matters: ${c.item.why}`, { size: 9, color: MUTED, gap: 6, maxWidth: CW });
+  });
+  d.hr();
+
+  // Limitations
+  d.gap(4);
+  d.text("Evidence and assessment limitations", { size: 9, bold: true, color: NAVY, gap: 5 });
+  d.text("Maturity and verification measure different things. Founder answers describe the practices reported by the respondent. Independent coverage reflects what a reviewer has confirmed. Scores are self-reported and are not a credit or funding decision.", { size: 8.5, color: MUTED, gap: 4, maxWidth: CW });
+}
+
 export async function buildCompanyReportPdf(detail: Detail, orgName: string): Promise<Uint8Array> {
   const d = await Doc.create();
   const { company, latest, dimRows } = detail;
@@ -130,6 +207,14 @@ export async function buildCompanyReportPdf(detail: Detail, orgName: string): Pr
     d.y -= 16;
   }
   d.hr();
+
+  // Revised (v2) rubric: render the Enterprise Management Diagnostic from the
+  // version-aware scoring service. Legacy assessments keep the original layout below.
+  const fv = await getFounderV2(company.id);
+  if (fv.state === "v2") {
+    renderV2Report(d, fv.result, fv.plan);
+    return d.save();
+  }
 
   // Executive summary: stat blocks
   d.section("Executive summary");
