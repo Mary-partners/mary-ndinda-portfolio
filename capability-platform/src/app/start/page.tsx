@@ -4,9 +4,9 @@ import { Gauge, ArrowRight, ClipboardCheck, Compass, ShieldCheck } from "lucide-
 export const dynamic = "force-dynamic";
 
 const POINTS = [
-  { icon: ClipboardCheck, text: "36 short questions across the six pillars — roughly 15 minutes." },
-  { icon: Compass, text: "Your Management Capital Index (0–100), your readiness band and closest archetype." },
-  { icon: ShieldCheck, text: "A downloadable PDF report with your most valuable next step." },
+  { icon: ClipboardCheck, text: "36 short questions across the six pillars, roughly 15 minutes." },
+  { icon: Compass, text: "Your Management Capital Index from 0 to 100, and your band." },
+  { icon: ShieldCheck, text: "A downloadable PDF report with your next steps." },
 ];
 
 export default async function StartPage({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
