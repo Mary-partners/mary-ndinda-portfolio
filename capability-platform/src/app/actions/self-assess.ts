@@ -82,14 +82,13 @@ export interface SelfResponse {
   status: "numeric" | "dontknow" | "na";
   score: number | null; // 0-4 when status === "numeric"
   reason?: string | null; // eligibility reason when status === "na"
-  hasEvidence: boolean;
 }
 
 // Anonymous self-assessment submission: access is the tokenised link only.
 // Responses are recorded as self-reported (evidence is "claimed" at most, never
 // "verified"), so they flow into analytics as maturity but add no verified
 // evidence until an independent reviewer confirms it.
-export async function submitSelfAssessment(token: string, founderName: string, responses: SelfResponse[], returnTo?: string) {
+export async function submitSelfAssessment(token: string, founderName: string, responses: SelfResponse[], returnTo?: string, evidenceReadiness?: string) {
   const company = await prisma.company.findUnique({ where: { inviteToken: token }, select: { id: true, founderName: true } });
   if (!company) redirect("/assess/invalid");
 
@@ -126,8 +125,9 @@ export async function submitSelfAssessment(token: string, founderName: string, r
         questionId: r.questionId,
         score: numeric ? r.score : null,
         applicable: r.status !== "na",
-        // Self-reported: never "verified". A reviewer must confirm evidence separately.
-        evidenceStatus: numeric && r.hasEvidence ? "claimed" : "none",
+        // One overall founder declaration at the end of the form, applied to the
+        // answers given. Self-reported: never "verified" until a reviewer confirms.
+        evidenceStatus: numeric && evidenceReadiness === "yes" ? "claimed" : "none",
         confidence: "medium",
         // "dontknow" vs an eligibility reason for N/A, kept for traceability.
         rationale: r.status === "na" ? (r.reason || "Not applicable") : r.status === "dontknow" ? "dontknow" : null,
