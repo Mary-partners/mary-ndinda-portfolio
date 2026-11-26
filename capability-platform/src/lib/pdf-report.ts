@@ -140,13 +140,14 @@ function renderV2Report(d: Doc, result: V2Result, plan: V2Plan) {
   // Capability breakdown
   d.section("Capability breakdown");
   d.text("Latest raw score out of 4, maturity, applicable responses rated, and the gap to a fully embedded practice (4.00). This is the first assessment, so it is also the baseline.", { size: 8.5, color: MUTED, gap: 7, maxWidth: CW });
-  const c1 = M, c2 = M + 232, c3 = M + 286, cband = M + 336, crated = M + 452, cgap = M + 500;
+  const c1 = M, c2 = M + 226, c3 = M + 274, cband = M + 322, crated = M + 420, cgap = M + 462;
+  const wRated = 34, wGap = CW - (cgap - M);
   d.cell("Pillar", c1, { size: 8.5, bold: true, color: MUTED });
   d.cell("/4", c2, { size: 8.5, bold: true, color: MUTED, align: "right", w: 30 });
   d.cell("/100", c3, { size: 8.5, bold: true, color: MUTED, align: "right", w: 30 });
   d.cell("Maturity", cband, { size: 8.5, bold: true, color: MUTED });
-  d.cell("Rated", crated, { size: 8.5, bold: true, color: MUTED, align: "right", w: 34 });
-  d.cell("Gap", cgap, { size: 8.5, bold: true, color: MUTED, align: "right", w: CW - (cgap - M) });
+  d.cell("Rated", crated, { size: 8.5, bold: true, color: MUTED, align: "right", w: wRated });
+  d.cell("Gap", cgap, { size: 8.5, bold: true, color: MUTED, align: "right", w: wGap });
   d.y -= 14;
   for (const p of result.pillars) {
     d.ensure(16);
@@ -155,8 +156,8 @@ function renderV2Report(d: Doc, result: V2Result, plan: V2Plan) {
       d.cell(p.raw.toFixed(2), c2, { size: 9.5, align: "right", w: 30 });
       d.cell(String(p.display), c3, { size: 9.5, bold: true, align: "right", w: 30 });
       d.cell(p.band.label, cband, { size: 8.5, color: toneColor(p.band.label === "Embedded" || p.band.label === "Strong" ? "ok" : p.band.label === "Developing" ? "warn" : "bad") });
-      d.cell(`${p.numericCount}/${p.applicableCount}`, crated, { size: 9, color: MUTED, align: "right", w: 34 });
-      d.cell((4 - p.raw).toFixed(2), cgap, { size: 9.5, color: MUTED, align: "right", w: CW - (cgap - M) });
+      d.cell(`${p.numericCount}/${p.applicableCount}`, crated, { size: 9, color: MUTED, align: "right", w: wRated });
+      d.cell((4 - p.raw).toFixed(2), cgap, { size: 9.5, color: MUTED, align: "right", w: wGap });
     } else {
       d.cell("Insufficient information", c2, { size: 8.5, color: MUTED });
     }
