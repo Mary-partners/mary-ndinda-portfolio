@@ -396,7 +396,7 @@ export async function seedDatabase(prisma: PrismaClient) {
   const admin = await prisma.user.create({ data: { name: "Amina Yusuf", email: "admin@demo.mcl", role: "ADMIN", isPlatformAdmin: true, title: "Platform Administrator" } });
   const pm = await prisma.user.create({ data: { name: "Peter Njoroge", email: "pm@demo.mcl", role: "PROGRAM_MANAGER", title: "Programme Manager" } });
   const reviewer = await prisma.user.create({ data: { name: "Lydia Mensah", email: "reviewer@demo.mcl", role: "REVIEWER", title: "Independent Reviewer" } });
-  const founder = await prisma.user.create({ data: { name: "Daniel Mwangi", email: "founder@demo.mcl", role: "FOUNDER", title: "Founder — Baus Taka" } });
+  const founder = await prisma.user.create({ data: { name: "Daniel Mwangi", email: "founder@demo.mcl", role: "FOUNDER", title: "Founder, Baus Taka" } });
   const advisors = await Promise.all(
     [
       { name: "Faith Kamau", email: "advisor1@demo.mcl" },
@@ -568,7 +568,7 @@ export async function seedDatabase(prisma: PrismaClient) {
       data: { overallScore: result.overall, completeness: result.completeness, evidenceCoverage: result.evidenceCoverage },
     });
 
-    // Improvement plans — three priorities derived from weakest dimensions
+    // Improvement plans: three priorities derived from weakest dimensions
     const weakest = [...result.dimensions]
       .filter((d) => d.score !== null)
       .sort((a, b) => (a.score ?? 0) - (b.score ?? 0))

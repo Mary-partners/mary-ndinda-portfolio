@@ -69,7 +69,7 @@ export function PostItCard({ note }: { note: Contribution }) {
       </div>
 
       <div className="mt-3 flex items-center justify-between border-t border-navy/10 pt-3 text-xs text-navy-500">
-        <span className="font-medium text-navy-700">— {displayName}</span>
+        <span className="font-medium text-navy-700">{displayName}</span>
         <time dateTime={note.approvedAt ?? note.createdAt}>
           {formatDate(note.approvedAt ?? note.createdAt)}
         </time>

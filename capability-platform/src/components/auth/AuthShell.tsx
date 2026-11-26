@@ -2,7 +2,7 @@ import * as React from "react";
 import { Gauge, ClipboardCheck, KanbanSquare, PieChart } from "lucide-react";
 
 const FEATURES = [
-  { icon: ClipboardCheck, title: "Diagnose capability", desc: "Score management maturity across eight capability dimensions — transparently, never guessing unanswered questions." },
+  { icon: ClipboardCheck, title: "Diagnose capability", desc: "Score management capability across the six pillars of the Management Capital Index. Scoring is transparent and never guesses an unanswered question." },
   { icon: KanbanSquare, title: "Track real implementation", desc: "Turn findings into improvement plans and verify what actually changed, with independent evidence review." },
   { icon: PieChart, title: "See the whole portfolio", desc: "Portfolio-wide intelligence for funds, DFIs, accelerators and enterprise-support organisations." },
 ];

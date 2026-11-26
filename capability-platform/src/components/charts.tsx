@@ -27,7 +27,7 @@ export function CapabilityRadar({
         )}
         <Radar name="Current" dataKey="current" stroke={NAVY} fill={NAVY} fillOpacity={0.25} />
         <Legend wrapperStyle={{ fontSize: 12 }} />
-        <Tooltip formatter={(v: number) => (v === null ? "—" : v.toFixed(2))} />
+        <Tooltip formatter={(v: number) => (v === null ? "n/a" : v.toFixed(2))} />
       </RadarChart>
     </ResponsiveContainer>
   );
@@ -44,7 +44,7 @@ export function DimensionBars({
         <CartesianGrid horizontal={false} stroke={GRID} />
         <XAxis type="number" domain={[0, 4]} tick={{ fontSize: 11, fill: "#64748B" }} />
         <YAxis type="category" dataKey="name" width={150} tick={{ fontSize: 11, fill: "#334155" }} />
-        <Tooltip formatter={(v: number) => (v === null ? "—" : v.toFixed(2))} />
+        <Tooltip formatter={(v: number) => (v === null ? "n/a" : v.toFixed(2))} />
         <Bar dataKey="score" radius={[0, 4, 4, 0]} barSize={16}>
           {data.map((d, i) => (
             <Cell key={i} fill={(d.score ?? 0) < 2 ? "#b91c1c" : (d.score ?? 0) < 3 ? GOLD : NAVY} />

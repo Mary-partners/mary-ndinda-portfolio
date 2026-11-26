@@ -84,7 +84,7 @@ export interface SelfResponse {
   hasEvidence: boolean;
 }
 
-// Anonymous self-assessment submission — access is the tokenised link only.
+// Anonymous self-assessment submission: access is the tokenised link only.
 // Responses are recorded as self-reported (evidence is "claimed" at most, never
 // "verified"), so they flow into analytics as maturity but add no verified
 // evidence until an independent reviewer confirms it.

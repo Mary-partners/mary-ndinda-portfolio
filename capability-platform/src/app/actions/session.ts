@@ -23,7 +23,7 @@ export async function completeSetup(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
   const password = String(formData.get("password") ?? "");
   if (!name || !email || password.length < 8) redirect("/setup?error=invalid");
-  // The administrator account only — organisations are created inside the app.
+  // The administrator account only; organisations are created inside the app.
   const { user } = await bootstrapOwner(prisma, { name, email, password });
   await login(user.id);
   redirect("/organisations");

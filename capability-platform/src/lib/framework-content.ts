@@ -1,4 +1,4 @@
-// The Management Capital Index (MCI 1.1) question bank — 36 behaviour-based
+// The Management Capital Index (MCI 1.1) question bank: 36 behaviour-based
 // questions, six per pillar, as supplied with the build brief
 // (managementcapitallab.com/framework, Mary Ndinda, DBA research).
 // Answered on the 0-4 practice scale in constants.ts (MATURITY_ANCHORS).

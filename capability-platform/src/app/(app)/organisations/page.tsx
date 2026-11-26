@@ -37,7 +37,7 @@ export default async function OrganisationsPage() {
           <div className="mb-5 rounded-2xl border border-navy/10 bg-gradient-to-b from-white to-surface-muted p-6 text-center">
             <h2 className="font-semibold text-navy-700">Create your first organisation</h2>
             <p className="mx-auto mt-1 max-w-md text-sm text-ink-muted">
-              An organisation is a programme sponsor you support — a fund, DFI, accelerator or ESO. Each is a separate,
+              An organisation is a programme sponsor you support, such as a fund, DFI, accelerator or ESO. Each is a separate,
               tenant-isolated workspace with its own programmes, enterprises and team. You can add as many as you need.
             </p>
           </div>
@@ -87,8 +87,8 @@ export default async function OrganisationsPage() {
                 <div className="mt-2 flex flex-wrap gap-4 text-xs text-ink-muted">
                   {p.fundingPartner && <span>Funder: {p.fundingPartner}</span>}
                   {(p.startDate || p.endDate) && <span>{fmtDate(p.startDate)} → {fmtDate(p.endDate)}</span>}
-                  <span>Target: {p.targetEnterprises ?? "—"} · Enrolled: {p._count.companies}</span>
-                  <span>Budget: {p.budget ? fmtNumber(p.budget) : "—"}</span>
+                  <span>Target: {p.targetEnterprises ?? "n/a"} · Enrolled: {p._count.companies}</span>
+                  <span>Budget: {p.budget ? fmtNumber(p.budget) : "n/a"}</span>
                   {p.reportingCadence && <span>Cadence: {p.reportingCadence}</span>}
                 </div>
               </div>
@@ -114,7 +114,7 @@ export default async function OrganisationsPage() {
         </div>
       </Panel>
 
-      <p className="mt-4 text-xs text-ink-muted">Data is strictly isolated per organisation — the org switcher (top right, for multi-org users) changes the entire workspace.</p>
+      <p className="mt-4 text-xs text-ink-muted">Data is strictly isolated per organisation. The org switcher (top right, for multi-org users) changes the entire workspace.</p>
     </>
   );
 }

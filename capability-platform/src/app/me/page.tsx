@@ -123,7 +123,7 @@ export default async function FounderHome() {
                     return (
                       <div key={d.key} className="flex items-center gap-3">
                         <div className="w-40 shrink-0 text-sm text-navy-700 sm:w-48">{d.name}</div>
-                        <div className="h-2 flex-1 rounded-full bg-navy/10"><div className="h-2 rounded-full bg-gold" style={{ width: `${v === "—" ? 0 : v}%` }} /></div>
+                        <div className="h-2 flex-1 rounded-full bg-navy/10"><div className="h-2 rounded-full bg-gold" style={{ width: `${v === "n/a" ? 0 : v}%` }} /></div>
                         <div className="w-10 text-right text-sm font-medium text-navy-700">{v}</div>
                       </div>
                     );

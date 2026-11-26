@@ -46,7 +46,7 @@ export default async function CompanyPage({ params }: { params: Promise<{ id: st
     <>
       <PageHeader
         title={company.tradingName ?? company.legalName}
-        subtitle={`${company.sector} · ${company.country} · ${company.stage ?? ""} · Advisor: ${company.advisor?.name ?? "—"}`}
+        subtitle={`${company.sector} · ${company.country} · ${company.stage ?? ""} · Advisor: ${company.advisor?.name ?? "n/a"}`}
         actions={
           <div className="flex flex-wrap items-center gap-2">
             <a href={`${BASE_PATH}/api/report/company/${company.id}`} className="btn-outline"><Download className="h-4 w-4" /> PDF report</a>
@@ -61,7 +61,7 @@ export default async function CompanyPage({ params }: { params: Promise<{ id: st
       />
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Management Capital Index" value={latest?.overallScore != null ? `${fmtIndex(latest?.overallScore)}/100` : "—"} sub={<Badge tone={band.tone as "ok" | "warn" | "bad" | "neutral"}>{band.label}</Badge>} tone="gold" />
+        <StatCard label="Management Capital Index" value={latest?.overallScore != null ? `${fmtIndex(latest?.overallScore)}/100` : "n/a"} sub={<Badge tone={band.tone as "ok" | "warn" | "bad" | "neutral"}>{band.label}</Badge>} tone="gold" />
         <StatCard label="Assessment completeness" value={`${Math.round((latest?.completeness ?? 0) * 100)}%`} sub="of applicable questions" />
         <StatCard label="Evidence coverage" value={`${Math.round((latest?.evidenceCoverage ?? 0) * 100)}%`} sub="answered items verified" />
         <StatCard label="Open interventions" value={company.plans.filter((p) => !["Verified", "Rejected"].includes(p.status)).length} tone="navy" href="/implementation" />
@@ -70,7 +70,7 @@ export default async function CompanyPage({ params }: { params: Promise<{ id: st
       {canManage && (
         <div className="mt-5">
           <Panel title="Founder self-assessment">
-            <p className="mb-3 text-sm text-ink-muted">Invite the business owner to complete the capability check themselves. Their answers appear here as self-reported maturity — evidence is only counted once a reviewer verifies it.</p>
+            <p className="mb-3 text-sm text-ink-muted">Invite the business owner to complete the capability check themselves. Their answers appear here as self-reported maturity. Evidence is only counted once a reviewer verifies it.</p>
             <InviteLink companyId={company.id} existingToken={company.inviteToken} />
           </Panel>
         </div>
@@ -102,7 +102,7 @@ export default async function CompanyPage({ params }: { params: Promise<{ id: st
                       <td className="td text-ink-muted">{fmtScore(d.baseline)}</td>
                       <td className="td font-medium">{fmtScore(d.current)}</td>
                       <td className="td"><Badge tone={b.tone as "ok" | "warn" | "bad" | "neutral"}>{b.label}</Badge></td>
-                      <td className="td text-ink-muted">{d.gap !== null ? d.gap.toFixed(2) : "—"}</td>
+                      <td className="td text-ink-muted">{d.gap !== null ? d.gap.toFixed(2) : "n/a"}</td>
                     </tr>
                   );
                 })}
@@ -110,7 +110,7 @@ export default async function CompanyPage({ params }: { params: Promise<{ id: st
             </table>
           </div>
           <p className="mt-3 text-xs text-ink-muted">
-            Maturity reflects a documented assessment — not task completion. Reassess to change scores.
+            Maturity reflects a documented assessment, not task completion. Reassess to change scores.
           </p>
         </Panel>
       </div>
@@ -173,7 +173,7 @@ export default async function CompanyPage({ params }: { params: Promise<{ id: st
                       <StatusBadge status={p.status} />
                     </div>
                     <h3 className="mt-2 text-sm font-semibold text-navy-700">{p.title}</h3>
-                    <p className="mt-1 text-xs text-ink-muted">Owner: {p.ownerName ?? "—"} · Target {fmtScore(p.targetScore)}</p>
+                    <p className="mt-1 text-xs text-ink-muted">Owner: {p.ownerName ?? "n/a"} · Target {fmtScore(p.targetScore)}</p>
                     <div className="mt-2 text-xs text-ink-muted">{verified}/{p.milestones.length} milestones verified</div>
                     <div className="mt-2 h-1.5 w-full rounded-full bg-navy/10">
                       <div className="h-1.5 rounded-full bg-emerald-500" style={{ width: `${p.milestones.length ? (verified / p.milestones.length) * 100 : 0}%` }} />
@@ -206,9 +206,9 @@ export default async function CompanyPage({ params }: { params: Promise<{ id: st
                   return (
                     <tr key={k.id} className="border-b border-navy/5 last:border-0">
                       <td className="td font-medium text-navy-700">{k.definition.name}<div className="text-[11px] text-ink-muted">{k.definition.unit}{k.dataStatus !== "actual" ? ` · ${k.dataStatus}` : ""}</div></td>
-                      <td className="td text-ink-muted">{k.baseline === null ? "—" : fmtNumber(k.baseline)}</td>
-                      <td className="td">{k.actual === null ? "—" : fmtNumber(k.actual)}</td>
-                      <td className="td text-ink-muted">{k.target === null ? "—" : fmtNumber(k.target)}</td>
+                      <td className="td text-ink-muted">{k.baseline === null ? "n/a" : fmtNumber(k.baseline)}</td>
+                      <td className="td">{k.actual === null ? "n/a" : fmtNumber(k.actual)}</td>
+                      <td className="td text-ink-muted">{k.target === null ? "n/a" : fmtNumber(k.target)}</td>
                       <td className="td text-xs">{ch.value === null ? <span className="text-ink-muted">{ch.note}</span> : <span className={ch.value >= 0 ? "text-emerald-700" : "text-red-700"}>{ch.value >= 0 ? "+" : ""}{ch.value.toFixed(1)}%</span>}</td>
                     </tr>
                   );
@@ -229,7 +229,7 @@ export default async function CompanyPage({ params }: { params: Promise<{ id: st
                 <div><dt className="text-xs font-semibold uppercase text-ink-muted">Top priorities</dt><dd className="text-ink-muted">{company.founderProfile.topPriorities}</dd></div>
               </dl>
             ) : <p className="text-sm text-ink-muted">No founder interview captured.</p>}
-            <p className="mt-3 text-xs text-ink-muted">Captured as qualitative context — not scored as management quality.</p>
+            <p className="mt-3 text-xs text-ink-muted">Captured as qualitative context, not scored as management quality.</p>
           </Panel>
 
           <Panel title="Advisory history" actions={<Link href="/sessions" className="text-xs font-medium text-navy-600 hover:underline">All sessions</Link>}>

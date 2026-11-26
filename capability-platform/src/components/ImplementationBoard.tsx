@@ -80,7 +80,7 @@ export function ImplementationBoard({ items, canEdit }: { items: BoardItem[]; ca
                   )}
                 </div>
               ))}
-              {colItems.length === 0 && <div className="rounded-lg border border-dashed border-navy/15 py-6 text-center text-xs text-ink-muted/60">—</div>}
+              {colItems.length === 0 && <div className="rounded-lg border border-dashed border-navy/15 py-6 text-center text-xs text-ink-muted/60">Nothing here yet</div>}
             </div>
           </div>
         );

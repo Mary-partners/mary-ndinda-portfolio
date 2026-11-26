@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 30;
 
 // Diagnostic endpoint (token-protected). Reports whether the database is
-// reachable and, if not, the exact error — without ever revealing the password.
+// reachable and, if not, the exact error, without ever revealing the password.
 export async function GET(req: Request) {
   const token = new URL(req.url).searchParams.get("token");
   if (!process.env.SEED_TOKEN || token !== process.env.SEED_TOKEN) {

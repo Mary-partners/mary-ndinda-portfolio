@@ -68,7 +68,7 @@ export function EvidenceReviewer({ items, canVerify }: { items: EvidenceItem[]; 
               <div>
                 <h2 className="text-lg font-semibold text-navy-700">{current.name}</h2>
                 <p className="text-sm text-ink-muted">
-                  {current.type} · {current.period ?? "—"} · submitted by {current.submittedBy ?? "—"} on {fmtDate(current.createdAt)}
+                  {current.type} · {current.period ?? "n/a"} · submitted by {current.submittedBy ?? "n/a"} on {fmtDate(current.createdAt)}
                 </p>
                 <Link href={`/portfolio/${current.companyId}`} className="text-sm text-gold-700 hover:underline">{current.companyName}</Link>
                 {current.planTitle && <span className="text-sm text-ink-muted"> · {current.planTitle}</span>}
@@ -77,7 +77,7 @@ export function EvidenceReviewer({ items, canVerify }: { items: EvidenceItem[]; 
             </div>
 
             <div className="mt-4 rounded-lg border border-dashed border-navy/20 bg-surface-muted p-6 text-center text-sm text-ink-muted">
-              Document preview is not yet enabled — verification is recorded against the evidence metadata and
+              Document preview is not yet enabled. Verification is recorded against the evidence metadata and
               review history below. File attachments with signed, expiring links are on the roadmap.
             </div>
 

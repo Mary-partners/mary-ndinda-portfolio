@@ -30,7 +30,7 @@ export function InviteLink({ companyId, existingToken }: { companyId: string; ex
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
     } catch {
-      /* clipboard blocked — the field is selectable as a fallback */
+      /* clipboard blocked; the field is selectable as a fallback */
     }
   }
 
@@ -55,7 +55,7 @@ export function InviteLink({ companyId, existingToken }: { companyId: string; ex
         <button onClick={copy} className="btn-primary shrink-0">{copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}{copied ? "Copied" : "Copy"}</button>
         <a href={url} target="_blank" rel="noopener noreferrer" className="btn-ghost shrink-0" title="Open link"><ExternalLink className="h-4 w-4" /></a>
       </div>
-      <p className="mt-1.5 text-xs text-ink-muted">Send this link to the business owner. Anyone with it can complete the self-assessment and download their report — no account needed.</p>
+      <p className="mt-1.5 text-xs text-ink-muted">Send this link to the business owner. Anyone with it can complete the self-assessment and download their report. No account is needed.</p>
     </div>
   );
 }

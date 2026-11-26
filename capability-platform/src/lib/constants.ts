@@ -77,7 +77,7 @@ export const CONSTRAINT_LABELS: Record<string, string> = {
 // Management Capital Index instrument version.
 export const FRAMEWORK_VERSION = "1.1";
 
-// Answer scale (0-4) — MCI 1.1 practice levels.
+// Answer scale (0-4): MCI 1.1 practice levels.
 export const MATURITY_ANCHORS = [
   { score: 0, label: "Not in place", desc: "The practice does not exist." },
   { score: 1, label: "Occasional", desc: "Occasional, or entirely dependent on one person." },
@@ -86,7 +86,7 @@ export const MATURITY_ANCHORS = [
   { score: 4, label: "Embedded", desc: "Embedded, reviewed and improved over time." },
 ] as const;
 
-// The Management Capital Index (MCI 1.1) — six pillars, proposed weights and
+// The Management Capital Index (MCI 1.1): six pillars, proposed weights and
 // plain-language labels. managementcapitallab.com/framework (Mary Ndinda, DBA).
 export const DIMENSION_META: { key: string; name: string; label: string; weight: number; description: string }[] = [
   { key: "financial", name: "Financial Management Capability", label: "Know the numbers", weight: 15, description: "Reliable records, pricing, cash planning, and informed choices." },
