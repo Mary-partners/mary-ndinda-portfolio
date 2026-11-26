@@ -1,6 +1,5 @@
 import type { PrismaClient } from "@prisma/client";
-import { FRAMEWORK_CONTENT } from "./framework-content";
-import { DIMENSION_META, FRAMEWORK_VERSION } from "./constants";
+import { MCI_ITEMS, PILLAR_ORDER, PILLAR_NAMES, RUBRIC_VERSION } from "./mci-v2";
 import { hashPassword } from "./password";
 
 // First-run installation helpers for a real (non-demo) deployment.
@@ -17,27 +16,34 @@ const DEFAULT_KPIS: { key: string; name: string; unit: string; category: string;
   { key: "employee_turnover", name: "Employee turnover", unit: "%", category: "people", higherIsBetter: false },
 ];
 
+const FRAMEWORK_NAME = "Management Capital Index";
+
+// Ensure the revised (v2) rubric is installed as the default framework.
+// Legacy frameworks and their historical assessments are preserved unchanged;
+// this adds the v2 framework if missing and makes it the single default.
 export async function ensureFramework(prisma: PrismaClient) {
-  let framework = await prisma.framework.findFirst({ where: { isDefault: true } });
+  let framework = await prisma.framework.findFirst({ where: { name: FRAMEWORK_NAME, version: RUBRIC_VERSION } });
   if (!framework) {
     framework = await prisma.framework.create({
-      data: { name: "Management Capital Index", version: FRAMEWORK_VERSION, isDefault: true, orgId: null },
+      data: { name: FRAMEWORK_NAME, version: RUBRIC_VERSION, isDefault: true, orgId: null },
     });
-    for (let i = 0; i < DIMENSION_META.length; i++) {
-      const meta = DIMENSION_META[i];
+    for (let i = 0; i < PILLAR_ORDER.length; i++) {
+      const key = PILLAR_ORDER[i];
       const dim = await prisma.dimension.create({
-        data: { frameworkId: framework.id, key: meta.key, name: meta.name, description: meta.description, weight: meta.weight, order: i + 1 },
+        data: { frameworkId: framework.id, key, name: PILLAR_NAMES[key], description: null, weight: 1, order: i + 1 },
       });
-      const content = FRAMEWORK_CONTENT.find((c) => c.key === meta.key);
-      if (content) {
-        for (let q = 0; q < content.questions.length; q++) {
-          const sq = content.questions[q];
-          await prisma.question.create({
-            data: { dimensionId: dim.id, text: sq.text, helpText: sq.helpText, weight: sq.weight ?? 1, order: q + 1, appliesTo: sq.appliesTo },
-          });
-        }
+      const items = MCI_ITEMS.filter((it) => it.pillar === key).sort((a, b) => a.order - b.order);
+      for (const it of items) {
+        await prisma.question.create({
+          data: { dimensionId: dim.id, text: it.question, helpText: null, weight: 1, order: it.order },
+        });
       }
     }
+  }
+  // v2 is the single default; demote any other default framework (legacy stays usable for its history).
+  await prisma.framework.updateMany({ where: { id: { not: framework.id }, isDefault: true }, data: { isDefault: false } });
+  if (!framework.isDefault) {
+    framework = await prisma.framework.update({ where: { id: framework.id }, data: { isDefault: true } });
   }
   for (const k of DEFAULT_KPIS) {
     await prisma.kpiDefinition.upsert({ where: { key: k.key }, update: {}, create: k });

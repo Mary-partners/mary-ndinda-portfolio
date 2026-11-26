@@ -3,7 +3,7 @@
 import crypto from "crypto";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { recomputeAssessment } from "@/lib/recompute";
+import { storeV2 } from "@/lib/store-v2";
 import { ensurePublicOrg, ensureFramework } from "@/lib/install";
 import { login } from "@/lib/auth";
 import { hashPassword } from "@/lib/password";
@@ -79,8 +79,9 @@ export async function startPublicAssessment(formData: FormData) {
 
 export interface SelfResponse {
   questionId: string;
-  score: number | null;
-  applicable: boolean;
+  status: "numeric" | "dontknow" | "na";
+  score: number | null; // 0-4 when status === "numeric"
+  reason?: string | null; // eligibility reason when status === "na"
   hasEvidence: boolean;
 }
 
@@ -118,19 +119,23 @@ export async function submitSelfAssessment(token: string, founderName: string, r
 
   const rows = responses
     .filter((r) => validIds.has(r.questionId))
-    .filter((r) => !r.applicable || (r.score !== null && r.score !== undefined))
-    .map((r) => ({
-      assessmentId: assessment.id,
-      questionId: r.questionId,
-      score: r.applicable ? r.score : null,
-      applicable: r.applicable,
-      // Self-reported: never "verified". A reviewer must confirm evidence separately.
-      evidenceStatus: r.applicable && r.score !== null && r.hasEvidence ? "claimed" : "none",
-      confidence: "medium",
-    }));
+    .map((r) => {
+      const numeric = r.status === "numeric" && r.score !== null && r.score !== undefined;
+      return {
+        assessmentId: assessment.id,
+        questionId: r.questionId,
+        score: numeric ? r.score : null,
+        applicable: r.status !== "na",
+        // Self-reported: never "verified". A reviewer must confirm evidence separately.
+        evidenceStatus: numeric && r.hasEvidence ? "claimed" : "none",
+        confidence: "medium",
+        // "dontknow" vs an eligibility reason for N/A, kept for traceability.
+        rationale: r.status === "na" ? (r.reason || "Not applicable") : r.status === "dontknow" ? "dontknow" : null,
+      };
+    });
   if (rows.length) await prisma.response.createMany({ data: rows });
 
-  await recomputeAssessment(assessment.id);
+  await storeV2(assessment.id);
 
   const name = founderName.trim();
   if (name && !company.founderName) {
