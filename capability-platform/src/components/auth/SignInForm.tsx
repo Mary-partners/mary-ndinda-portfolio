@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { useFormStatus } from "react-dom";
 import { signIn } from "@/app/actions/session";
 import { Mail, Lock, Eye, EyeOff, Loader2, ArrowRight, AlertCircle } from "lucide-react";
@@ -25,7 +26,7 @@ export function SignInForm({ message }: { message?: string | null }) {
       <div className="h-1.5 bg-gradient-to-r from-gold-300 via-gold to-gold-600" />
       <div className="p-6 sm:p-8">
       <h1 className="text-xl font-semibold text-navy-700">Welcome back</h1>
-      <p className="mt-1.5 text-sm text-ink-muted">Sign in with the email and password from your administrator.</p>
+      <p className="mt-1.5 text-sm text-ink-muted">Founders and programme teams: sign in with your email and password.</p>
 
       {message && (
         <div className="mt-4 flex items-start gap-2 rounded-xl border border-bad/20 bg-bad/5 px-3 py-2.5 text-sm text-bad">
@@ -56,6 +57,23 @@ export function SignInForm({ message }: { message?: string | null }) {
 
         <SubmitButton />
       </form>
+
+      <div className="mt-6 border-t border-navy/10 pt-5 text-sm">
+        <p className="font-medium text-navy-700">New to the Management Capital Index?</p>
+        <Link
+          href="/signup"
+          className="mt-2 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-gold/50 bg-gold/10 font-semibold text-navy-800 transition-colors hover:bg-gold/20"
+        >
+          Create your founder account <ArrowRight className="h-4 w-4" />
+        </Link>
+        <p className="mt-3 text-center text-xs text-ink-muted">
+          Prefer not to create an account?{" "}
+          <Link href="/start" className="font-medium text-gold-700 hover:underline">
+            Take the diagnostic once
+          </Link>
+          .
+        </p>
+      </div>
       </div>
     </div>
   );
