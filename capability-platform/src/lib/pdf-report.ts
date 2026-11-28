@@ -255,10 +255,13 @@ async function buildFounderSnapshotPdf(result: V2Result, plan: V2Plan, company: 
   else if (pr.length) startText = (PRACTICE_GUIDE[pr[0].code]?.milestone ?? pr[0].item.action).toLowerCase();
   else startText = "keep your current routines and reassess in 90 days";
   startText = startText.charAt(0).toUpperCase() + startText.slice(1) + ".";
-  d.page.drawRectangle({ x: M, y: y - 24, width: CW, height: 24, color: CREAM });
+  const swLines = d.wrap(startText, d.reg, 9.5, CW - 120);
+  const swH = Math.max(24, 9 + swLines.length * 13);
+  d.page.drawRectangle({ x: M, y: y - swH, width: CW, height: swH, color: CREAM });
   put("Start this week", M + 12, y - 16, { size: 8.5, bold: true, color: NAVY });
-  put(startText, M + 108, y - 16, { size: 9.5, color: INK });
-  y -= 24 + 16;
+  let sy = y - 16;
+  for (const ln of swLines) { put(ln, M + 108, sy, { size: 9.5, color: INK }); sy -= 13; }
+  y -= swH + 16;
 
   pr.slice(0, 3).forEach((c, i) => {
     const g = PRACTICE_GUIDE[c.code];
