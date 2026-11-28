@@ -91,8 +91,8 @@ export function AudienceCards() {
           <RotatingPlan />
 
           <div className="mt-4 flex-1" />
-          <Link href="/start" className="group mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-gold-700 hover:underline">
-            Take the diagnostic <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+          <Link href="/signup" className="group mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-gold-700 hover:underline">
+            Create your account <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
           </Link>
         </article>
 
