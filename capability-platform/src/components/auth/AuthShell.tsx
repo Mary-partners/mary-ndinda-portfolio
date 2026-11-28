@@ -1,10 +1,10 @@
 import * as React from "react";
-import { Gauge, ClipboardCheck, KanbanSquare, PieChart } from "lucide-react";
+import { Gauge, ClipboardCheck, ListChecks, Users } from "lucide-react";
 
 const FEATURES = [
-  { icon: ClipboardCheck, title: "Diagnose capability", desc: "Score management capability across the six pillars of the Management Capital Index. Scoring is transparent and never guesses an unanswered question." },
-  { icon: KanbanSquare, title: "Track real implementation", desc: "Turn findings into improvement plans and verify what actually changed, with independent evidence review." },
-  { icon: PieChart, title: "See the whole portfolio", desc: "Portfolio-wide intelligence for funds, DFIs, accelerators and enterprise-support organisations." },
+  { icon: ClipboardCheck, title: "Know your score", desc: "Score your management practices across six areas of the Management Capital Index. Transparent, and never guesses an unanswered question." },
+  { icon: ListChecks, title: "Get a 90-day plan", desc: "Turn your answers into a short, practical set of next steps for the coming three months." },
+  { icon: Users, title: "For everyone backing SMEs", desc: "Founders, the programmes that support them, and the investors and lenders deploying capital." },
 ];
 
 export function AuthShell({ children, footnote }: { children: React.ReactNode; footnote?: string }) {
@@ -30,15 +30,11 @@ export function AuthShell({ children, footnote }: { children: React.ReactNode; f
         </div>
 
         <div className="relative max-w-md">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-[11px] font-medium uppercase tracking-wide text-gold-200">
-            <span className="h-1.5 w-1.5 rounded-full bg-gold" />
-            For funds, DFIs, accelerators &amp; ESOs
-          </span>
-          <h2 className="mt-5 text-3xl font-semibold leading-tight text-white xl:text-4xl">
-            Turn management capability into <span className="text-gold-300">measurable growth.</span>
+          <h2 className="text-3xl font-semibold leading-tight text-white xl:text-4xl">
+            See what to improve in the way your <span className="text-gold-300">business runs.</span>
           </h2>
           <p className="mt-4 text-[15px] leading-relaxed text-white/70">
-            A diagnostic, implementation and portfolio-intelligence platform for the organisations backing African SMEs.
+            The Management Capital Index shows which management practices are working, which need attention, and what to work on over the next 90 days.
           </p>
           <ul className="mt-8 space-y-5">
             {FEATURES.map((f) => (
@@ -55,7 +51,7 @@ export function AuthShell({ children, footnote }: { children: React.ReactNode; f
           </ul>
         </div>
 
-        <p className="relative text-xs text-white/40">Capability intelligence for African SME support programmes</p>
+        <p className="relative text-xs text-white/40">For founders and the organisations that back them.</p>
       </aside>
 
       {/* Content panel */}
