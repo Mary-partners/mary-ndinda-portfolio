@@ -182,7 +182,8 @@ async function buildFounderSnapshotPdf(result: V2Result, plan: V2Plan, company: 
   right("PRIVATE SELF-ASSESSMENT", y - 3, 8.5, GOLD_DEEP, true);
   y -= 30;
   put(name, M, y - 20, { size: 21, bold: true, color: NAVY }); y -= 28;
-  put("Enterprise Management Diagnostic", M, y - 11, { size: 11.5, color: SUB }); y -= 24;
+  put("Enterprise Management Diagnostic", M, y - 11, { size: 11.5, color: SUB }); y -= 19;
+  if (company.founderName) { put(`Prepared for ${company.founderName}`, M, y - 9, { size: 9.5, color: NAVY }); y -= 15; }
   const metaLeft = [company.sector, company.country].filter(Boolean).join("   /   ");
   if (metaLeft) put(metaLeft, M, y - 8, { size: 9, color: MUTED });
   right(`Report generated ${gen}`, y - 8, 9, MUTED); y -= 20;
@@ -269,22 +270,22 @@ async function buildFounderSnapshotPdf(result: V2Result, plan: V2Plan, company: 
 
   const financeFirst = pr.some((c) => c.startNow);
   let intro = pr.length
-    ? "These are the practices your answers scored lowest, so they are where to start. "
+    ? "These three practices scored lowest in your answers, so they are where to start. "
     : "You rated most practices at a routine level or higher, so no priorities are flagged. ";
   intro += financeFirst
-    ? "Essential money routines come first, even where another area scored lower, so you can see what cash the business has and what it will need. Work through them in order."
-    : "They are ordered by what will strengthen how the business runs first. Work through them in order.";
-  for (const ln of d.wrap(intro, d.reg, 9.5, CW)) { put(ln, M, y, { size: 9.5, color: INK }); y -= 13.5; }
-  y -= 12;
+    ? "Money routines come first, so you can see the cash the business has and will need."
+    : "They are ordered by what will strengthen the business first.";
+  for (const ln of d.wrap(intro, d.reg, 9.5, CW)) { put(ln, M, y, { size: 9.5, color: INK }); y -= 14; }
+  y -= 13;
 
   const RX = M + 108; // right-text column on page 2
   for (let i = 0; i < Math.min(3, pr.length); i++) {
     const c = pr[i];
     const g = PRACTICE_GUIDE[c.code];
-    rule(y); y -= 8;
-    put(g?.guideTitle ?? c.pillarName, M, y - 13, { size: 12, bold: true, color: NAVY });
+    rule(y); y -= 9;
+    put(g?.guideTitle ?? c.pillarName, M, y - 13, { size: 12.5, bold: true, color: NAVY });
     right(`${scoreLabel(c)} · By day ${30 * (i + 1)}`, y - 13, 9, MUTED);
-    y -= 24;
+    y -= 27;
     const rows: [string, string][] = [
       ["Why it matters", g?.why ?? c.item.why],
       ["Put it to work", (g?.work ?? c.item.action) + (g?.solo ? " " + g.solo : "")],
@@ -294,10 +295,10 @@ async function buildFounderSnapshotPdf(result: V2Result, plan: V2Plan, company: 
       put(lab, M, y, { size: 8.5, bold: true, color: SUB });
       const lines = d.wrap(txt, d.reg, 9.5, CW - (RX - M));
       let ty = y;
-      for (const ln of lines) { put(ln, RX, ty, { size: 9.5, color: INK }); ty -= 12.5; }
-      y -= Math.max(1, lines.length) * 12.5 + 5;
+      for (const ln of lines) { put(ln, RX, ty, { size: 9.5, color: INK }); ty -= 13; }
+      y -= Math.max(1, lines.length) * 13 + 7;
     }
-    y -= 8;
+    y -= 10;
   }
 
   // What the evidence says
