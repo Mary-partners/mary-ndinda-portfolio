@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { SignInForm } from "@/components/auth/SignInForm";
 import { AudienceCards } from "@/components/auth/AudienceCards";
-import { HowItWorks, Capabilities, ClosingCta } from "@/components/auth/LandingSections";
+import { Capabilities, Research, ClosingCta } from "@/components/auth/LandingSections";
 import { Gauge, ArrowRight, Check } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -25,8 +25,8 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   return (
     <div className="min-h-screen bg-surface-muted">
       {/* HERO BAND */}
-      <div className="border-b border-navy/10 bg-white">
-        <div className="mx-auto w-full max-w-6xl px-5 py-7 lg:py-10" style={PAD}>
+      <div className="relative overflow-hidden border-b border-navy/10 bg-gradient-to-br from-gold/[0.07] via-white to-navy-700/[0.05]">
+        <div className="relative mx-auto w-full max-w-6xl px-5 py-7 lg:py-10" style={PAD}>
           {/* top bar */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
@@ -44,8 +44,8 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
             {/* hero */}
             <div className="relative lg:pt-1">
               <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
-                <div className="animate-aurora absolute -left-16 -top-12 h-72 w-72 rounded-full bg-gold/15 blur-3xl" />
-                <div className="animate-aurora absolute left-40 top-28 h-72 w-72 rounded-full bg-navy-400/10 blur-3xl" style={{ animationDelay: "4s" }} />
+                <div className="animate-aurora absolute -left-20 -top-16 h-80 w-80 rounded-full bg-gold/25 blur-3xl" />
+                <div className="animate-aurora absolute left-44 top-24 h-80 w-80 rounded-full bg-navy-400/20 blur-3xl" style={{ animationDelay: "4s" }} />
               </div>
               <span className="rise inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-gold-700">
                 <span className="h-1.5 w-1.5 animate-soft-pulse rounded-full bg-gold" /> Free founder diagnostic
@@ -79,15 +79,15 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
         </div>
       </div>
 
-      {/* HOW IT WORKS (muted band) */}
+      {/* THE SIX PRACTICES (muted band) — occupies the top of the page */}
       <div className="mx-auto w-full max-w-6xl px-5 py-12 lg:py-16" style={PAD}>
-        <HowItWorks />
+        <Capabilities />
       </div>
 
-      {/* WHAT IT MEASURES (white band) */}
+      {/* RESEARCH (white band) */}
       <div className="border-y border-navy/10 bg-white">
         <div className="mx-auto w-full max-w-6xl px-5 py-12 lg:py-16" style={PAD}>
-          <Capabilities />
+          <Research />
         </div>
       </div>
 
