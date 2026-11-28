@@ -75,7 +75,7 @@ function RotatingPlan() {
 
 export function AudienceCards() {
   return (
-    <section className="mt-12 lg:mt-16">
+    <section>
       <div className="flex items-center gap-2">
         <span className="h-1.5 w-1.5 animate-soft-pulse rounded-full bg-gold" />
         <h2 className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Who the Management Capital Index is for</h2>
