@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { SignInForm } from "@/components/auth/SignInForm";
 import { AudienceCards } from "@/components/auth/AudienceCards";
+import { HowItWorks, Capabilities, ClosingCta } from "@/components/auth/LandingSections";
 import { Gauge, ArrowRight } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -16,7 +17,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   if (userCount === 0) redirect("/setup");
 
   const { error } = await searchParams;
-  const message = error === "invalid" ? "Incorrect email or password." : error ? "Please enter your email and password." : null;
+  const message = error === "invalid" ? "Incorrect email or password." : error === "throttled" ? "Too many sign-in attempts. Please wait a few minutes and try again." : error ? "Please enter your email and password." : null;
 
   return (
     <div className="min-h-screen bg-surface-muted">
@@ -64,10 +65,17 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
           </div>
         </div>
 
+        {/* how it works */}
+        <HowItWorks />
+
+        {/* what the diagnostic measures */}
+        <Capabilities />
+
         {/* audience cards */}
-        <div className="mt-10 lg:mt-12">
-          <AudienceCards />
-        </div>
+        <AudienceCards />
+
+        {/* closing call to action */}
+        <ClosingCta />
 
         <p className="mt-10 text-center text-xs text-ink-muted">The Management Capital Index is a self-assessment of management practices and an input to decisions. It is not a credit, funding or investment decision.</p>
       </div>

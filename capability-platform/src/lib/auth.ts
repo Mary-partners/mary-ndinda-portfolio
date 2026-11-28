@@ -5,9 +5,17 @@ import { prisma } from "./prisma";
 const UID_COOKIE = "cap_uid";
 const ORG_COOKIE = "cap_org";
 
+function sessionSecret(): string {
+  const s = process.env.SESSION_SECRET;
+  if (s && s.length >= 16) return s;
+  // Never sign real sessions with the weak development default in production.
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("SESSION_SECRET is not configured; refusing to sign sessions with an insecure default.");
+  }
+  return "dev-secret";
+}
 function sign(value: string): string {
-  const secret = process.env.SESSION_SECRET ?? "dev-secret";
-  const mac = crypto.createHmac("sha256", secret).update(value).digest("hex").slice(0, 16);
+  const mac = crypto.createHmac("sha256", sessionSecret()).update(value).digest("hex").slice(0, 16);
   return `${value}.${mac}`;
 }
 function verify(signed: string | undefined): string | null {
@@ -19,9 +27,11 @@ function verify(signed: string | undefined): string | null {
   return null;
 }
 
+const COOKIE_OPTS = { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax" as const, path: "/", maxAge: 60 * 60 * 12 };
+
 export async function login(userId: string) {
   const store = await cookies();
-  store.set(UID_COOKIE, sign(userId), { httpOnly: true, sameSite: "lax", path: "/", maxAge: 60 * 60 * 12 });
+  store.set(UID_COOKIE, sign(userId), COOKIE_OPTS);
 }
 export async function logout() {
   const store = await cookies();
@@ -30,7 +40,7 @@ export async function logout() {
 }
 export async function setActiveOrg(orgId: string) {
   const store = await cookies();
-  store.set(ORG_COOKIE, sign(orgId), { httpOnly: true, sameSite: "lax", path: "/", maxAge: 60 * 60 * 12 });
+  store.set(ORG_COOKIE, sign(orgId), COOKIE_OPTS);
 }
 
 export interface SessionUser {

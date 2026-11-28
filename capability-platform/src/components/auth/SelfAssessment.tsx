@@ -22,7 +22,7 @@ export function SelfAssessment({ token, companyName, orgName, defaultFounder, di
   embedded?: boolean; returnTo?: string;
 }) {
   const allQ = React.useMemo(() => dimensions.flatMap((d) => d.questions), [dimensions]);
-  const [founder, setFounder] = React.useState(defaultFounder);
+  const [founder] = React.useState(defaultFounder);
   const [ans, setAns] = React.useState<Record<string, Answer>>({});
   const [evidence, setEvidence] = React.useState<string | null>(null);
   const [pending, setPending] = React.useState(false);
@@ -93,11 +93,6 @@ export function SelfAssessment({ token, companyName, orgName, defaultFounder, di
             <p className="mt-1.5 text-sm text-ink-muted">About {total} short questions, roughly 15 minutes. For each one, pick the statement that best describes how your business works today. There are no right or wrong answers. Your answers save when you submit at the bottom.</p>
           </div>
         )}
-
-        <div className="mt-4 rounded-xl border border-navy/10 bg-white p-4">
-          <label className="block text-sm font-medium text-navy-700" htmlFor="founder">Your name <span className="font-normal text-ink-muted">(optional)</span></label>
-          <input id="founder" value={founder} onChange={(e) => setFounder(e.target.value)} className="input mt-2" placeholder="Who is completing this?" />
-        </div>
 
         {dimensions.map((d, di) => (
           <section key={d.key} className="mt-5">

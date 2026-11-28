@@ -19,7 +19,7 @@ export function FounderShell({ userName, businessName, companyId, assessed, sign
 
   const nav = [
     { href: "/me", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/me/diagnostic", label: assessed ? "Retake diagnostic" : "Take diagnostic", icon: ClipboardCheck },
+    { href: "/me/diagnostic", label: assessed ? "Reassess" : "Take diagnostic", icon: ClipboardCheck },
     { href: "/me/results", label: "My results", icon: BarChart3 },
   ];
   const active = (href: string) => (href === "/me" ? pathname === "/me" : pathname.startsWith(href));
