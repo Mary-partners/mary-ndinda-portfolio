@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { DIMENSION_META } from "@/lib/constants";
-import { UserPlus, ClipboardCheck, LineChart, Wallet, ShieldCheck, Compass, Settings2, Users, TrendingUp, ArrowRight, type LucideIcon } from "lucide-react";
+import { EVIDENCE_REFS } from "@/lib/practice-guide";
+import { Wallet, ShieldCheck, Compass, Settings2, Users, TrendingUp, ArrowRight, BookOpen, ExternalLink, type LucideIcon } from "lucide-react";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -8,30 +9,6 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
       <span className="h-1.5 w-1.5 rounded-full bg-gold" />
       <h2 className="text-xs font-semibold uppercase tracking-wide text-ink-muted">{children}</h2>
     </div>
-  );
-}
-
-const STEPS = [
-  { icon: UserPlus, n: "01", title: "Create your account", body: "Register your business in about a minute. Free and confidential, and your results are saved so you can track progress." },
-  { icon: ClipboardCheck, n: "02", title: "Answer 36 questions", body: "Across six areas of how your business runs, roughly 15 minutes. For each one you pick the statement that best fits." },
-  { icon: LineChart, n: "03", title: "Get your Index and plan", body: "Your Management Capital Index, your maturity level, and a clear 90-day action plan. Reassess every 90 days to see change." },
-];
-
-export function HowItWorks() {
-  return (
-    <section>
-      <SectionLabel>How it works</SectionLabel>
-      <div className="mt-4 grid gap-4 md:grid-cols-3">
-        {STEPS.map((s, i) => (
-          <article key={s.n} className="rise lift relative flex flex-col rounded-2xl border border-navy/10 bg-white p-5 shadow-card hover:shadow-lg" style={{ animationDelay: `${60 + i * 90}ms` }}>
-            <span className="absolute right-4 top-3 text-2xl font-semibold text-navy/10">{s.n}</span>
-            <span className="grid h-11 w-11 place-items-center rounded-xl bg-gold/15 text-gold-700"><s.icon className="h-5 w-5" /></span>
-            <h3 className="mt-3 text-base font-semibold text-navy-700">{s.title}</h3>
-            <p className="mt-1.5 text-sm leading-relaxed text-ink-muted">{s.body}</p>
-          </article>
-        ))}
-      </div>
-    </section>
   );
 }
 
@@ -47,8 +24,8 @@ const PILLAR_ICON: Record<string, LucideIcon> = {
 export function Capabilities() {
   return (
     <section>
-      <SectionLabel>What the diagnostic measures</SectionLabel>
-      <p className="mt-2 max-w-2xl text-sm text-ink-muted">Six areas of management capability. Each is scored on its own, so you see exactly where your business is strong and where to focus next.</p>
+      <SectionLabel>The six management practices we measure</SectionLabel>
+      <p className="mt-2 max-w-2xl text-sm text-ink-muted">Each area is scored on its own, so you see exactly where your business is strong and where to focus next.</p>
       <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {DIMENSION_META.map((d, i) => {
           const Icon = PILLAR_ICON[d.key] ?? Compass;
@@ -63,6 +40,54 @@ export function Capabilities() {
             </article>
           );
         })}
+      </div>
+    </section>
+  );
+}
+
+const RESEARCH = [
+  {
+    source: "IFC SME Governance Guidebook (2020)",
+    title: "The routines that matter",
+    body: "Recommends a core set of management routines: managing cash flow, separating business and owner funds, and making clear who has authority to decide.",
+    href: EVIDENCE_REFS.ifc.url,
+  },
+  {
+    source: "World Bank study, McKenzie & Woodruff (2017)",
+    title: "Practices track with survival and growth",
+    body: "Across firms in Kenya, Nigeria and Sri Lanka, those using more of these practices at the start showed higher survival rates and faster sales growth.",
+    href: EVIDENCE_REFS.mw.url,
+  },
+  {
+    source: "How to read this",
+    title: "An input, not a prediction",
+    body: "These are associations found across many firms, not a forecast for any single business. Your answers are self-reported until a reviewer verifies them.",
+    href: null,
+  },
+];
+
+export function Research() {
+  return (
+    <section>
+      <SectionLabel>Why these practices matter</SectionLabel>
+      <p className="mt-2 max-w-2xl text-sm text-ink-muted">Studies of small and growing businesses link stronger management practices with better outcomes. The Index measures your practices; it does not predict your results.</p>
+      <div className="mt-4 grid gap-4 md:grid-cols-3">
+        {RESEARCH.map((r, i) => (
+          <article key={r.title} className="rise lift flex flex-col rounded-2xl border border-navy/10 bg-white p-5 shadow-card hover:shadow-lg" style={{ animationDelay: `${60 + i * 80}ms` }}>
+            <span className="grid h-10 w-10 place-items-center rounded-xl bg-gold/15 text-gold-700"><BookOpen className="h-5 w-5" /></span>
+            <div className="mt-3 text-[11px] font-semibold uppercase tracking-wide text-gold-700">{r.source}</div>
+            <h3 className="mt-0.5 text-base font-semibold text-navy-700">{r.title}</h3>
+            <p className="mt-1.5 text-sm leading-relaxed text-ink-muted">{r.body}</p>
+            <div className="mt-3 flex-1" />
+            {r.href ? (
+              <a href={r.href} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-xs font-semibold text-gold-700 hover:underline">
+                Read the source <ExternalLink className="h-3.5 w-3.5" />
+              </a>
+            ) : (
+              <span className="text-xs font-medium text-ink-muted">Research is context, not a guarantee.</span>
+            )}
+          </article>
+        ))}
       </div>
     </section>
   );
