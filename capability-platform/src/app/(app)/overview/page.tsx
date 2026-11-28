@@ -51,6 +51,7 @@ export default async function OverviewPage() {
                 <thead>
                   <tr className="border-b border-navy/10">
                     <th className="th">Business</th>
+                    <th className="th">Contact</th>
                     <th className="th">Source</th>
                     <th className="th">Sector</th>
                     <th className="th">Index</th>
@@ -60,11 +61,19 @@ export default async function OverviewPage() {
                 </thead>
                 <tbody>
                   {p.rows.length === 0 && (
-                    <tr><td className="td text-ink-muted" colSpan={6}>No diagnostics completed yet.</td></tr>
+                    <tr><td className="td text-ink-muted" colSpan={7}>No diagnostics completed yet.</td></tr>
                   )}
                   {p.rows.map((r) => (
                     <tr key={r.companyId} className="border-b border-navy/5 last:border-0">
                       <td className="td font-medium text-navy-700">{r.companyName}</td>
+                      <td className="td">
+                        {r.founderName || r.founderEmail ? (
+                          <div className="leading-tight">
+                            {r.founderName && <div className="text-navy-700">{r.founderName}</div>}
+                            {r.founderEmail && <a href={`mailto:${r.founderEmail}`} className="text-xs text-gold-700 hover:underline">{r.founderEmail}</a>}
+                          </div>
+                        ) : <span className="text-ink-muted">—</span>}
+                      </td>
                       <td className="td text-ink-muted">{r.source}</td>
                       <td className="td text-ink-muted">{r.sector ?? "—"}</td>
                       <td className="td font-medium">{r.index ?? "—"}</td>

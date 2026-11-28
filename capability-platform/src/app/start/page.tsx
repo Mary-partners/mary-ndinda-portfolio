@@ -39,7 +39,7 @@ export default async function StartPage({ searchParams }: { searchParams: Promis
           <div className="p-6 sm:p-8">
             <h2 className="text-lg font-semibold text-navy-700">Tell us about your business</h2>
             <p className="mt-1 text-sm text-ink-muted">Just a few details, then you&apos;ll go straight into the questions.</p>
-            {error && <div className="mt-4 rounded-lg border border-bad/20 bg-bad/5 px-3 py-2.5 text-sm text-bad">Please enter your business name to continue.</div>}
+            {error && <div className="mt-4 rounded-lg border border-bad/20 bg-bad/5 px-3 py-2.5 text-sm text-bad">Please enter your business name, your name, and a valid email to continue.</div>}
             <form action={startPublicAssessment} className="mt-5 space-y-4">
               <div>
                 <label className="mb-1.5 block text-xs font-medium text-navy-700" htmlFor="business">Business name</label>
@@ -57,12 +57,12 @@ export default async function StartPage({ searchParams }: { searchParams: Promis
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="mb-1.5 block text-xs font-medium text-navy-700" htmlFor="founderName">Your name <span className="font-normal text-ink-muted">(optional)</span></label>
-                  <input id="founderName" name="founderName" className="input" placeholder="Who is completing this?" />
+                  <label className="mb-1.5 block text-xs font-medium text-navy-700" htmlFor="founderName">Your name</label>
+                  <input id="founderName" name="founderName" required className="input" placeholder="Who is completing this?" />
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-xs font-medium text-navy-700" htmlFor="email">Email <span className="font-normal text-ink-muted">(optional)</span></label>
-                  <input id="email" name="email" type="email" className="input" placeholder="So we can send your results" />
+                  <label className="mb-1.5 block text-xs font-medium text-navy-700" htmlFor="email">Email</label>
+                  <input id="email" name="email" type="email" required className="input" placeholder="So we can send your results" />
                 </div>
               </div>
               <button className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-gold text-sm font-semibold text-navy-900 shadow-sm transition-colors hover:bg-gold-600 hover:text-white">
