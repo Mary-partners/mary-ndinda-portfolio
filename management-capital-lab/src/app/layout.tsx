@@ -4,7 +4,11 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ToastProvider } from "@/components/ui/toast";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+// Canonical production domain. Use the env override only when it points at the
+// real domain, so previews never leak a vercel.app or localhost URL.
+const CANONICAL = "https://www.managementcapitallab.com";
+const envUrl = process.env.NEXT_PUBLIC_SITE_URL;
+const siteUrl = envUrl && envUrl.includes("managementcapitallab.com") ? envUrl : CANONICAL;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
