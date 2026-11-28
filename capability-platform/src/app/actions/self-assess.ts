@@ -7,6 +7,7 @@ import { storeV2 } from "@/lib/store-v2";
 import { ensurePublicOrg, ensureFramework } from "@/lib/install";
 import { login } from "@/lib/auth";
 import { hashPassword } from "@/lib/password";
+import { getReassessGate } from "@/lib/reassess";
 
 const t = (v: FormDataEntryValue | null) => String(v ?? "").trim();
 
@@ -50,38 +51,6 @@ export async function founderSignup(formData: FormData) {
   redirect(`/me`);
 }
 
-// Public, self-serve entry: a founder starts their own assessment from the
-// website. Creates an enterprise under the public-intake organisation and sends
-// them straight into the self-assessment. No account required.
-export async function startPublicAssessment(formData: FormData) {
-  const business = t(formData.get("business"));
-  const founderName = t(formData.get("founderName"));
-  const email = t(formData.get("email")).toLowerCase();
-  // Name and email are required so every completion lands in our records with a
-  // contact. Basic email shape check; the field is also type="email" client-side.
-  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  if (!business || !founderName || !emailOk) redirect("/start?error=1");
-  const org = await ensurePublicOrg(prisma);
-  await ensureFramework(prisma);
-  const token = crypto.randomBytes(16).toString("hex");
-  const company = await prisma.company.create({
-    data: {
-      orgId: org.id,
-      legalName: business,
-      tradingName: business,
-      country: t(formData.get("country")) || "",
-      sector: t(formData.get("sector")) || "",
-      founderName,
-      founderEmail: email,
-      isDemo: false,
-      scenarioTag: "Public self-assessment",
-      inviteToken: token,
-    },
-  });
-  await prisma.auditLog.create({ data: { orgId: org.id, entity: "Company", entityId: company.id, action: "public.start", detail: business } });
-  redirect(`/assess/${token}`);
-}
-
 export interface SelfResponse {
   questionId: string;
   status: "numeric" | "dontknow" | "na";
@@ -96,6 +65,11 @@ export interface SelfResponse {
 export async function submitSelfAssessment(token: string, founderName: string, responses: SelfResponse[], returnTo?: string, evidenceReadiness?: string) {
   const company = await prisma.company.findUnique({ where: { inviteToken: token }, select: { id: true, founderName: true } });
   if (!company) redirect("/assess/invalid");
+
+  // Reassessment cadence: block a second assessment inside the 90-day window so
+  // results track progress over time. First assessment always passes.
+  const gate = await getReassessGate(company.id);
+  if (gate.hasAssessment && !gate.canStart) redirect(returnTo || "/me");
 
   const framework = await prisma.framework.findFirst({
     where: { isDefault: true },

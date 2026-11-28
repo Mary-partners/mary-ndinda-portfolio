@@ -67,11 +67,7 @@ export function SignInForm({ message }: { message?: string | null }) {
           Create your founder account <ArrowRight className="h-4 w-4" />
         </Link>
         <p className="mt-3 text-center text-xs text-ink-muted">
-          Prefer not to create an account?{" "}
-          <Link href="/start" className="font-medium text-gold-700 hover:underline">
-            Take the diagnostic once
-          </Link>
-          .
+          An account keeps your results so you can reassess every 90 days and see your progress.
         </p>
       </div>
       </div>

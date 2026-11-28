@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
 import { SelfAssessment } from "@/components/auth/SelfAssessment";
 import { itemAt } from "@/lib/mci-v2";
+import { getReassessGate } from "@/lib/reassess";
 
 export const dynamic = "force-dynamic";
 
@@ -13,9 +14,14 @@ export default async function FounderDiagnosticPage() {
   const company = await prisma.company.findFirst({
     where: { ownerUserId: user.id },
     orderBy: { createdAt: "desc" },
-    select: { legalName: true, tradingName: true, founderName: true, inviteToken: true, org: { select: { name: true } } },
+    select: { id: true, legalName: true, tradingName: true, founderName: true, inviteToken: true, org: { select: { name: true } } },
   });
   if (!company || !company.inviteToken) redirect("/me");
+
+  // Already assessed within the 90-day window: send them back to their dashboard,
+  // which shows when they can reassess.
+  const gate = await getReassessGate(company.id);
+  if (gate.hasAssessment && !gate.canStart) redirect("/me");
 
   const framework = await prisma.framework.findFirst({
     where: { isDefault: true },

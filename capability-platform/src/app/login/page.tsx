@@ -50,12 +50,12 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
             </h1>
             <p className="rise mt-4 max-w-lg text-[15px] leading-relaxed text-ink-muted" style={{ animationDelay: "160ms" }}>The Management Capital Index shows which management practices are working, which need attention, and what to work on over the next 90 days.</p>
             <div className="rise mt-6 flex flex-wrap items-center gap-x-5 gap-y-3" style={{ animationDelay: "240ms" }}>
-              <Link href="/start" className="group inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-gold px-6 text-sm font-semibold text-navy-900 shadow-sm transition-all hover:-translate-y-0.5 hover:bg-gold-600 hover:text-white hover:shadow-md">
-                Take the diagnostic <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+              <Link href="/signup" className="group inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-gold px-6 text-sm font-semibold text-navy-900 shadow-sm transition-all hover:-translate-y-0.5 hover:bg-gold-600 hover:text-white hover:shadow-md">
+                Create your account <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
               </Link>
               <a href="#signin" className="text-sm font-medium text-navy-700 underline-offset-4 hover:underline">Sign in</a>
             </div>
-            <p className="rise mt-3 text-xs text-ink-muted" style={{ animationDelay: "320ms" }}>36 questions across six areas of management. Free and confidential.</p>
+            <p className="rise mt-3 text-xs text-ink-muted" style={{ animationDelay: "320ms" }}>Free account. 36 questions across six areas of management, then reassess every 90 days to track progress.</p>
           </div>
 
           {/* sign-in */}

@@ -3,8 +3,10 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
 import { getFounderV2 } from "@/lib/founder-v2";
+import { reassessFrom } from "@/lib/reassess";
+import { fmtDate } from "@/lib/utils";
 import { BASE_PATH, DIMENSION_META } from "@/lib/constants";
-import { Download, RefreshCw, ClipboardCheck, Building2, Target, ArrowRight, Compass, ListChecks, Gauge, AlertTriangle } from "lucide-react";
+import { Download, RefreshCw, ClipboardCheck, Building2, Target, ArrowRight, Compass, ListChecks, Gauge, AlertTriangle, Lock } from "lucide-react";
 import { BandScale, PillarCard, ActionItem } from "@/components/founder/Results";
 
 export const dynamic = "force-dynamic";
@@ -17,6 +19,7 @@ export default async function FounderHome() {
 
   const company = await prisma.company.findFirst({ where: { ownerUserId: user.id }, orderBy: { createdAt: "desc" }, select: { id: true, tradingName: true, legalName: true, sector: true, country: true } });
   const fv = company ? await getFounderV2(company.id) : { state: "none" as const };
+  const gate = reassessFrom("finalizedAt" in fv ? fv.finalizedAt : null);
 
   const businessName = company?.tradingName || company?.legalName || "Your business";
   const sector = company?.sector || null;
@@ -32,7 +35,11 @@ export default async function FounderHome() {
         </div>
         {fv.state === "v2" && company && (
           <div className="flex gap-2">
-            <Link href="/me/diagnostic" className="inline-flex h-10 items-center gap-2 rounded-xl border border-navy/20 px-3.5 text-sm font-semibold text-navy-700 hover:bg-surface-muted"><RefreshCw className="h-4 w-4" /> Retake</Link>
+            {gate.canStart ? (
+              <Link href="/me/diagnostic" className="inline-flex h-10 items-center gap-2 rounded-xl border border-navy/20 px-3.5 text-sm font-semibold text-navy-700 hover:bg-surface-muted"><RefreshCw className="h-4 w-4" /> Reassess</Link>
+            ) : (
+              <span className="inline-flex h-10 items-center gap-2 rounded-xl border border-navy/15 bg-surface-muted px-3.5 text-sm font-medium text-ink-muted" title={gate.nextEligibleAt ? `Reassessment opens ${fmtDate(gate.nextEligibleAt)}` : undefined}><Lock className="h-4 w-4" /> Reassess {gate.nextEligibleAt ? fmtDate(gate.nextEligibleAt) : ""}</span>
+            )}
             <a href={`${BASE_PATH}/api/report/company/${company.id}`} className="inline-flex h-10 items-center gap-2 rounded-xl bg-navy-700 px-3.5 text-sm font-semibold text-white hover:bg-navy-800"><Download className="h-4 w-4" /> PDF report</a>
           </div>
         )}
@@ -74,7 +81,11 @@ export default async function FounderHome() {
       <section className="mt-5 rounded-xl border border-navy/10 bg-white p-6 shadow-card sm:p-8">
         <h2 className="text-lg font-semibold text-navy-700">Your earlier result</h2>
         <p className="mt-1.5 text-sm text-ink-muted">You completed an earlier version of the diagnostic. Your previous Index was <span className="font-semibold text-navy-700">{fv.index ?? "n/a"}/100</span>. The diagnostic has since been revised with clearer questions and scoring.</p>
-        <Link href="/me/diagnostic" className="mt-4 inline-flex h-11 items-center gap-2 rounded-xl bg-gold px-6 text-sm font-semibold text-navy-900 hover:bg-gold-600 hover:text-white"><RefreshCw className="h-4 w-4" /> Take the revised diagnostic</Link>
+        {gate.canStart ? (
+          <Link href="/me/diagnostic" className="mt-4 inline-flex h-11 items-center gap-2 rounded-xl bg-gold px-6 text-sm font-semibold text-navy-900 hover:bg-gold-600 hover:text-white"><RefreshCw className="h-4 w-4" /> Take the revised diagnostic</Link>
+        ) : (
+          <p className="mt-4 inline-flex items-center gap-2 rounded-xl border border-navy/15 bg-surface-muted px-4 py-2.5 text-sm font-medium text-ink-muted"><Lock className="h-4 w-4" /> You can reassess on {gate.nextEligibleAt ? fmtDate(gate.nextEligibleAt) : ""}, 90 days after your last.</p>
+        )}
       </section>
     );
   }
@@ -87,6 +98,14 @@ export default async function FounderHome() {
 
   return Shell(
     <>
+      {/* Reassessment window: you have a result; the next one opens after 90 days. */}
+      {!gate.canStart && gate.nextEligibleAt && (
+        <div className="mt-4 flex items-start gap-2.5 rounded-xl border border-navy/10 bg-white px-4 py-3 shadow-card">
+          <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-navy-700/5 text-navy-700"><Lock className="h-4 w-4" /></span>
+          <p className="text-sm text-ink-muted">You already have an assessment. To track progress over time, you can reassess on <span className="font-medium text-navy-700">{fmtDate(gate.nextEligibleAt)}</span>, 90 days after your last. Your current result stays here until then.</p>
+        </div>
+      )}
+
       {/* Stat tiles */}
       <section className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
         <div className="rounded-xl border border-navy/10 bg-white p-4 shadow-card">
