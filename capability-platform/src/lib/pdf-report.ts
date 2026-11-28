@@ -3,7 +3,7 @@ import type { PDFFont, PDFPage, RGB } from "pdf-lib";
 import fontkit from "@pdf-lib/fontkit";
 import { gunzipSync } from "zlib";
 import { POPPINS_REGULAR_GZ, POPPINS_SEMIBOLD_GZ } from "./poppins";
-import { DIMENSION_META, CONSTRAINT_LABELS } from "./constants";
+import { DIMENSION_META, CONSTRAINT_LABELS, READINESS_BANDS } from "./constants";
 import { fmtScore, fmtIndex, fmtNumber, fmtDate, pctChange, maturityBand } from "./utils";
 import { getActionPlan } from "./recommend";
 import { getFounderV2 } from "./founder-v2";
@@ -176,27 +176,51 @@ async function buildFounderSnapshotPdf(result: V2Result, plan: V2Plan, company: 
   const LX = M + 94; // content column (left label gutter)
 
   // ---------- PAGE 1 ----------
+  const DL = new Map(DIMENSION_META.map((dm) => [dm.key, dm.label]));
   let y = H - M;
   d.page.drawRectangle({ x: M, y: y - 1, width: 24, height: 2.5, color: GOLD });
   put("MANAGEMENT CAPITAL LAB", M + 32, y - 3, { size: 8.5, bold: true, color: NAVY });
   right("PRIVATE SELF-ASSESSMENT", y - 3, 8.5, GOLD_DEEP, true);
-  y -= 30;
-  put(name, M, y - 20, { size: 21, bold: true, color: NAVY }); y -= 28;
-  put("Enterprise Management Diagnostic", M, y - 11, { size: 11.5, color: SUB }); y -= 19;
-  if (company.founderName) { put(`Prepared for ${company.founderName}`, M, y - 9, { size: 9.5, color: NAVY }); y -= 15; }
-  const metaLeft = [company.sector, company.country].filter(Boolean).join("   /   ");
-  if (metaLeft) put(metaLeft, M, y - 8, { size: 9, color: MUTED });
-  right(`Report generated ${gen}`, y - 8, 9, MUTED); y -= 20;
+  y -= 26;
+  put(name, M, y - 20, { size: 21, bold: true, color: NAVY }); y -= 26;
+  put("Enterprise Management Diagnostic", M, y - 11, { size: 11.5, color: SUB });
+  right(`Generated ${gen}`, y - 11, 9, MUTED);
+  y -= 17;
+  const subBits = [company.founderName ? `Prepared for ${company.founderName}` : null, company.sector, company.country].filter(Boolean).join("   ·   ");
+  if (subBits) { put(subBits, M, y - 8, { size: 9, color: MUTED }); y -= 16; }
+  y -= 4;
 
+  // Score band: index on the left, interpretation and the strongest / focus areas on the right.
+  const strongLabel = strongest.length === 1 ? DL.get(strongest[0].key) ?? null : null;
+  const focusLabel = lowest.length === 1 ? DL.get(lowest[0].key) ?? null : null;
+  const highlights: { k: string; v: string; c: RGB }[] = [];
+  if (strongLabel) highlights.push({ k: "Strongest", v: strongLabel, c: OK });
+  if (focusLabel) highlights.push({ k: "Focus", v: focusLabel, c: WARN });
   const interpLines = d.wrap(interp, d.reg, 9.5, CW - 196);
-  const bandH = Math.max(76, 30 + interpLines.length * 13.5);
+  const bandH = Math.max(84, 22 + (interpLines.length + highlights.length) * 13.5 + 8);
   d.page.drawRectangle({ x: M, y: y - bandH, width: CW, height: bandH, color: SKY });
-  put(`${result.mci ?? "n/a"}/100`, M + 20, y - 32, { size: 22, bold: true, color: NAVY });
-  put(result.overallBand.label, M + 20, y - 48, { size: 10.5, bold: true, color: NAVY });
-  put(isBaseline ? "Your first assessment" : "Latest assessment", M + 20, y - 60, { size: 8, color: MUTED });
+  put(`${result.mci ?? "n/a"}/100`, M + 20, y - 34, { size: 24, bold: true, color: NAVY });
+  put(result.overallBand.label, M + 20, y - 51, { size: 10.5, bold: true, color: matuTone(result.overallBand.label) });
+  put(isBaseline ? "Your first assessment" : "Latest assessment", M + 20, y - 63, { size: 8, color: MUTED });
   let iy = y - 22;
   for (const ln of interpLines) { put(ln, M + 188, iy, { size: 9.5, color: INK }); iy -= 13.5; }
-  y -= bandH + 20;
+  for (const hl of highlights) {
+    put(hl.k + ":", M + 188, iy, { size: 8.5, bold: true, color: hl.c });
+    put(" " + hl.v, M + 188 + d.bold.widthOfTextAtSize(hl.k + ":", 8.5), iy, { size: 9, color: INK });
+    iy -= 13.5;
+  }
+  y -= bandH + 14;
+
+  // Where this Index sits on the 0-100 maturity ladder.
+  {
+    const segW = CW / READINESS_BANDS.length, barY = y - 7, barH = 6, mciV = result.mci ?? -1;
+    READINESS_BANDS.forEach((b, i) => {
+      const inBand = result.mci !== null && mciV >= b.min && mciV <= b.max;
+      d.page.drawRectangle({ x: M + i * segW + (i ? 1.5 : 0), y: barY, width: segW - 1.5, height: barH, color: inBand ? GOLD : rgb(0.88, 0.9, 0.92) });
+      put(b.label, M + i * segW + 1, barY - 11, { size: 7, bold: inBand, color: inBand ? NAVY : MUTED });
+    });
+    y -= barH + 11 + 14;
+  }
 
   if (result.mci === null) {
     put(`Not enough questions were answered to show an overall Index (${result.totalNumeric} of ${result.totalApplicable} scored).`, M, y - 9, { size: 9, color: BAD });
@@ -285,7 +309,7 @@ async function buildFounderSnapshotPdf(result: V2Result, plan: V2Plan, company: 
     rule(y); y -= 9;
     put(g?.guideTitle ?? c.pillarName, M, y - 13, { size: 12.5, bold: true, color: NAVY });
     right(`${scoreLabel(c)} · By day ${30 * (i + 1)}`, y - 13, 9, MUTED);
-    y -= 27;
+    y -= 33;
     const rows: [string, string][] = [
       ["Why it matters", g?.why ?? c.item.why],
       ["Put it to work", (g?.work ?? c.item.action) + (g?.solo ? " " + g.solo : "")],
