@@ -36,21 +36,26 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
         {/* hero + sign-in */}
         <div className="mt-8 grid items-center gap-8 lg:mt-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
           {/* hero (light) */}
-          <div>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-gold-700">
-              <span className="h-1.5 w-1.5 rounded-full bg-gold" /> Free founder diagnostic
+          <div className="relative">
+            {/* soft animated glow behind the hero */}
+            <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+              <div className="animate-aurora absolute -left-16 -top-12 h-72 w-72 rounded-full bg-gold/15 blur-3xl" />
+              <div className="animate-aurora absolute left-40 top-28 h-72 w-72 rounded-full bg-navy-400/10 blur-3xl" style={{ animationDelay: "4s" }} />
+            </div>
+            <span className="rise inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-gold-700">
+              <span className="h-1.5 w-1.5 animate-soft-pulse rounded-full bg-gold" /> Free founder diagnostic
             </span>
-            <h1 className="mt-4 max-w-xl text-[2rem] font-semibold leading-[1.1] text-navy-700 sm:text-[2.6rem]">
+            <h1 className="rise mt-4 max-w-xl text-[2rem] font-semibold leading-[1.1] text-navy-700 sm:text-[2.6rem]" style={{ animationDelay: "80ms" }}>
               See what to improve in the way your <span className="text-gold-600">business runs.</span>
             </h1>
-            <p className="mt-4 max-w-lg text-[15px] leading-relaxed text-ink-muted">The Management Capital Index shows which management practices are working, which need attention, and what to work on over the next 90 days.</p>
-            <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
-              <Link href="/start" className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-gold px-6 text-sm font-semibold text-navy-900 shadow-sm transition-colors hover:bg-gold-600 hover:text-white">
-                Take the diagnostic <ArrowRight className="h-4 w-4" />
+            <p className="rise mt-4 max-w-lg text-[15px] leading-relaxed text-ink-muted" style={{ animationDelay: "160ms" }}>The Management Capital Index shows which management practices are working, which need attention, and what to work on over the next 90 days.</p>
+            <div className="rise mt-6 flex flex-wrap items-center gap-x-5 gap-y-3" style={{ animationDelay: "240ms" }}>
+              <Link href="/start" className="group inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-gold px-6 text-sm font-semibold text-navy-900 shadow-sm transition-all hover:-translate-y-0.5 hover:bg-gold-600 hover:text-white hover:shadow-md">
+                Take the diagnostic <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
               </Link>
               <a href="#signin" className="text-sm font-medium text-navy-700 underline-offset-4 hover:underline">Sign in</a>
             </div>
-            <p className="mt-3 text-xs text-ink-muted">36 questions across six areas of management. Free and confidential.</p>
+            <p className="rise mt-3 text-xs text-ink-muted" style={{ animationDelay: "320ms" }}>36 questions across six areas of management. Free and confidential.</p>
           </div>
 
           {/* sign-in */}

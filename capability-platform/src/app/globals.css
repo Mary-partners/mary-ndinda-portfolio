@@ -48,8 +48,39 @@
 }
 .animate-aurora { animation: aurora 14s ease-in-out infinite; }
 
+/* Gentle continuous float for card illustrations. */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.animate-float { animation: float 6s ease-in-out infinite; }
+
+/* Soft pulse for the status dot / eyebrow marker. */
+@keyframes soft-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.45; transform: scale(0.82); }
+}
+.animate-soft-pulse { animation: soft-pulse 2.4s ease-in-out infinite; }
+
+/* Cross-fade for the rotating example card. */
+@keyframes swap-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-swap-in { animation: swap-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* Entrance helper: start hidden, play fade-up (used with inline animation-delay). */
+.rise { opacity: 0; animation: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* Card hover lift. */
+.lift { transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease; }
+.lift:hover { transform: translateY(-4px); }
+
 @media (prefers-reduced-motion: reduce) {
-  .animate-fade-up, .animate-aurora { animation: none; }
+  .animate-fade-up, .animate-aurora, .animate-float, .animate-soft-pulse,
+  .animate-swap-in, .rise { animation: none; opacity: 1; transform: none; }
+  .lift { transition: none; }
+  .lift:hover { transform: none; }
 }
 
 .auth-input {
