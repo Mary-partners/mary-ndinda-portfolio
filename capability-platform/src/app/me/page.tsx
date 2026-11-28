@@ -3,6 +3,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
 import { getFounderV2 } from "@/lib/founder-v2";
+import { createFounderCompany } from "@/app/actions/self-assess";
 import { reassessFrom } from "@/lib/reassess";
 import { fmtDate } from "@/lib/utils";
 import { BASE_PATH, DIMENSION_META } from "@/lib/constants";
@@ -56,6 +57,41 @@ export default async function FounderHome() {
       {children}
     </div>
   );
+
+  // No business on the account yet (e.g. an administrator taking the diagnostic
+  // themselves): collect the business first, then go straight into the questions.
+  if (!company) {
+    return (
+      <div className="mx-auto w-full max-w-5xl px-5 py-7" style={{ paddingLeft: "max(20px, env(safe-area-inset-left,0px))", paddingRight: "max(20px, env(safe-area-inset-right,0px))" }}>
+        <h1 className="text-2xl font-semibold text-navy-700">Welcome, {firstName}</h1>
+        <p className="mt-1 max-w-2xl text-sm text-ink-muted">Set up your business so we can save your results and track your progress over time. Then you will go straight into the diagnostic.</p>
+        <section className="mt-5 overflow-hidden rounded-xl border border-navy/10 bg-white shadow-card">
+          <div className="h-1.5 bg-gradient-to-r from-gold-300 via-gold to-gold-600" />
+          <div className="p-6 sm:p-8">
+            <span className="grid h-11 w-11 place-items-center rounded-xl bg-gold/15 text-gold-700"><Building2 className="h-5 w-5" /></span>
+            <h2 className="mt-3 text-lg font-semibold text-navy-700">Set up your business</h2>
+            <form action={createFounderCompany} className="mt-5 max-w-xl space-y-4">
+              <div>
+                <label className="mb-1.5 block text-xs font-medium text-navy-700" htmlFor="business">Business name</label>
+                <input id="business" name="business" required className="input" placeholder="Your business name" />
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label className="mb-1.5 block text-xs font-medium text-navy-700" htmlFor="country">Country <span className="font-normal text-ink-muted">(optional)</span></label>
+                  <input id="country" name="country" className="input" placeholder="e.g. Kenya" />
+                </div>
+                <div>
+                  <label className="mb-1.5 block text-xs font-medium text-navy-700" htmlFor="sector">Sector <span className="font-normal text-ink-muted">(optional)</span></label>
+                  <input id="sector" name="sector" className="input" placeholder="e.g. Agri-processing" />
+                </div>
+              </div>
+              <button className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-gold px-6 text-sm font-semibold text-navy-900 hover:bg-gold-600 hover:text-white">Save and start the diagnostic <ArrowRight className="h-4 w-4" /></button>
+            </form>
+          </div>
+        </section>
+      </div>
+    );
+  }
 
   if (fv.state === "none") {
     return Shell(

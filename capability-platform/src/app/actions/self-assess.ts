@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { storeV2 } from "@/lib/store-v2";
 import { ensurePublicOrg, ensureFramework } from "@/lib/install";
-import { login } from "@/lib/auth";
+import { login, getCurrentUser } from "@/lib/auth";
 import { hashPassword } from "@/lib/password";
 import { getReassessGate } from "@/lib/reassess";
 
@@ -49,6 +49,42 @@ export async function founderSignup(formData: FormData) {
   await prisma.auditLog.create({ data: { orgId: org.id, entity: "Company", entityId: company.id, action: "founder.signup", detail: email } });
   await login(user.id);
   redirect(`/me`);
+}
+
+// Sets up the business for a signed-in account that does not have one yet (for
+// example an administrator who wants to take the diagnostic themselves). Creates
+// the company with an invite token and drops them straight into the questions.
+export async function createFounderCompany(formData: FormData) {
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
+
+  const existing = await prisma.company.findFirst({ where: { ownerUserId: user.id }, select: { id: true } });
+  if (existing) redirect("/me/diagnostic");
+
+  const business = t(formData.get("business"));
+  if (!business) redirect("/me?setup=1");
+
+  const org = await ensurePublicOrg(prisma);
+  await ensureFramework(prisma);
+  const token = crypto.randomBytes(16).toString("hex");
+  const company = await prisma.company.create({
+    data: {
+      orgId: org.id,
+      legalName: business,
+      tradingName: business,
+      country: t(formData.get("country")) || "",
+      sector: t(formData.get("sector")) || "",
+      founderName: user.name || null,
+      founderEmail: user.email || null,
+      ownerUserId: user.id,
+      isDemo: false,
+      scenarioTag: "Founder self-signup",
+      inviteToken: token,
+    },
+  });
+  await prisma.membership.create({ data: { userId: user.id, orgId: org.id, role: "FOUNDER" } }).catch(() => {});
+  await prisma.auditLog.create({ data: { orgId: org.id, entity: "Company", entityId: company.id, action: "founder.company.create", detail: business } });
+  redirect("/me/diagnostic");
 }
 
 export interface SelfResponse {
