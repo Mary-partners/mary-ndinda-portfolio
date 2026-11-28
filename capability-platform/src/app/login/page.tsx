@@ -34,25 +34,23 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
         </div>
 
         {/* hero + sign-in */}
-        <div className="mt-8 grid items-start gap-6 lg:mt-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12">
-          {/* hero */}
-          <div className="relative overflow-hidden rounded-2xl bg-navy-800 p-8 text-white sm:p-10">
-            <div aria-hidden className="pointer-events-none absolute inset-0">
-              <div className="absolute -left-20 -top-24 h-80 w-80 rounded-full bg-gold/15 blur-3xl" />
-              <div className="absolute -bottom-28 right-0 h-80 w-80 rounded-full bg-navy-400/20 blur-3xl" />
-              <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)", backgroundSize: "28px 28px" }} />
+        <div className="mt-8 grid items-center gap-8 lg:mt-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
+          {/* hero (light) */}
+          <div>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-gold-700">
+              <span className="h-1.5 w-1.5 rounded-full bg-gold" /> Free founder diagnostic
+            </span>
+            <h1 className="mt-4 max-w-xl text-[2rem] font-semibold leading-[1.1] text-navy-700 sm:text-[2.6rem]">
+              See what to improve in the way your <span className="text-gold-600">business runs.</span>
+            </h1>
+            <p className="mt-4 max-w-lg text-[15px] leading-relaxed text-ink-muted">The Management Capital Index shows which management practices are working, which need attention, and what to work on over the next 90 days.</p>
+            <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
+              <Link href="/start" className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-gold px-6 text-sm font-semibold text-navy-900 shadow-sm transition-colors hover:bg-gold-600 hover:text-white">
+                Take the diagnostic <ArrowRight className="h-4 w-4" />
+              </Link>
+              <a href="#signin" className="text-sm font-medium text-navy-700 underline-offset-4 hover:underline">Sign in</a>
             </div>
-            <div className="relative">
-              <h1 className="max-w-lg text-3xl font-semibold leading-tight sm:text-4xl">See what to improve in the way your business runs.</h1>
-              <p className="mt-4 max-w-lg text-[15px] leading-relaxed text-white/70">The Management Capital Index shows which management practices are working, which need attention, and what to work on over the next 90 days.</p>
-              <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3">
-                <Link href="/start" className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-gold px-6 text-sm font-semibold text-navy-900 shadow-sm transition-colors hover:bg-gold-600 hover:text-white">
-                  Take the diagnostic <ArrowRight className="h-4 w-4" />
-                </Link>
-                <a href="#signin" className="text-sm font-medium text-white/80 underline-offset-4 hover:text-white hover:underline">Sign in</a>
-              </div>
-              <p className="mt-3 text-xs text-white/55">36 questions across six areas of management. Free and confidential.</p>
-            </div>
+            <p className="mt-3 text-xs text-ink-muted">36 questions across six areas of management. Free and confidential.</p>
           </div>
 
           {/* sign-in */}
@@ -62,7 +60,9 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
         </div>
 
         {/* audience cards */}
-        <AudienceCards />
+        <div className="mt-10 lg:mt-12">
+          <AudienceCards />
+        </div>
 
         <p className="mt-10 text-center text-xs text-ink-muted">The Management Capital Index is a self-assessment of management practices and an input to decisions. It is not a credit, funding or investment decision.</p>
       </div>

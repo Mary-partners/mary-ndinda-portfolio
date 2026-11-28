@@ -55,7 +55,12 @@ export async function founderSignup(formData: FormData) {
 // them straight into the self-assessment. No account required.
 export async function startPublicAssessment(formData: FormData) {
   const business = t(formData.get("business"));
-  if (!business) redirect("/start?error=1");
+  const founderName = t(formData.get("founderName"));
+  const email = t(formData.get("email")).toLowerCase();
+  // Name and email are required so every completion lands in our records with a
+  // contact. Basic email shape check; the field is also type="email" client-side.
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  if (!business || !founderName || !emailOk) redirect("/start?error=1");
   const org = await ensurePublicOrg(prisma);
   await ensureFramework(prisma);
   const token = crypto.randomBytes(16).toString("hex");
@@ -66,8 +71,8 @@ export async function startPublicAssessment(formData: FormData) {
       tradingName: business,
       country: t(formData.get("country")) || "",
       sector: t(formData.get("sector")) || "",
-      founderName: t(formData.get("founderName")) || null,
-      founderEmail: t(formData.get("email")) || null,
+      founderName,
+      founderEmail: email,
       isDemo: false,
       scenarioTag: "Public self-assessment",
       inviteToken: token,

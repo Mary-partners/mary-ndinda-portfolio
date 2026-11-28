@@ -16,6 +16,7 @@ export interface PlatformRow {
   source: string;
   sector: string | null;
   country: string | null;
+  founderName: string | null;
   founderEmail: string | null;
   index: number | null;
   band: string;
@@ -36,7 +37,7 @@ export async function getPlatformOverview() {
         company: {
           select: {
             id: true, legalName: true, tradingName: true, sector: true, country: true,
-            founderEmail: true, scenarioTag: true, org: { select: { name: true } },
+            founderName: true, founderEmail: true, scenarioTag: true, org: { select: { name: true } },
           },
         },
       },
@@ -56,6 +57,7 @@ export async function getPlatformOverview() {
     source: sourceLabel(a.company.scenarioTag),
     sector: a.company.sector || null,
     country: a.company.country || null,
+    founderName: a.company.founderName || null,
     founderEmail: a.company.founderEmail || null,
     index: indexScore(a.overallScore),
     band: maturityBand(a.overallScore).label,

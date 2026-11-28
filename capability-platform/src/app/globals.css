@@ -10,7 +10,9 @@
   body {
     @apply bg-surface-muted text-ink antialiased;
   }
-  h1, h2, h3, h4 { @apply font-semibold text-navy-700; }
+  /* Headings inherit their container's text colour so white-on-navy bands stay
+     legible. Light surfaces get the navy tone from the body/default colour. */
+  h1, h2, h3, h4 { @apply font-semibold; color: inherit; }
   * { font-feature-settings: "kern", "liga", "tnum"; }
 }
 
