@@ -19,7 +19,7 @@ const STEPS = [
 
 export function HowItWorks() {
   return (
-    <section className="mt-12 lg:mt-16">
+    <section>
       <SectionLabel>How it works</SectionLabel>
       <div className="mt-4 grid gap-4 md:grid-cols-3">
         {STEPS.map((s, i) => (
@@ -46,7 +46,7 @@ const PILLAR_ICON: Record<string, LucideIcon> = {
 
 export function Capabilities() {
   return (
-    <section className="mt-12 lg:mt-16">
+    <section>
       <SectionLabel>What the diagnostic measures</SectionLabel>
       <p className="mt-2 max-w-2xl text-sm text-ink-muted">Six areas of management capability. Each is scored on its own, so you see exactly where your business is strong and where to focus next.</p>
       <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -70,7 +70,7 @@ export function Capabilities() {
 
 export function ClosingCta() {
   return (
-    <section className="rise mt-12 overflow-hidden rounded-2xl border border-gold/30 bg-gradient-to-br from-navy-800 to-navy-900 p-7 shadow-card lg:mt-16 lg:p-9">
+    <section className="rise overflow-hidden rounded-2xl border border-gold/30 bg-gradient-to-br from-navy-800 to-navy-900 p-7 shadow-card lg:p-9">
       <div className="flex flex-col items-start justify-between gap-5 lg:flex-row lg:items-center">
         <div className="max-w-xl">
           <h2 className="text-xl font-semibold text-white sm:text-2xl">See where your business stands today.</h2>
